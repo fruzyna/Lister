@@ -1,4 +1,4 @@
-Wishlister-Android
-==================
+Lister
+======
 
-An app designed to help organize your family's wishlists.
+A basic list creation and management app. Available on Google Play for free.
