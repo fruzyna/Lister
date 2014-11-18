@@ -25,6 +25,6 @@
         android:layout_toStartOf="@+id/button"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Item Name"
+        android:hint="Item Name"
         android:textColor="#FFFFFF" />
 </RelativeLayout>

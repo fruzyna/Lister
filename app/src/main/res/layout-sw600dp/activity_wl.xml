@@ -1,41 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background_gray"
-    android:orientation="vertical">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/background_gray"
+                android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="192dp"
         android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
         android:textAppearance="?android:attr/textAppearanceLarge"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:gravity="top">
 
-        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="64dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true">
 
             <Spinner
                 android:id="@+id/spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true" />
+                android:layout_centerVertical="true"
+                android:layout_alignParentTop="true"/>
 
             <ImageButton
                 android:id="@+id/add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/ic_note_add"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="16dp"
                 android:layout_toLeftOf="@+id/settings"
-                android:layout_toStartOf="@+id/settings" />
+                android:layout_marginRight="16dp"
+                android:layout_toStartOf="@+id/settings"
+                android:background="@drawable/ic_note_add"/>
 
             <ImageButton
                 android:id="@+id/settings"
@@ -45,50 +49,57 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="16dp"
-                android:maxHeight="32dp"
-                android:background="@drawable/ic_settings" />
+                android:background="@drawable/ic_settings"
+                android:maxHeight="32dp"/>
 
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <LinearLayout
         android:id="@+id/popup"
-        android:layout_width="match_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="512dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:elevation="8dp"
+        android:layout_margin="8dp"
         android:background="#323232"
-        android:orientation="vertical" />
+        android:elevation="8dp"
+        android:orientation="vertical"/>
 
     <com.liamfruzyna.android.wishlister.Fab
         android:id="@+id/fab"
         android:layout_width="72dp"
         android:layout_height="72dp"
-        android:layout_above="@id/popup"
-        android:elevation="8dp"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="8dp"
-        android:layout_marginRight="8dp" />
-
-    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/cardView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_below="@id/toolbar"
+        android:layout_marginRight="72dp"
+        android:layout_marginTop="-36dp"
+        android:elevation="8dp"/>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardView"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="512dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:layout_gravity="center"
-        android:layout_margin="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="64dp"
         card_view:cardCornerRadius="4dp">
 
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="16dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="16dp"
-            tools:context=".WLActivity">
+                        xmlns:tools="http://schemas.android.com/tools"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="16dp"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:paddingTop="16dp"
+                        tools:context=".WLActivity">
 
             <ListView
                 android:id="@+id/listView"
@@ -98,32 +109,35 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:divider="@null"
-                android:dividerHeight="0dp" />
+                android:dividerHeight="0dp"/>
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 
-    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    <android.support.v7.widget.CardView
         android:id="@+id/tags"
-        android:layout_width="match_parent"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="512dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/cardView"
+        android:layout_centerHorizontal="true"
         android:layout_gravity="center"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         card_view:cardCornerRadius="4dp">
 
-        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
+        <RelativeLayout
             android:id="@+id/tag"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="16dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:paddingTop="16dp"
-            tools:context=".WLActivity" />
+            tools:context=".WLActivity"/>
 
     </android.support.v7.widget.CardView>
 

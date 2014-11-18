@@ -8,8 +8,8 @@ android {
         applicationId "com.liamfruzyna.android.wishlister"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 8
-        versionName "1.1.0"
+        versionCode 9
+        versionName "1.2.0"
     }
     buildTypes {
         release {

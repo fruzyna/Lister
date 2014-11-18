@@ -144,13 +144,14 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
 
         //set up fab (Floating Action Button)
         fab.setFabDrawable(getResources().getDrawable(R.drawable.ic_add));
-        fab.setFabColor(getResources().getColor(R.color.fab_blue));
+        fab.setFabColor(getResources().getColor(R.color.dark_main));
         fab.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
                 final LinearLayout popup = (LinearLayout) findViewById(R.id.popup);
+                popup.removeAllViews();
                 LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
                 View v = inflater.inflate(R.layout.new_item_item, null);
                 popup.addView(v);
@@ -201,6 +202,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         } else
         {
             popup = (LinearLayout) findViewById(R.id.popup);
+            popup.removeAllViews();
             LayoutInflater inflater = (LayoutInflater) this.getSystemService(this.LAYOUT_INFLATER_SERVICE);
             View view = inflater.inflate(R.layout.new_list_item, null);
             popup.addView(view);
@@ -218,6 +220,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
             public void onClick(View v)
             {
                 popup = (LinearLayout) findViewById(R.id.popup);
+                popup.removeAllViews();
                 LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
                 View view = inflater.inflate(R.layout.new_list_item, null);
                 popup.addView(view);

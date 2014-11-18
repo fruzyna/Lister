@@ -15,7 +15,7 @@
         android:layout_toStartOf="@+id/button"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="List Name"
+        android:hint="List Name"
         android:textColor="#FFFFFF" />
 
     <Button
@@ -38,6 +38,6 @@
         android:layout_toLeftOf="@+id/button"
         android:layout_toStartOf="@+id/button"
         android:inputType="textPersonName"
-        android:text="Tags"
+        android:hint="Tags"
         android:textColor="#FFFFFF" />
 </RelativeLayout>
