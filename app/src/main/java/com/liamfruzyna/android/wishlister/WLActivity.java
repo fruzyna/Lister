@@ -144,7 +144,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
 
         //set up fab (Floating Action Button)
         fab.setFabDrawable(getResources().getDrawable(R.drawable.ic_add));
-        fab.setFabColor(getResources().getColor(R.color.dark_main));
+        fab.setFabColor(getResources().getColor(R.color.fab));
         fab.setOnClickListener(new View.OnClickListener()
         {
             @Override

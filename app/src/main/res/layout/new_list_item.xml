@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <EditText
         android:id="@+id/name"
@@ -14,9 +14,9 @@
         android:layout_toLeftOf="@+id/button"
         android:layout_toStartOf="@+id/button"
         android:ems="10"
-        android:inputType="textPersonName"
         android:hint="List Name"
-        android:textColor="#FFFFFF" />
+        android:inputType="textPersonName"
+        android:textColor="#FFFFFF"/>
 
     <Button
         android:id="@+id/button"
@@ -26,7 +26,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:text="Create List"
-        android:textColor="#FFEB3B" />
+        android:textColor="#FFEB3B"/>
 
     <EditText
         android:id="@+id/tags"
@@ -37,7 +37,7 @@
         android:layout_below="@+id/name"
         android:layout_toLeftOf="@+id/button"
         android:layout_toStartOf="@+id/button"
-        android:inputType="textPersonName"
         android:hint="Tags"
-        android:textColor="#FFFFFF" />
+        android:inputType="textPersonName"
+        android:textColor="#FFFFFF"/>
 </RelativeLayout>
