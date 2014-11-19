@@ -2,6 +2,8 @@ package com.liamfruzyna.android.wishlister;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.CardView;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -34,7 +37,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
 
     static String dir = "";
 
-    static ListView list;
+    static LinearLayout list;
     static Context c;
 
     public View.OnClickListener l = new View.OnClickListener()
@@ -60,7 +63,6 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
             updateList();
         }
     };
-    static CustomAdapter adapter;
     static RelativeLayout tagcv;
     EditText name;
     EditText tags;
@@ -92,9 +94,54 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
                 items.add(temp.get(i));
             }
         }
-        adapter = new CustomAdapter(c, R.layout.item, R.id.checkbox, items);
-        list.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+        list.removeAllViews();
+        LayoutInflater inflater = LayoutInflater.from(c);
+        for (int i = 0; i < items.size(); i++)
+        {
+            final int j = i;
+            View view = inflater.inflate(R.layout.item, list, false);
+            //init checkbox and set text
+            final CheckBox cb = (CheckBox) view.findViewById(R.id.checkbox);
+            cb.setText(items.get(i).item);
+            cb.setChecked(items.get(i).done);
+            if (items.get(i).done)
+            {
+                cb.setPaintFlags(cb.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            } else
+            {
+                cb.setPaintFlags(0);
+            }
+
+            cb.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    items.get(j).done = cb.isChecked();
+                    if (cb.isChecked())
+                    {
+                        cb.setPaintFlags(cb.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                    } else
+                    {
+                        cb.setPaintFlags(0);
+                    }
+                    IO.save(WLActivity.lists, WLActivity.dir);
+                }
+            });
+            cb.setOnLongClickListener(new View.OnLongClickListener()
+            {
+                @Override
+                public boolean onLongClick(View v)
+                {
+                    items.remove(j);
+                    WLActivity.lists.get(WLActivity.current).items = items;
+                    cb.setTextColor(Color.parseColor("#FFFFFF"));
+                    IO.save(WLActivity.lists, WLActivity.dir);
+                    return true;
+                }
+            });
+            list.addView(view);
+        }
         sb.append("Tags: ");
         for (int i = 0; i < lists.get(current).tags.size(); i++)
         {
@@ -130,7 +177,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         ImageButton settings = (ImageButton) findViewById(R.id.settings);
         final Fab fab = (Fab) findViewById(R.id.fab);
         tagcv = (RelativeLayout) findViewById(R.id.tag);
-        list = (ListView) findViewById(R.id.listView);
+        list = (LinearLayout) findViewById(R.id.list);
         c = this;
 
         settings.setOnClickListener(new View.OnClickListener()
@@ -143,7 +190,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         });
 
         //set up fab (Floating Action Button)
-        fab.setFabDrawable(getResources().getDrawable(R.drawable.ic_add));
+        fab.setFabDrawable(getResources().getDrawable(R.drawable.ic_add_white));
         fab.setFabColor(getResources().getColor(R.color.fab));
         fab.setOnClickListener(new View.OnClickListener()
         {
@@ -215,6 +262,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         spin.setOnItemSelectedListener(this);
 
         ImageButton newlist = (ImageButton) findViewById(R.id.add);
+        ImageButton removelist = (ImageButton) findViewById(R.id.remove);
         newlist.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v)
@@ -255,6 +303,29 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
                         return true;
                     }
                 });
+            }
+        });
+        removelist.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v)
+            {
+                lists.remove(current);
+                //setup spinner
+                List<String> names = new ArrayList<String>();
+                for (int i = 0; i < lists.size(); i++)
+                {
+                    names.add(lists.get(i).name);
+                }
+                ArrayAdapter<String> sadapter = new ArrayAdapter<String>(c, R.layout.spinner_item, names);
+                sadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spin.setAdapter(sadapter);
+                current = spin.getSelectedItemPosition();
+                if(names.size() == 0)
+                {
+                    IO.save(lists, dir);
+                    list.removeAllViews();
+                    tagcv.removeAllViews();
+                }
             }
         });
     }
