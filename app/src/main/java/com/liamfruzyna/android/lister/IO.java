@@ -1,4 +1,4 @@
-package com.liamfruzyna.android.wishlister;
+package com.liamfruzyna.android.lister;
 
 import org.json.JSONArray;
 import org.json.JSONException;

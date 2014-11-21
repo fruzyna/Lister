@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.liamfruzyna.android.wishlister">
+    package="com.liamfruzyna.android.lister">
 
     <application
         android:allowBackup="true"
@@ -8,7 +8,7 @@
         android:label="@string/app_name"
         android:theme="@style/MyTheme">
         <activity
-            android:name="com.liamfruzyna.android.wishlister.WLActivity"
+            android:name="com.liamfruzyna.android.lister.WLActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -17,7 +17,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.liamfruzyna.android.wishlister.SettingsActivity"
+            android:name="com.liamfruzyna.android.lister.SettingsActivity"
             android:label="Settings">
 
         </activity>

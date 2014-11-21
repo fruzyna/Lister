@@ -1,4 +1,4 @@
-package com.liamfruzyna.android.wishlister;
+package com.liamfruzyna.android.lister;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

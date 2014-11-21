@@ -1,6 +1,10 @@
-package com.liamfruzyna.android.wishlister;
+package com.liamfruzyna.android.lister;
 
 import android.app.Activity;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +16,8 @@ import android.widget.TextView;
  */
 public class SettingsActivity extends Activity
 {
+    View v;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -20,7 +26,7 @@ public class SettingsActivity extends Activity
 
         LinearLayout layout = (LinearLayout) findViewById(R.id.settings);
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        View v = inflater.inflate(R.layout.subheader, null);
+        v = inflater.inflate(R.layout.subheader, null);
         layout.addView(v);
         TextView tv = (TextView) v.findViewById(R.id.textView);
         tv.setText("About");
@@ -30,8 +36,8 @@ public class SettingsActivity extends Activity
         layout.addView(v);
         TextView number = (TextView) v.findViewById(R.id.big);
         TextView description = (TextView) v.findViewById(R.id.little);
-        number.setText("Lister Version 1.1.0");
-        description.setText("Settings, Remove Items, UI Tweaks");
+        number.setText("Lister Version 1.2.3");
+        description.setText("Minor bug fixes");
 
         inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         v = inflater.inflate(R.layout.settings_text_item, null);
@@ -40,5 +46,16 @@ public class SettingsActivity extends Activity
         TextView link = (TextView) v.findViewById(R.id.little);
         by.setText("2014 Liam Fruzyna");
         link.setText("liamfruzyna.com");
+        v.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                String url = "http://liamfruzyna.com";
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        });
     }
 }

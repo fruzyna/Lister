@@ -13,7 +13,6 @@
         android:layout_height="192dp"
         android:background="?attr/colorPrimary"
         android:gravity="top"
-        android:textAppearance="?android:attr/textAppearanceLarge"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
@@ -28,10 +27,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
                 android:layout_centerVertical="true"
                 android:text="Lister"
-                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="20sp"
                 android:textColor="@android:color/black"/>
 
             <ImageButton
@@ -60,7 +59,7 @@
         android:elevation="8dp"
         android:orientation="vertical"/>
 
-    <com.liamfruzyna.android.wishlister.Fab
+    <com.liamfruzyna.android.lister.Fab
         android:id="@+id/fab"
         android:layout_width="72dp"
         android:layout_height="72dp"

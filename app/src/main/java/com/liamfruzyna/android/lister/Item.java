@@ -1,4 +1,4 @@
-package com.liamfruzyna.android.wishlister;
+package com.liamfruzyna.android.lister;
 
 /**
  * Created by mail929 on 11/6/14.
