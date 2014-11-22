@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="main">#FFC107</color>
-    <color name="dark_main">#FFA000</color>
-    <color name="stop_red">#ff5252</color>
-    <color name="go_green">#0f9d58</color>
-    <color name="button_blue">#2196f3</color>
-    <color name="pressed_button_blue">#1976d2</color>
-    <color name="fab">#03A9F4</color>
+    <color name="main">#2196F3</color>
+    <color name="dark_main">#1976D2</color>
+    <color name="fab">#FF5722</color>
     <color name="background_gray">#e3e3e3</color>
 </resources>

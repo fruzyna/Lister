@@ -224,22 +224,8 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
             {
                 if(lists.size() > 0)
                 {
-                    final LinearLayout popup = (LinearLayout) findViewById(R.id.popup);
-                    popup.removeAllViews();
-                    LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-                    View v = inflater.inflate(R.layout.new_item_item, null);
-                    popup.addView(v);
-                    Button add = (Button) v.findViewById(R.id.button);
-                    final EditText name = (EditText) v.findViewById(R.id.name);
-                    add.setOnClickListener(new View.OnClickListener()
-                    {
-                        public void onClick(View v)
-                        {
-                            lists.get(current).items.add(new Item(name.getText().toString(), false));
-                            popup.removeAllViews();
-                            updateList();
-                        }
-                    });
+                    DialogFragment dialog = new NewItemDialog();
+                    dialog.show(getFragmentManager(), "");
                 }
             }
         });
@@ -392,7 +378,37 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
                             ArrayAdapter<String> sadapter = new ArrayAdapter<String>(c, R.layout.spinner_item, names);
                             sadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                             spin.setAdapter(sadapter);
+                            spin.setSelection(lists.size()-1);
                             current = spin.getSelectedItemPosition();
+                            updateList();
+                        }
+                    })
+                    .setNegativeButton("CANCEL", new DialogInterface.OnClickListener()
+                    {
+                        public void onClick(DialogInterface dialog, int id)
+                        {
+                        }
+                    });
+            return builder.create();
+        }
+    }
+    public static class NewItemDialog extends DialogFragment
+    {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the Builder class for convenient dialog construction
+            LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
+            final View v = inflater.inflate(R.layout.new_item_item, null);
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage("Add a new item to " + lists.get(current).name)
+                    .setTitle("New Item")
+                    .setView(v)
+                    .setPositiveButton("CREATE", new DialogInterface.OnClickListener()
+                    {
+                        public void onClick(DialogInterface dialog, int id)
+                        {
+                            EditText name = (EditText) v.findViewById(R.id.name);
+                            lists.get(current).items.add(new Item(name.getText().toString(), false));
                             updateList();
                         }
                     })

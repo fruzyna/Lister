@@ -29,7 +29,7 @@
                 android:layout_alignParentTop="true"
                 android:text="Settings"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="#000000"/>
+                android:textColor="@android:color/white"/>
 
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
