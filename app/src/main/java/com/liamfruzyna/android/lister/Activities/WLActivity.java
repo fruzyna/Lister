@@ -1,30 +1,19 @@
-package com.liamfruzyna.android.lister;
+package com.liamfruzyna.android.lister.Activities;
 
-import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.FragmentManager;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -32,37 +21,37 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.liamfruzyna.android.lister.Data.DataContainer;
+import com.liamfruzyna.android.lister.Data.IO;
+import com.liamfruzyna.android.lister.Data.Item;
+import com.liamfruzyna.android.lister.Data.WishList;
+import com.liamfruzyna.android.lister.DialogFragments.NewItemDialog;
+import com.liamfruzyna.android.lister.DialogFragments.NewListDialog;
+import com.liamfruzyna.android.lister.DialogFragments.RemoveListDialog;
+import com.liamfruzyna.android.lister.Views.Fab;
+import com.liamfruzyna.android.lister.R;
+import com.liamfruzyna.android.lister.Notifications.ReminderService;
+
 import org.json.JSONException;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
 public class WLActivity extends ActionBarActivity implements AdapterView.OnItemSelectedListener
 {
-    static List<WishList> lists = new ArrayList<WishList>();
-    static List<Item> items = new ArrayList<Item>();
-    static int current = 0;
 
-    static String dir = "";
+    public static List<WishList> lists = new ArrayList<WishList>();
+    public static List<Item> items = new ArrayList<Item>();
+    public static int current = 0;
 
     static LinearLayout list;
     static Context c;
     static RelativeLayout tagcv;
-    EditText name;
-    EditText tags;
-    static LinearLayout popup;
     static Spinner spin;
 
-    public static void removeItem(int i)
-    {
-        lists.get(current).items.remove(i);
-        updateList();
-    }
-
+    //finds all the different tags there are
     public List<String> getTags()
     {
         List<String> tags = new ArrayList<String>();
@@ -87,6 +76,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         return tags;
     }
 
+    //rebuilds the list of items
     public static void updateList()
     {
         List<Item> temp = lists.get(current).items;
@@ -94,14 +84,14 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < temp.size(); i++)
         {
-            if (!temp.get(i).done)
+            if(!temp.get(i).done && !temp.get(i).archived)
             {
                 items.add(temp.get(i));
             }
         }
         for (int i = 0; i < temp.size(); i++)
         {
-            if (temp.get(i).done)
+            if(temp.get(i).done && !temp.get(i).archived)
             {
                 items.add(temp.get(i));
             }
@@ -116,7 +106,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
             final CheckBox cb = (CheckBox) view.findViewById(R.id.checkbox);
             cb.setText(items.get(i).item);
             cb.setChecked(items.get(i).done);
-            if (items.get(i).done)
+            if(items.get(i).done)
             {
                 cb.setPaintFlags(cb.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             } else
@@ -129,7 +119,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
                 @Override
                 public void onClick(View v)
                 {
-                    if(items.size() > 0)
+                    if(!items.get(j).archived)
                     {
                         items.get(j).done = cb.isChecked();
                         if (cb.isChecked())
@@ -139,7 +129,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
                         {
                             cb.setPaintFlags(0);
                         }
-                        IO.save(WLActivity.lists, WLActivity.dir);
+                        IO.save(WLActivity.lists);
                     }
                 }
             });
@@ -148,27 +138,19 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
                 @Override
                 public boolean onLongClick(View v)
                 {
-                    boolean found = false;
-                    for(int l = 0; l < items.size(); l++)
+                    if(!items.get(j).archived)
                     {
-                        if(items.get(l).item.equals(cb.getText().toString()))
-                        {
-                            found = true;
-                        }
-                    }
-                    if(found)
-                    {
-                        items.remove(j);
+                        items.get(j).archived = true;
                         WLActivity.lists.get(WLActivity.current).items = items;
                         cb.setTextColor(Color.parseColor("#FFFFFF"));
-                        IO.save(WLActivity.lists, WLActivity.dir);
+                        IO.save(WLActivity.lists);
                     }
                     else
                     {
-                        items.add(new Item(cb.getText().toString(), cb.isChecked()));
+                        items.get(j).archived = false;
                         WLActivity.lists.get(WLActivity.current).items = items;
                         cb.setTextColor(Color.parseColor("#000000"));
-                        IO.save(WLActivity.lists, WLActivity.dir);
+                        IO.save(WLActivity.lists);
                     }
                     return false;
                 }
@@ -176,7 +158,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
             list.addView(view);
         }
         sb.append("Tags: ");
-        for (int i = 0; i < lists.get(current).tags.size(); i++)
+        for(int i = 0; i < lists.get(current).tags.size(); i++)
         {
             sb.append(lists.get(current).tags.get(i) + " ");
         }
@@ -184,20 +166,21 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         tv.setText(sb.toString());
         tagcv.removeAllViews();
         tagcv.addView(tv);
-        IO.save(lists, dir);
+        IO.save(lists);
     }
 
+    //main method that is run when app is started
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wl);
         c = this;
-        dir = getFilesDir().toString();
+        DataContainer.dir = getFilesDir().toString();
 
         try
         {
-            lists = IO.load(dir);
+            lists = IO.load();
         } catch (JSONException e)
         {
             e.printStackTrace();
@@ -298,6 +281,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         });
     }
 
+    //for notifications
     public static void startAlarm(GregorianCalendar date)
     {
         AlarmManager alarmManager = (AlarmManager) c.getSystemService(c.ALARM_SERVICE);
@@ -308,6 +292,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         alarmManager.set(AlarmManager.RTC, when, pendingIntent);
     }
 
+    //updates list when new list is selected
     @Override
     public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id)
     {
@@ -315,127 +300,5 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         updateList();
     }
 
-    @Override
-    public void onNothingSelected(AdapterView<?> parent)
-    {
-    }
-
-    @Override
-    public void onBackPressed()
-    {
-        popup = (LinearLayout) findViewById(R.id.popup);
-        popup.removeAllViews();
-    }
-
-
-    public static class RemoveListDialog extends DialogFragment
-    {
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the Builder class for convenient dialog construction
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage("Are you sure you want to delete " + lists.get(current).name + "? You can never get it back.")
-                    .setTitle("Delete List?")
-                    .setPositiveButton("DELETE", new DialogInterface.OnClickListener()
-                    {
-                        public void onClick(DialogInterface dialog, int id)
-                        {
-                            lists.remove(current);
-                            //setup spinner
-                            List<String> names = new ArrayList<String>();
-                            for (int i = 0; i < lists.size(); i++)
-                            {
-                                names.add(lists.get(i).name);
-                            }
-                            ArrayAdapter<String> sadapter = new ArrayAdapter<String>(c, R.layout.spinner_item, names);
-                            sadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spin.setAdapter(sadapter);
-                            current = spin.getSelectedItemPosition();
-                            if (names.size() == 0)
-                            {
-                                IO.save(lists, dir);
-                                list.removeAllViews();
-                                tagcv.removeAllViews();
-                            }
-                        }
-                    })
-                    .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                        }
-                    });
-            return builder.create();
-        }
-    }
-    public static class NewListDialog extends DialogFragment
-    {
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the Builder class for convenient dialog construction
-            LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
-            final View v = inflater.inflate(R.layout.new_list_item, null);
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage("Type the new list's name and click create to make a new list.")
-                    .setTitle("New List")
-                    .setView(v)
-                    .setPositiveButton("CREATE", new DialogInterface.OnClickListener()
-                    {
-                        public void onClick(DialogInterface dialog, int id)
-                        {
-                            EditText name = (EditText) v.findViewById(R.id.name);
-                            EditText tags = (EditText) v.findViewById(R.id.tags);
-                            lists.add(new WishList(name.getText().toString(), new ArrayList<String>(Arrays.asList(tags.getText().toString().split(" ")))));
-                            spin = (Spinner) getActivity().findViewById(R.id.spinner);
-                            //creates a list of events level and distance to fill out the spinner
-                            List<String> names = new ArrayList<String>();
-                            for (int i = 0; i < lists.size(); i++)
-                            {
-                                names.add(lists.get(i).name);
-                            }
-                            //setup spinner
-                            ArrayAdapter<String> sadapter = new ArrayAdapter<String>(c, R.layout.spinner_item, names);
-                            sadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spin.setAdapter(sadapter);
-                            spin.setSelection(lists.size()-1);
-                            current = spin.getSelectedItemPosition();
-                            updateList();
-                        }
-                    })
-                    .setNegativeButton("CANCEL", new DialogInterface.OnClickListener()
-                    {
-                        public void onClick(DialogInterface dialog, int id)
-                        {
-                        }
-                    });
-            return builder.create();
-        }
-    }
-    public static class NewItemDialog extends DialogFragment
-    {
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the Builder class for convenient dialog construction
-            LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
-            final View v = inflater.inflate(R.layout.new_item_item, null);
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage("Add a new item to " + lists.get(current).name)
-                    .setTitle("New Item")
-                    .setView(v)
-                    .setPositiveButton("CREATE", new DialogInterface.OnClickListener()
-                    {
-                        public void onClick(DialogInterface dialog, int id)
-                        {
-                            EditText name = (EditText) v.findViewById(R.id.name);
-                            lists.get(current).items.add(new Item(name.getText().toString(), false));
-                            updateList();
-                        }
-                    })
-                    .setNegativeButton("CANCEL", new DialogInterface.OnClickListener()
-                    {
-                        public void onClick(DialogInterface dialog, int id)
-                        {
-                        }
-                    });
-            return builder.create();
-        }
-    }
+    @Override public void onNothingSelected(AdapterView<?> parent){}
 }

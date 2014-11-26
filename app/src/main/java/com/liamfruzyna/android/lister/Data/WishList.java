@@ -1,4 +1,6 @@
-package com.liamfruzyna.android.lister;
+package com.liamfruzyna.android.lister.Data;
+
+import com.liamfruzyna.android.lister.Data.Item;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,4 +26,5 @@ public class WishList
         this.name = name;
         this.tags = tags;
     }
+
 }

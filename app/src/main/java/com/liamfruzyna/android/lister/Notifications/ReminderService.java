@@ -1,4 +1,4 @@
-package com.liamfruzyna.android.lister;
+package com.liamfruzyna.android.lister.Notifications;
 
 import android.app.IntentService;
 import android.app.Notification;
@@ -7,7 +7,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
-import java.util.GregorianCalendar;
+import com.liamfruzyna.android.lister.Activities.WLActivity;
+import com.liamfruzyna.android.lister.R;
 
 /**
  * Created by mail929 on 11/25/14.

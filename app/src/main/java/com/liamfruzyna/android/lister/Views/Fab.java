@@ -1,4 +1,4 @@
-package com.liamfruzyna.android.lister;
+package com.liamfruzyna.android.lister.Views;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

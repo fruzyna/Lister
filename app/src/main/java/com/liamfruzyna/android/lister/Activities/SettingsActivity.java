@@ -1,4 +1,4 @@
-package com.liamfruzyna.android.lister;
+package com.liamfruzyna.android.lister.Activities;
 
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.liamfruzyna.android.lister.R;
 
 /**
  * Activity for customizing app settings.

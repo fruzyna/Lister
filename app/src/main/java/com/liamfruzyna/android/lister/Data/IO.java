@@ -1,4 +1,6 @@
-package com.liamfruzyna.android.lister;
+package com.liamfruzyna.android.lister.Data;
+
+import com.liamfruzyna.android.lister.Activities.WLActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,9 +21,10 @@ import java.util.List;
  */
 public class IO
 {
+    static String fileDir = DataContainer.dir;
 
     //turns app data into a string of json data
-    public static void save(List<WishList> lists, String fileDir)
+    public static void save(List<WishList> lists)
     {
         try
         {
@@ -37,6 +40,7 @@ public class IO
                     JSONObject jitem = new JSONObject();
                     jitem.put("item", items.get(j).item);
                     jitem.put("done", items.get(j).done);
+                    jitem.put("archived", items.get(j).archived);
                     jitems.put(jitem);
                 }
                 jlist.put("items", jitems);
@@ -49,7 +53,7 @@ public class IO
                 jlist.put("tags", jtags);
                 jlists.put(jlist);
             }
-            writeToFile(fileDir, jlists.toString());
+            writeToFile(jlists.toString());
         } catch (JSONException e)
         {
             e.printStackTrace();
@@ -57,10 +61,10 @@ public class IO
     }
 
     //converts a string of json data to useable lists
-    public static List<WishList> load(String fileDir) throws JSONException, MalformedURLException
+    public static List<WishList> load() throws JSONException, MalformedURLException
     {
         List<WishList> lists = new ArrayList<WishList>();
-        JSONArray jlists = new JSONArray(readFromFile(fileDir));
+        JSONArray jlists = new JSONArray(readFromFile());
         for (int i = 0; i < jlists.length(); i++)
         {
             JSONObject jlist = jlists.getJSONObject(i);
@@ -68,7 +72,7 @@ public class IO
             JSONArray jitems = jlist.getJSONArray("items");
             for (int j = 0; j < jitems.length(); j++)
             {
-                Item item = new Item(jitems.getJSONObject(j).getString("item"), jitems.getJSONObject(j).getBoolean("done"));
+                Item item = new Item(jitems.getJSONObject(j).getString("item"), jitems.getJSONObject(j).getBoolean("done"), jitems.getJSONObject(j).getBoolean("archived"));
                 items.add(item);
             }
             List<String> tags = new ArrayList<String>();
@@ -83,7 +87,7 @@ public class IO
     }
 
     //takes a string of data and writes it to the save file
-    private static void writeToFile(String fileDir, String data)
+    private static void writeToFile(String data)
     {
         File file = new File(fileDir, "data.json");
         try
@@ -98,7 +102,7 @@ public class IO
     }
 
     //gets a string of data from the save file
-    public static String readFromFile(String fileDir)
+    public static String readFromFile()
     {
         File file = new File(fileDir, "data.json");
         if (!file.exists())

@@ -1,18 +1,22 @@
-package com.liamfruzyna.android.lister;
+package com.liamfruzyna.android.lister.Data;
+
+import com.liamfruzyna.android.lister.Activities.WLActivity;
 
 import java.util.GregorianCalendar;
 
 public class Item
 {
-    GregorianCalendar date;
-    Boolean done;
-    String item;
+    public GregorianCalendar date;
+    public Boolean done;
+    public Boolean archived;
+    public String item;
 
-    public Item(String item, Boolean done)
+    public Item(String item, Boolean done, Boolean archived)
     {
         this.item = item;
         findDate();
         this.done = done;
+        this.archived = archived;
     }
 
     public void createNotification()

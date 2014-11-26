@@ -59,7 +59,7 @@
         android:elevation="8dp"
         android:orientation="vertical"/>
 
-    <com.liamfruzyna.android.lister.Fab
+    <com.liamfruzyna.android.lister.Views.Fab
         android:id="@+id/fab"
         android:layout_width="72dp"
         android:layout_height="72dp"
