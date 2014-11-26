@@ -1,16 +1,22 @@
 package com.liamfruzyna.android.lister;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +37,8 @@ import org.json.JSONException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class WLActivity extends ActionBarActivity implements AdapterView.OnItemSelectedListener
@@ -184,7 +192,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wl);
-
+        c = this;
         dir = getFilesDir().toString();
 
         try
@@ -203,7 +211,6 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         final Fab fab = (Fab) findViewById(R.id.fab);
         tagcv = (RelativeLayout) findViewById(R.id.tag);
         list = (LinearLayout) findViewById(R.id.list);
-        c = this;
 
         settings.setOnClickListener(new View.OnClickListener()
         {
@@ -289,6 +296,16 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
                 }
             }
         });
+    }
+
+    public static void startAlarm(GregorianCalendar date)
+    {
+        AlarmManager alarmManager = (AlarmManager) c.getSystemService(c.ALARM_SERVICE);
+        long when = date.getTimeInMillis();
+        System.out.println("Notification added for: " + when + " thats " + (when - System.currentTimeMillis()) + " ms from now");
+        Intent intent = new Intent(c, ReminderService.class);
+        PendingIntent pendingIntent = PendingIntent.getService(c, 0, intent, 0);
+        alarmManager.set(AlarmManager.RTC, when, pendingIntent);
     }
 
     @Override
