@@ -5,12 +5,20 @@ import com.liamfruzyna.android.lister.Activities.WLActivity;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+/*this is the object for items that are added into lists
+    Boolean done - whether the item is checked off or not
+    Boolean archived - whether the item has been hidden
+            this will be ignored if the setting is checked
+            but set grey
+    String item - the text in the item
+*/
 public class Item
 {
     public Boolean done;
     public Boolean archived;
     public String item;
 
+    //the constructor if you don't know what this is don't ask me
     public Item(String item, Boolean done, Boolean archived)
     {
         this.item = item;
@@ -19,6 +27,8 @@ public class Item
         this.archived = archived;
     }
 
+    //looks for dates in the list items and creates a notification if there is
+    //TODO actually figure out notifications
     public void findDate()
     {
         String s = item;
@@ -102,6 +112,7 @@ public class Item
         }
     }
 
+    //checks if the string found that could be a date is a number or not
     public static boolean isInt(String s)
     {
         try{

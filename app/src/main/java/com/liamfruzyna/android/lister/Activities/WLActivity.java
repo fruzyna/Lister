@@ -49,6 +49,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     static Context c;
     static RelativeLayout tagcv;
     static Spinner spin;
+    public static Fab fab;
 
     //finds all the different tags there are
     public List<String> getTags()
@@ -127,6 +128,11 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
                 cb.setPaintFlags(0);
             }
 
+            if(items.get(i).archived)
+            {
+                cb.setTextColor(Color.parseColor("#808080"));
+            }
+
             cb.setOnClickListener(new View.OnClickListener()
             {
                 @Override
@@ -155,7 +161,14 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
                     {
                         items.get(j).archived = true;
                         WLActivity.lists.get(WLActivity.current).items = items;
-                        cb.setTextColor(Color.parseColor("#FFFFFF"));
+                        if(DataContainer.showArchived)
+                        {
+                            cb.setTextColor(Color.parseColor("#808080"));
+                        }
+                        else
+                        {
+                            cb.setTextColor(Color.parseColor("#FFFFFF"));
+                        }
                         IO.save(WLActivity.lists);
                     }
                     else
@@ -204,7 +217,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
 
         //init view widgets
         ImageButton settings = (ImageButton) findViewById(R.id.settings);
-        final Fab fab = (Fab) findViewById(R.id.fab);
+        fab = (Fab) findViewById(R.id.fab);
         tagcv = (RelativeLayout) findViewById(R.id.tag);
         list = (LinearLayout) findViewById(R.id.list);
 
@@ -229,6 +242,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
                 {
                     DialogFragment dialog = new NewItemDialog();
                     dialog.show(getFragmentManager(), "");
+                    fab.hideFab();
                 }
             }
         });
@@ -292,8 +306,11 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
                 }
             }
         });
+
+        updateList();
     }
 
+    //creates the notification
     public static void startAlarm(Calendar calendar)
     {
         AlarmManager alarmManager = (AlarmManager) c.getSystemService(c.ALARM_SERVICE);
@@ -303,7 +320,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         alarmManager.set(AlarmManager.RTC, when, pendingIntent);
     }
 
-    //updates list when new list is selected
+    //updates list when new list is selected in spinner
     @Override
     public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id)
     {
@@ -311,5 +328,6 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         updateList();
     }
 
+    //when nothing is selected in the spinner
     @Override public void onNothingSelected(AdapterView<?> parent){}
 }

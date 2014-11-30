@@ -41,6 +41,7 @@ public class SettingsActivity extends Activity
         tv = (TextView) v.findViewById(R.id.textView);
         tv.setText("Show Archived Items");
         final CheckBox cb = (CheckBox) v.findViewById(R.id.checkBox);
+        cb.setChecked(DataContainer.showArchived);
         cb.setOnClickListener(new View.OnClickListener()
         {
             @Override
