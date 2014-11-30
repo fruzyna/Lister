@@ -8,9 +8,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.liamfruzyna.android.lister.Data.DataContainer;
 import com.liamfruzyna.android.lister.R;
 
 /**
@@ -31,6 +33,27 @@ public class SettingsActivity extends Activity
         v = inflater.inflate(R.layout.subheader, null);
         layout.addView(v);
         TextView tv = (TextView) v.findViewById(R.id.textView);
+        tv.setText("General");
+
+        inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        v = inflater.inflate(R.layout.settings_checkbox, null);
+        layout.addView(v);
+        tv = (TextView) v.findViewById(R.id.textView);
+        tv.setText("Show Archived Items");
+        final CheckBox cb = (CheckBox) v.findViewById(R.id.checkBox);
+        cb.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                DataContainer.showArchived = cb.isChecked();
+            }
+        });
+
+        inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        v = inflater.inflate(R.layout.subheader, null);
+        layout.addView(v);
+        tv = (TextView) v.findViewById(R.id.textView);
         tv.setText("About");
 
         inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);

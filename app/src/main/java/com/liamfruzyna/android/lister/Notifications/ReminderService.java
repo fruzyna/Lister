@@ -11,27 +11,28 @@ import com.liamfruzyna.android.lister.Activities.WLActivity;
 import com.liamfruzyna.android.lister.R;
 
 /**
- * Created by mail929 on 11/25/14.
+ * Created by mail929 on 11/26/14.
  */
 public class ReminderService extends IntentService
 {
     private static final int NOTIF_ID = 1;
 
-    public ReminderService(){
+    public ReminderService()
+    {
         super("ReminderService");
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
+    protected void onHandleIntent(Intent intent)
+    {
         NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        long when = System.currentTimeMillis();         // notification time
+        long when = System.currentTimeMillis();
         Notification notification = new Notification(R.drawable.ic_launcher, "reminder", when);
         notification.defaults |= Notification.DEFAULT_SOUND;
         notification.flags |= notification.FLAG_AUTO_CANCEL;
         Intent notificationIntent = new Intent(this, WLActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent , 0);
-        notification.setLatestEventInfo(getApplicationContext(), "Test Notification", "this is a test", contentIntent);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        notification.setLatestEventInfo(getApplicationContext(), "It's about time", "You should open the app now", contentIntent);
         nm.notify(NOTIF_ID, notification);
     }
-
 }

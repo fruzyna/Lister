@@ -30,13 +30,12 @@ import com.liamfruzyna.android.lister.DialogFragments.NewListDialog;
 import com.liamfruzyna.android.lister.DialogFragments.RemoveListDialog;
 import com.liamfruzyna.android.lister.Views.Fab;
 import com.liamfruzyna.android.lister.R;
-import com.liamfruzyna.android.lister.Notifications.ReminderService;
 
 import org.json.JSONException;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
+import java.util.Calendar;
 import java.util.List;
 
 public class WLActivity extends ActionBarActivity implements AdapterView.OnItemSelectedListener
@@ -84,16 +83,30 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < temp.size(); i++)
         {
-            if(!temp.get(i).done && !temp.get(i).archived)
+            if(!temp.get(i).done)
             {
-                items.add(temp.get(i));
+                if(DataContainer.showArchived)
+                {
+                    items.add(temp.get(i));
+                }
+                else if(!temp.get(i).archived)
+                {
+                    items.add(temp.get(i));
+                }
             }
         }
         for (int i = 0; i < temp.size(); i++)
         {
-            if(temp.get(i).done && !temp.get(i).archived)
+            if(temp.get(i).done)
             {
-                items.add(temp.get(i));
+                if(DataContainer.showArchived)
+                {
+                    items.add(temp.get(i));
+                }
+                else if(!temp.get(i).archived)
+                {
+                    items.add(temp.get(i));
+                }
             }
         }
         list.removeAllViews();
@@ -281,13 +294,11 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         });
     }
 
-    //for notifications
-    public static void startAlarm(GregorianCalendar date)
+    public static void startAlarm(Calendar calendar)
     {
         AlarmManager alarmManager = (AlarmManager) c.getSystemService(c.ALARM_SERVICE);
-        long when = date.getTimeInMillis();
-        System.out.println("Notification added for: " + when + " thats " + (when - System.currentTimeMillis()) + " ms from now");
-        Intent intent = new Intent(c, ReminderService.class);
+        long when = calendar.getTimeInMillis();         // notification time
+        Intent intent = new Intent(c, WLActivity.class);
         PendingIntent pendingIntent = PendingIntent.getService(c, 0, intent, 0);
         alarmManager.set(AlarmManager.RTC, when, pendingIntent);
     }
