@@ -10,4 +10,5 @@ public class DataContainer
 {
     public static String dir = "";
     public static Boolean showArchived = false;
+    public static Boolean showNotifications = true;
 }

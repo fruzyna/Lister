@@ -21,6 +21,7 @@ import com.liamfruzyna.android.lister.R;
 public class SettingsActivity extends Activity
 {
     View v;
+    CheckBox cb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -40,7 +41,7 @@ public class SettingsActivity extends Activity
         layout.addView(v);
         tv = (TextView) v.findViewById(R.id.textView);
         tv.setText("Show Archived Items");
-        final CheckBox cb = (CheckBox) v.findViewById(R.id.checkBox);
+        cb = (CheckBox) v.findViewById(R.id.checkBox);
         cb.setChecked(DataContainer.showArchived);
         cb.setOnClickListener(new View.OnClickListener()
         {
@@ -48,6 +49,22 @@ public class SettingsActivity extends Activity
             public void onClick(View v)
             {
                 DataContainer.showArchived = cb.isChecked();
+            }
+        });
+
+        inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        v = inflater.inflate(R.layout.settings_checkbox, null);
+        layout.addView(v);
+        tv = (TextView) v.findViewById(R.id.textView);
+        tv.setText("Show Notifications for Items with Dates and Times");
+        cb = (CheckBox) v.findViewById(R.id.checkBox);
+        cb.setChecked(DataContainer.showNotifications);
+        cb.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                DataContainer.showNotifications = cb.isChecked();
             }
         });
 

@@ -2,12 +2,14 @@ package com.liamfruzyna.android.lister.Activities;
 
 import android.app.AlarmManager;
 import android.app.DialogFragment;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +30,7 @@ import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.DialogFragments.NewItemDialog;
 import com.liamfruzyna.android.lister.DialogFragments.NewListDialog;
 import com.liamfruzyna.android.lister.DialogFragments.RemoveListDialog;
+import com.liamfruzyna.android.lister.Notifications.NotifyService;
 import com.liamfruzyna.android.lister.Views.Fab;
 import com.liamfruzyna.android.lister.R;
 
@@ -46,7 +49,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     public static int current = 0;
 
     static LinearLayout list;
-    static Context c;
+    public static Context c;
     static RelativeLayout tagcv;
     static Spinner spin;
     public static Fab fab;
@@ -193,6 +196,11 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         tagcv.removeAllViews();
         tagcv.addView(tv);
         IO.save(lists);
+    }
+
+    //sets up the notifcation with data provided
+    public static void createNotification(String item, Calendar date)
+    {
     }
 
     //main method that is run when app is started

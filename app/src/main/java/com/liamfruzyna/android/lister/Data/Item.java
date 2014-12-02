@@ -1,9 +1,11 @@
 package com.liamfruzyna.android.lister.Data;
 
+import android.provider.ContactsContract;
+
 import com.liamfruzyna.android.lister.Activities.WLActivity;
+import com.liamfruzyna.android.lister.Notifications.AlarmTask;
 
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 /*this is the object for items that are added into lists
     Boolean done - whether the item is checked off or not
@@ -22,26 +24,29 @@ public class Item
     public Item(String item, Boolean done, Boolean archived)
     {
         this.item = item;
-        findDate();
+        if(DataContainer.showNotifications && !archived)
+        {
+            findDate();
+        }
         this.done = done;
         this.archived = archived;
     }
 
     //looks for dates in the list items and creates a notification if there is
-    //TODO actually figure out notifications
     public void findDate()
     {
         String s = item;
         boolean found = false;
-        int hour = 0;
+        int hour = 12;
         int min = 0;
         if(s.indexOf(":") != -1)
         {
             found = true;
             s = s.substring(0, s.indexOf(":"));
+            s = s.substring(1 + s.lastIndexOf(" "));
             if(isInt(s))
             {
-                hour = Integer.parseInt(s.substring(1 + s.lastIndexOf(" ")));
+                hour = Integer.parseInt(s);
             }
             else
             {
@@ -67,9 +72,10 @@ public class Item
         {
             found = true;
             s = s.substring(0, s.indexOf("/"));
+            s = s.substring(1 + s.lastIndexOf(" "));
             if(isInt(s))
             {
-                month = Integer.parseInt(s.substring(1 + s.lastIndexOf(" ")));
+                month = Integer.parseInt(s) - 1;
             }
             else
             {
@@ -77,9 +83,10 @@ public class Item
             }
             s = item;
             s = s.substring(1 + s.indexOf("/"));
+            s = s.substring(0, s.indexOf("/"));
             if(isInt(s))
             {
-                day = Integer.parseInt(s.substring(0, s.indexOf("/")));
+                day = Integer.parseInt(s);
             }
             else
             {
@@ -88,27 +95,29 @@ public class Item
             s = item;
             s = s.substring(1 + s.indexOf("/"));
             s = s.substring(1 + s.indexOf("/"));
-            s = s.substring(0, 2);
+            s = s.substring(0, 4);
             if(isInt(s))
             {
                 year = Integer.parseInt(s);
             }
+            else if(isInt(s.substring(0, 2)))
+            {
+                year = Integer.parseInt(s.substring(0, 2));
+            }
             else
             {
                 found = false;
             }
-            year += 100;
-            if(year > 2000)
+            if(year < 2000)
             {
-                year -= 2000;
+                year += 2000;
             }
-            System.out.println(month + "/" + day + "/" + year + " " + hour + ":" + min);
         }
         if(found)
         {
             Calendar calendar =  Calendar.getInstance();
-            calendar.set(year, month, day, hour, min);
-            WLActivity.startAlarm(calendar);
+            calendar.set(year, month, day, hour, min, 0);
+            new AlarmTask(WLActivity.c, calendar, (long)(Math.random()*100), item);
         }
     }
 
