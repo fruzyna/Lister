@@ -299,6 +299,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         {
             public void onClick(View v)
             {
+                fab.hideFab();
                 DialogFragment dialog = new NewListDialog();
                 dialog.show(getFragmentManager(), "");
             }

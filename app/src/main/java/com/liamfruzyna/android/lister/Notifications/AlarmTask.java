@@ -45,6 +45,7 @@ public class AlarmTask implements Runnable
         System.out.println("Setting Notification");
         System.out.println("At " + date.getTime());
         System.out.println("In " + (date.getTimeInMillis() - System.currentTimeMillis())/1000 + "s");
+        System.out.println("-----------------------");
         // Sets an alarm - note this alarm will be lost if the phone is turned off and on again
         am.set(AlarmManager.RTC, date.getTimeInMillis(), pendingIntent);
     }
