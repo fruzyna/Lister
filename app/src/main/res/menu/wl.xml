@@ -1,9 +1,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".WLActivity">
-    <item
-        android:id="@+id/newlist"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="New List" />
+      xmlns:yourapp="http://schemas.android.com/apk/res-auto" >
+    <!-- Search, should appear as action button -->
+    <item android:id="@+id/action_settings"
+          android:icon="@drawable/ic_settings"
+          android:title="Settings"
+          yourapp:showAsAction="ifRoom"  />
 </menu>

@@ -11,7 +11,11 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -82,125 +86,123 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     //rebuilds the list of items
     public static void updateList()
     {
-        List<Item> temp = lists.get(current).items;
-        items = new ArrayList<Item>();
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < temp.size(); i++)
+        if(lists.size() > 0)
         {
-            if(!temp.get(i).done)
+            List<Item> temp = lists.get(current).items;
+            items = new ArrayList<Item>();
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < temp.size(); i++)
             {
-                if(DataContainer.showArchived)
+                if(!temp.get(i).done)
                 {
-                    items.add(temp.get(i));
-                }
-                else if(!temp.get(i).archived)
-                {
-                    items.add(temp.get(i));
-                }
-            }
-        }
-        for (int i = 0; i < temp.size(); i++)
-        {
-            if(temp.get(i).done)
-            {
-                if(DataContainer.showArchived)
-                {
-                    items.add(temp.get(i));
-                }
-                else if(!temp.get(i).archived)
-                {
-                    items.add(temp.get(i));
-                }
-            }
-        }
-        list.removeAllViews();
-        LayoutInflater inflater = LayoutInflater.from(c);
-        for (int i = 0; i < items.size(); i++)
-        {
-            final int j = i;
-            View view = inflater.inflate(R.layout.item, list, false);
-            //init checkbox and set text
-            final CheckBox cb = (CheckBox) view.findViewById(R.id.checkbox);
-            cb.setText(items.get(i).item);
-            cb.setChecked(items.get(i).done);
-            if(items.get(i).done)
-            {
-                cb.setPaintFlags(cb.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            } else
-            {
-                cb.setPaintFlags(0);
-            }
-
-            if(items.get(i).archived)
-            {
-                cb.setTextColor(Color.parseColor("#808080"));
-            }
-
-            cb.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    if(!items.get(j).archived)
+                    if(DataContainer.showArchived)
                     {
-                        items.get(j).done = cb.isChecked();
-                        if (cb.isChecked())
-                        {
-                            cb.setPaintFlags(cb.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                        } else
-                        {
-                            cb.setPaintFlags(0);
-                        }
-                        IO.save(WLActivity.lists);
+                        items.add(temp.get(i));
+                    }
+                    else if(!temp.get(i).archived)
+                    {
+                        items.add(temp.get(i));
                     }
                 }
-            });
-            cb.setOnLongClickListener(new View.OnLongClickListener()
+            }
+            for (int i = 0; i < temp.size(); i++)
             {
-                @Override
-                public boolean onLongClick(View v)
+                if(temp.get(i).done)
                 {
-                    if(!items.get(j).archived)
+                    if(DataContainer.showArchived)
                     {
-                        items.get(j).archived = true;
-                        WLActivity.lists.get(WLActivity.current).items = items;
-                        if(DataContainer.showArchived)
+                        items.add(temp.get(i));
+                    }
+                    else if(!temp.get(i).archived)
+                    {
+                        items.add(temp.get(i));
+                    }
+                }
+            }
+            list.removeAllViews();
+            LayoutInflater inflater = LayoutInflater.from(c);
+            for (int i = 0; i < items.size(); i++)
+            {
+                final int j = i;
+                View view = inflater.inflate(R.layout.item, list, false);
+                //init checkbox and set text
+                final CheckBox cb = (CheckBox) view.findViewById(R.id.checkbox);
+                cb.setText(items.get(i).item);
+                cb.setChecked(items.get(i).done);
+                if(items.get(i).done)
+                {
+                    cb.setPaintFlags(cb.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                } else
+                {
+                    cb.setPaintFlags(0);
+                }
+
+                if(items.get(i).archived)
+                {
+                    cb.setTextColor(Color.parseColor("#808080"));
+                }
+
+                cb.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        if(!items.get(j).archived)
                         {
-                            cb.setTextColor(Color.parseColor("#808080"));
+                            items.get(j).done = cb.isChecked();
+                            if (cb.isChecked())
+                            {
+                                cb.setPaintFlags(cb.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                            } else
+                            {
+                                cb.setPaintFlags(0);
+                            }
+                            IO.save(WLActivity.lists);
+                        }
+                    }
+                });
+                cb.setOnLongClickListener(new View.OnLongClickListener()
+                {
+                    @Override
+                    public boolean onLongClick(View v)
+                    {
+                        if(!items.get(j).archived)
+                        {
+                            items.get(j).archived = true;
+                            WLActivity.lists.get(WLActivity.current).items = items;
+                            if(DataContainer.showArchived)
+                            {
+                                cb.setTextColor(Color.parseColor("#808080"));
+                            }
+                            else
+                            {
+                                cb.setTextColor(Color.parseColor("#FFFFFF"));
+                            }
+                            IO.save(WLActivity.lists);
                         }
                         else
                         {
-                            cb.setTextColor(Color.parseColor("#FFFFFF"));
+                            items.get(j).archived = false;
+                            WLActivity.lists.get(WLActivity.current).items = items;
+                            cb.setTextColor(Color.parseColor("#000000"));
+                            IO.save(WLActivity.lists);
                         }
-                        IO.save(WLActivity.lists);
+                        return false;
                     }
-                    else
-                    {
-                        items.get(j).archived = false;
-                        WLActivity.lists.get(WLActivity.current).items = items;
-                        cb.setTextColor(Color.parseColor("#000000"));
-                        IO.save(WLActivity.lists);
-                    }
-                    return false;
-                }
-            });
-            list.addView(view);
+                });
+                list.addView(view);
+            }
+            sb.append("Tags: ");
+            for(int i = 0; i < lists.get(current).tags.size(); i++)
+            {
+                sb.append(lists.get(current).tags.get(i) + " ");
+            }
+            TextView tv = new TextView(c);
+            tv.setText(sb.toString());
+            tagcv.removeAllViews();
+            tagcv.addView(tv);
+            IO.save(lists);
         }
-        sb.append("Tags: ");
-        for(int i = 0; i < lists.get(current).tags.size(); i++)
-        {
-            sb.append(lists.get(current).tags.get(i) + " ");
-        }
-        TextView tv = new TextView(c);
-        tv.setText(sb.toString());
-        tagcv.removeAllViews();
-        tagcv.addView(tv);
-        IO.save(lists);
-    }
-
-    //sets up the notifcation with data provided
-    public static void createNotification(String item, Calendar date)
-    {
     }
 
     //main method that is run when app is started
@@ -211,6 +213,9 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         setContentView(R.layout.activity_wl);
         c = this;
         DataContainer.dir = getFilesDir().toString();
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         try
         {
@@ -224,19 +229,9 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         }
 
         //init view widgets
-        ImageButton settings = (ImageButton) findViewById(R.id.settings);
         fab = (Fab) findViewById(R.id.fab);
         tagcv = (RelativeLayout) findViewById(R.id.tag);
         list = (LinearLayout) findViewById(R.id.list);
-
-        settings.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
-                Intent goSettings = new Intent(WLActivity.this, SettingsActivity.class);
-                WLActivity.this.startActivity(goSettings);
-            }
-        });
 
         //set up fab (Floating Action Button)
         fab.setFabDrawable(getResources().getDrawable(R.drawable.ic_add_white));
@@ -339,4 +334,25 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
 
     //when nothing is selected in the spinner
     @Override public void onNothingSelected(AdapterView<?> parent){}
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu items for use in the action bar
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.wl, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                Intent goSettings = new Intent(this, SettingsActivity.class);
+                this.startActivity(goSettings);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }
