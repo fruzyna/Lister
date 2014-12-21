@@ -1,20 +1,15 @@
 package com.liamfruzyna.android.lister.Activities;
 
-import android.app.AlarmManager;
 import android.app.DialogFragment;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -31,10 +26,10 @@ import com.liamfruzyna.android.lister.Data.DataContainer;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.Item;
 import com.liamfruzyna.android.lister.Data.WishList;
+import com.liamfruzyna.android.lister.DialogFragments.EditTagsDialog;
 import com.liamfruzyna.android.lister.DialogFragments.NewItemDialog;
 import com.liamfruzyna.android.lister.DialogFragments.NewListDialog;
 import com.liamfruzyna.android.lister.DialogFragments.RemoveListDialog;
-import com.liamfruzyna.android.lister.Notifications.NotifyService;
 import com.liamfruzyna.android.lister.Views.Fab;
 import com.liamfruzyna.android.lister.R;
 
@@ -42,7 +37,6 @@ import org.json.JSONException;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class WLActivity extends ActionBarActivity implements AdapterView.OnItemSelectedListener
@@ -57,31 +51,6 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     static RelativeLayout tagcv;
     static Spinner spin;
     public static Fab fab;
-
-    //finds all the different tags there are
-    public List<String> getTags()
-    {
-        List<String> tags = new ArrayList<String>();
-        for(int i = 0; i < lists.size(); i++)
-        {
-            for(int j = 0; j < lists.get(i).tags.size(); j++)
-            {
-                boolean found = false;
-                for(int l = 0; l < tags.size(); l++)
-                {
-                    if(tags.get(l).equals(lists.get(i).tags.get(j)))
-                    {
-                        found = true;
-                    }
-                }
-                if(!found)
-                {
-                    tags.add(lists.get(i).tags.get(j));
-                }
-            }
-        }
-        return tags;
-    }
 
     //rebuilds the list of items
     public static void updateList()
@@ -233,6 +202,20 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         tagcv = (RelativeLayout) findViewById(R.id.tag);
         list = (LinearLayout) findViewById(R.id.list);
 
+        //sets listener for editing tags
+        tagcv.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v)
+            {
+                if(lists.size() > 0)
+                {
+                    DialogFragment dialog = new EditTagsDialog();
+                    dialog.show(getFragmentManager(), "");
+                }
+                return false;
+            }
+        });
+
         //set up fab (Floating Action Button)
         fab.setFabDrawable(getResources().getDrawable(R.drawable.ic_add_white));
         fab.setFabColor(getResources().getColor(R.color.fab));
@@ -282,6 +265,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
             updateList();
         } else
         {
+            fab.hideFab();
             DialogFragment dialog = new NewListDialog();
             dialog.show(getFragmentManager(), "");
         }
@@ -314,16 +298,6 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         updateList();
     }
 
-    //creates the notification
-    public static void startAlarm(Calendar calendar)
-    {
-        AlarmManager alarmManager = (AlarmManager) c.getSystemService(c.ALARM_SERVICE);
-        long when = calendar.getTimeInMillis();         // notification time
-        Intent intent = new Intent(c, WLActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getService(c, 0, intent, 0);
-        alarmManager.set(AlarmManager.RTC, when, pendingIntent);
-    }
-
     //updates list when new list is selected in spinner
     @Override
     public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id)
@@ -336,23 +310,32 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     @Override public void onNothingSelected(AdapterView<?> parent){}
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu items for use in the action bar
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.wl, menu);
-        return super.onCreateOptionsMenu(menu);
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.wl, menu);
+        return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle presses on the action bar items
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                Intent goSettings = new Intent(this, SettingsActivity.class);
-                this.startActivity(goSettings);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        int id = item.getItemId();
+
+        if (id == R.id.action_settings)
+        {
+            Intent goSettings = new Intent(this, SettingsActivity.class);
+            this.startActivity(goSettings);
+            return true;
         }
+        else if (id == R.id.action_tags)
+        {
+            DataContainer.lists = lists;
+            Intent goTags = new Intent(this, TagsActivity.class);
+            this.startActivity(goTags);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

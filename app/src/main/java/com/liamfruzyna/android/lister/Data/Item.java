@@ -3,7 +3,6 @@ package com.liamfruzyna.android.lister.Data;
 import android.provider.ContactsContract;
 
 import com.liamfruzyna.android.lister.Activities.WLActivity;
-import com.liamfruzyna.android.lister.Notifications.AlarmTask;
 
 import java.util.Calendar;
 
@@ -117,7 +116,6 @@ public class Item
         {
             Calendar calendar =  Calendar.getInstance();
             calendar.set(year, month, day, hour, min, 0);
-            new AlarmTask(WLActivity.c, calendar, (long)(Math.random()*100), item);
         }
     }
 
