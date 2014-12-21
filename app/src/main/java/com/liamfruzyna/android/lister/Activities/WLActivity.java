@@ -335,7 +335,6 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
             this.startActivity(goTags);
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

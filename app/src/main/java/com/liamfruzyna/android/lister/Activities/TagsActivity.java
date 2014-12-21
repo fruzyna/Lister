@@ -216,6 +216,13 @@ public class TagsActivity extends ActionBarActivity implements AdapterView.OnIte
     }
 
     @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        WLActivity.updateList();
+    }
+
+    @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
     {
         current = spin.getSelectedItemPosition();
