@@ -23,10 +23,10 @@ public class Item
     public Item(String item, Boolean done, Boolean archived)
     {
         this.item = item;
-        if(DataContainer.showNotifications && !archived)
+        /*if(DataContainer.showNotifications && !archived)
         {
             findDate();
-        }
+        }*/
         this.done = done;
         this.archived = archived;
     }

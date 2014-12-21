@@ -52,7 +52,7 @@ public class SettingsActivity extends Activity
             }
         });
 
-        inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        /*inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         v = inflater.inflate(R.layout.settings_checkbox, null);
         layout.addView(v);
         tv = (TextView) v.findViewById(R.id.textView);
@@ -66,7 +66,7 @@ public class SettingsActivity extends Activity
             {
                 DataContainer.showNotifications = cb.isChecked();
             }
-        });
+        });*/
 
         inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         v = inflater.inflate(R.layout.subheader, null);
@@ -79,15 +79,15 @@ public class SettingsActivity extends Activity
         layout.addView(v);
         TextView number = (TextView) v.findViewById(R.id.big);
         TextView description = (TextView) v.findViewById(R.id.little);
-        number.setText("Lister Version 1.4");
-        description.setText("Notifications, Tweaks, Bug Fixes");
+        number.setText("Lister Version 1.5");
+        description.setText("Tag Editing and Viewing");
 
         inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         v = inflater.inflate(R.layout.settings_text_item, null);
         layout.addView(v);
         TextView by = (TextView) v.findViewById(R.id.big);
         TextView link = (TextView) v.findViewById(R.id.little);
-        by.setText("2014 Liam Fruzyna");
+        by.setText("2014 Liam Fruzyna/mail929");
         link.setText("liamfruzyna.com");
         v.setOnClickListener(new View.OnClickListener()
         {
