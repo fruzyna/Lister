@@ -298,6 +298,15 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         updateList();
     }
 
+    public void onResume()
+    {
+        super.onResume();
+        if(lists.size() > 0 && lists != null)
+        {
+            updateList();
+        }
+    }
+
     //updates list when new list is selected in spinner
     @Override
     public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id)

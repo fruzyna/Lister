@@ -1,6 +1,5 @@
 package com.liamfruzyna.android.lister.Activities;
 
-import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -13,14 +12,12 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.liamfruzyna.android.lister.Data.DataContainer;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.Item;
 import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.R;
-import com.liamfruzyna.android.lister.Views.Fab;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -213,13 +210,6 @@ public class TagsActivity extends ActionBarActivity implements AdapterView.OnIte
         spin.setOnItemSelectedListener(this);
 
 
-    }
-
-    @Override
-    public void onBackPressed()
-    {
-        super.onBackPressed();
-        WLActivity.updateList();
     }
 
     @Override
