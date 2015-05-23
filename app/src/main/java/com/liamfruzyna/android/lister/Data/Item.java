@@ -4,7 +4,9 @@ import android.provider.ContactsContract;
 
 import com.liamfruzyna.android.lister.Activities.WLActivity;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /*this is the object for items that are added into lists
     Boolean done - whether the item is checked off or not
@@ -19,6 +21,11 @@ public class Item
     public Boolean archived;
     public String item;
 
+    public String color = "#000000";
+    public List<String> people = new ArrayList<>();
+    public List<String> tags = new ArrayList<>();
+    public List<String> urls = new ArrayList<>();
+
     //the constructor if you don't know what this is don't ask me
     public Item(String item, Boolean done, Boolean archived)
     {
@@ -27,10 +34,86 @@ public class Item
         {
             findDate();
         }*/
+        parseItem();
         this.done = done;
         this.archived = archived;
     }
 
+    public void parseItem()
+    {
+        if(item.contains("+"))
+        {
+            //url
+            String[] urls = item.split("\\+");
+            findUrls(urls);
+        }
+        if(item.contains("@"))
+        {
+            //person tag
+            String[] people = item.split("@");
+            findPeople(people);
+        }
+        if(item.contains("*"))
+        {
+            //tag
+            String[] tags = item.split("\\*");
+            findTags(tags);
+        }
+        if(item.contains("#"))
+        {
+            //color
+            String color = item.split("#")[1];
+            if(color.contains(" "))
+            {
+                color = color.split(" ")[0];
+            }
+            this.color = "#" + color;
+            System.out.println("Found Color: " + this.color);
+        }
+    }
+
+    public void findPeople(String[] strings)
+    {
+        for(int i = 1; i < strings.length; i++)
+        {
+            String person = strings[i];
+            if (person.contains(" "))
+            {
+                person = person.split(" ")[0];
+            }
+            System.out.println("Found Person: " + person);
+            people.add(person);
+        }
+    }
+
+    public void findTags(String[] strings)
+    {
+        for(int i = 1; i < strings.length; i++)
+        {
+            String tag = strings[i];
+            if (tag.contains(" "))
+            {
+                tag = tag.split(" ")[0];
+            }
+            System.out.println("Found Tag: " + tag);
+            tags.add(tag);
+        }
+    }
+    
+    public void findUrls(String[] strings)
+    {
+        for(int i = 1; i < strings.length; i++)
+        {
+            String url = strings[i];
+            if (url.contains(" "))
+            {
+                url = url.split(" ")[0];
+            }
+            System.out.println("Found URL: " + url);
+            urls.add(url);
+        }
+    }
+    
     //looks for dates in the list items and creates a notification if there is
     public void findDate()
     {

@@ -97,6 +97,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
                 //init checkbox and set text
                 final CheckBox cb = (CheckBox) view.findViewById(R.id.checkbox);
                 cb.setText(items.get(i).item);
+                cb.setTextColor(Color.parseColor(items.get(i).color));
                 cb.setChecked(items.get(i).done);
                 if(items.get(i).done)
                 {
@@ -203,11 +204,12 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         list = (LinearLayout) findViewById(R.id.list);
 
         //sets listener for editing tags
-        tagcv.setOnLongClickListener(new View.OnLongClickListener() {
+        tagcv.setOnLongClickListener(new View.OnLongClickListener()
+        {
             @Override
             public boolean onLongClick(View v)
             {
-                if(lists.size() > 0)
+                if (lists.size() > 0)
                 {
                     DialogFragment dialog = new EditTagsDialog();
                     dialog.show(getFragmentManager(), "");
@@ -226,9 +228,9 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
             {
                 if(lists.size() > 0)
                 {
-                    DialogFragment dialog = new NewItemDialog();
-                    dialog.show(getFragmentManager(), "");
                     fab.hideFab();
+                    DialogFragment dialog = new NewListDialog();
+                    dialog.show(getFragmentManager(), "");
                 }
             }
         });
@@ -272,22 +274,12 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
 
         spin.setOnItemSelectedListener(this);
 
-        ImageButton newlist = (ImageButton) findViewById(R.id.add);
         ImageButton removelist = (ImageButton) findViewById(R.id.remove);
-        newlist.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
-                fab.hideFab();
-                DialogFragment dialog = new NewListDialog();
-                dialog.show(getFragmentManager(), "");
-            }
-        });
         removelist.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v)
             {
-                if(lists.size() > 0)
+                if (lists.size() > 0)
                 {
                     DialogFragment dialog = new RemoveListDialog();
                     dialog.show(getFragmentManager(), "");
@@ -295,6 +287,23 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
             }
         });
 
+        LinearLayout container = (LinearLayout) findViewById(R.id.newitem);
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View view = inflater.inflate(R.layout.add_item, container, false);
+        view.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (lists.size() > 0)
+                {
+                    DialogFragment dialog = new NewItemDialog();
+                    dialog.show(getFragmentManager(), "");
+                    fab.hideFab();
+                }
+            }
+        });
+        container.addView(view);
         updateList();
     }
 
@@ -341,6 +350,13 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         {
             DataContainer.lists = lists;
             Intent goTags = new Intent(this, TagsActivity.class);
+            this.startActivity(goTags);
+            return true;
+        }
+        else if (id == R.id.action_people)
+        {
+            DataContainer.lists = lists;
+            Intent goTags = new Intent(this, PeopleActivity.class);
             this.startActivity(goTags);
             return true;
         }

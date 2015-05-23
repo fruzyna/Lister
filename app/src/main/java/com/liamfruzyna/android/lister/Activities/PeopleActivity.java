@@ -23,9 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by mail929 on 12/20/14.
+ * Created by mail929 on 5/23/15.
  */
-public class TagsActivity extends ActionBarActivity implements AdapterView.OnItemSelectedListener
+public class PeopleActivity extends ActionBarActivity implements AdapterView.OnItemSelectedListener
 {
     List<WishList> lists;
     LinearLayout list;
@@ -33,76 +33,46 @@ public class TagsActivity extends ActionBarActivity implements AdapterView.OnIte
     Spinner spin;
     int current;
 
-    //finds all the different tags there are
-    public List<String> getTags()
+    //finds all the different people there are
+    public List<String> getPeople()
     {
-        List<String> tags = new ArrayList<String>();
+        List<String> people = new ArrayList<>();
         for(int i = 0; i < lists.size(); i++)
         {
-            for(int j = 0; j < lists.get(i).tags.size(); j++)
-            {
-                boolean found = false;
-                for(int l = 0; l < tags.size(); l++)
-                {
-                    if(tags.get(l).equals(lists.get(i).tags.get(j)))
-                    {
-                        found = true;
-                    }
-                }
-                if(!found)
-                {
-                    tags.add(lists.get(i).tags.get(j));
-                }
-            }
             for(int l = 0; l < lists.get(i).items.size(); l++)
             {
-                for(int k = 0; k < lists.get(i).items.get(l).tags.size(); k++)
+                for(int k = 0; k < lists.get(i).items.get(l).people.size(); k++)
                 {
                     boolean found = false;
-                    for(int j = 0; j < tags.size(); j++)
+                    for(int j = 0; j < people.size(); j++)
                     {
-                        if(lists.get(i).items.get(l).tags.get(k).equals(tags.get(j)))
+                        if(lists.get(i).items.get(l).people.get(k).equals(people.get(j)))
                         {
                             found = true;
                         }
                     }
                     if(!found)
                     {
-                        tags.add(lists.get(i).items.get(l).tags.get(k));
+                        people.add(lists.get(i).items.get(l).people.get(k));
                     }
                 }
             }
         }
-        return tags;
+        return people;
     }
 
-    public List<Item> getTagItems(String tag)
+    public List<Item> getPeopleItems(String person)
     {
         List<Item> items = new ArrayList<Item>();
         for(int i = 0; i < lists.size(); i++)
         {
-            boolean found = false;
-            for(int j = 0; j < lists.get(i).tags.size(); j++)
+            for(int l = 0; l < lists.get(i).items.size(); l++)
             {
-                if(lists.get(i).tags.get(j).equals(tag))
+                for(int k = 0; k < lists.get(i).items.get(l).people.size(); k++)
                 {
-                    found = true;
-                    for(int l = 0; l < lists.get(i).items.size(); l++)
+                    if(lists.get(i).items.get(l).people.get(k).equals(person))
                     {
                         items.add(lists.get(i).items.get(l));
-                    }
-                }
-            }
-            if(!found)
-            {
-                for(int l = 0; l < lists.get(i).items.size(); l++)
-                {
-                    for(int k = 0; k < lists.get(i).items.get(l).tags.size(); k++)
-                    {
-                        if(lists.get(i).items.get(l).tags.get(k).equals(tag))
-                        {
-                            items.add(lists.get(i).items.get(l));
-                        }
                     }
                 }
             }
@@ -112,7 +82,7 @@ public class TagsActivity extends ActionBarActivity implements AdapterView.OnIte
 
     public void updateList()
     {
-        List<Item> temp = getTagItems(getTags().get(current));
+        List<Item> temp = getPeopleItems(getPeople().get(current));
         items = new ArrayList<Item>();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < temp.size(); i++)
@@ -235,7 +205,7 @@ public class TagsActivity extends ActionBarActivity implements AdapterView.OnIte
         System.out.println(lists.size());
 
         spin = (Spinner) findViewById(R.id.spinner);
-        ArrayAdapter<String> sadapter = new ArrayAdapter<String>(this, R.layout.spinner_item, getTags());
+        ArrayAdapter<String> sadapter = new ArrayAdapter<String>(this, R.layout.spinner_item, getPeople());
         sadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spin.setAdapter(sadapter);
         current = spin.getSelectedItemPosition();

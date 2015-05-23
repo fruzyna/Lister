@@ -23,6 +23,10 @@
             android:name=".Activities.TagsActivity"
             android:label="Tag Viewer">
         </activity>
+        <activity
+            android:name=".Activities.PeopleActivity"
+            android:label="People Viewer">
+        </activity>
     </application>
 
 </manifest>
