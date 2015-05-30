@@ -89,7 +89,19 @@ public class IO
     //takes a string of data and writes it to the save file
     private static void writeToFile(String data)
     {
+        File dir = new File(fileDir);
+        dir.mkdirs();
         File file = new File(fileDir, "data.json");
+        if(!file.exists())
+        {
+            try
+            {
+                file.createNewFile();
+            } catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
         try
         {
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));

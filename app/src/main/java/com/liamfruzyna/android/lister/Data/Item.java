@@ -24,7 +24,6 @@ public class Item
     public String color = "#000000";
     public List<String> people = new ArrayList<>();
     public List<String> tags = new ArrayList<>();
-    public List<String> urls = new ArrayList<>();
 
     //the constructor if you don't know what this is don't ask me
     public Item(String item, Boolean done, Boolean archived)
@@ -41,12 +40,6 @@ public class Item
 
     public void parseItem()
     {
-        if(item.contains("+"))
-        {
-            //url
-            String[] urls = item.split("\\+");
-            findUrls(urls);
-        }
         if(item.contains("@"))
         {
             //person tag
@@ -97,20 +90,6 @@ public class Item
             }
             System.out.println("Found Tag: " + tag);
             tags.add(tag);
-        }
-    }
-    
-    public void findUrls(String[] strings)
-    {
-        for(int i = 1; i < strings.length; i++)
-        {
-            String url = strings[i];
-            if (url.contains(" "))
-            {
-                url = url.split(" ")[0];
-            }
-            System.out.println("Found URL: " + url);
-            urls.add(url);
         }
     }
     

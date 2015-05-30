@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.os.Environment;
+import android.sax.Element;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -38,6 +40,8 @@ import org.json.JSONException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.os.Environment.getExternalStoragePublicDirectory;
 
 public class WLActivity extends ActionBarActivity implements AdapterView.OnItemSelectedListener
 {
@@ -182,7 +186,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wl);
         c = this;
-        DataContainer.dir = getFilesDir().toString();
+        DataContainer.dir = getExternalStoragePublicDirectory("Lists").toString();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

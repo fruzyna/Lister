@@ -13,7 +13,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.liamfruzyna.android.lister.Data.DataContainer;
+import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.R;
+
+import org.json.JSONException;
+
+import java.io.File;
+import java.net.MalformedURLException;
 
 /**
  * Activity for customizing app settings.
@@ -52,21 +58,32 @@ public class SettingsActivity extends Activity
             }
         });
 
-        /*inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        v = inflater.inflate(R.layout.settings_checkbox, null);
+        inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        v = inflater.inflate(R.layout.settings_text_item, null);
         layout.addView(v);
-        tv = (TextView) v.findViewById(R.id.textView);
-        tv.setText("Show Notifications for Items with Dates and Times");
-        cb = (CheckBox) v.findViewById(R.id.checkBox);
-        cb.setChecked(DataContainer.showNotifications);
-        cb.setOnClickListener(new View.OnClickListener()
+        TextView by = (TextView) v.findViewById(R.id.big);
+        TextView link = (TextView) v.findViewById(R.id.little);
+        by.setText("Clear Data");
+        link.setText("delete the save file for data (may require app restart)");
+        v.setOnClickListener(new View.OnClickListener()
         {
             @Override
-            public void onClick(View v)
+            public void onClick(View view)
             {
-                DataContainer.showNotifications = cb.isChecked();
+                File file = new File(DataContainer.dir, "data.json");
+                file.delete();
+                try
+                {
+                    IO.load();
+                } catch (JSONException e)
+                {
+                    e.printStackTrace();
+                } catch (MalformedURLException e)
+                {
+                    e.printStackTrace();
+                }
             }
-        });*/
+        });
 
         inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         v = inflater.inflate(R.layout.subheader, null);
@@ -85,8 +102,8 @@ public class SettingsActivity extends Activity
         inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         v = inflater.inflate(R.layout.settings_text_item, null);
         layout.addView(v);
-        TextView by = (TextView) v.findViewById(R.id.big);
-        TextView link = (TextView) v.findViewById(R.id.little);
+        by = (TextView) v.findViewById(R.id.big);
+        link = (TextView) v.findViewById(R.id.little);
         by.setText("2014 Liam Fruzyna/mail929");
         link.setText("liamfruzyna.com");
         v.setOnClickListener(new View.OnClickListener()
