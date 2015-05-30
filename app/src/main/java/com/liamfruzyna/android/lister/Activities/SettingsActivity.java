@@ -96,8 +96,8 @@ public class SettingsActivity extends Activity
         layout.addView(v);
         TextView number = (TextView) v.findViewById(R.id.big);
         TextView description = (TextView) v.findViewById(R.id.little);
-        number.setText("Lister Version 1.5");
-        description.setText("Tag Editing and Viewing");
+        number.setText("Lister Version 1.6.1");
+        description.setText("Public Save Files");
 
         inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         v = inflater.inflate(R.layout.settings_text_item, null);
