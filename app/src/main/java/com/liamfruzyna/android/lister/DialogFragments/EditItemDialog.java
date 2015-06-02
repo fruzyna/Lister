@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.liamfruzyna.android.lister.Activities.WLActivity;
-import com.liamfruzyna.android.lister.Data.Item;
 import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.R;
 
@@ -18,35 +17,36 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * Created by mail929 on 12/20/14.
+ * Created by mail929 on 6/1/15.
  */
-public class EditTagsDialog extends DialogFragment
+public class EditItemDialog extends DialogFragment
 {
-    EditText tags;
+    EditText item;
+    int position;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        position = getArguments().getInt("position");
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
         final View v = inflater.inflate(R.layout.new_item_item, null);
-        tags = (EditText) v.findViewById(R.id.name);
-        tags.setHint("Tags");
+        item = (EditText) v.findViewById(R.id.name);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final WishList list = WLActivity.lists.get(WLActivity.current);
-        StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < list.tags.size(); i++)
-        {
-            sb.append(list.tags.get(i) + " ");
-        }
-        tags.setText(sb.toString());
-        builder.setMessage("Edit tags of " + list.name)
-                .setTitle("Edit Tags")
+        builder.setMessage("Edit: " + WLActivity.items.get(position).item)
+                .setTitle("Edit List Item")
                 .setView(v)
                 .setPositiveButton("APPEND", new DialogInterface.OnClickListener()
                 {
                     public void onClick(DialogInterface dialog, int id)
                     {
-                        list.tags = new ArrayList<String>(Arrays.asList(tags.getText().toString().split(" ")));
+                        WLActivity.items.get(position).item = item.getText().toString();
                         ((WLActivity) getActivity()).updateList();
                         WLActivity.fab.showFab();
                     }

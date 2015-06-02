@@ -28,6 +28,7 @@ import com.liamfruzyna.android.lister.Data.DataContainer;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.Item;
 import com.liamfruzyna.android.lister.Data.WishList;
+import com.liamfruzyna.android.lister.DialogFragments.EditItemDialog;
 import com.liamfruzyna.android.lister.DialogFragments.EditTagsDialog;
 import com.liamfruzyna.android.lister.DialogFragments.NewItemDialog;
 import com.liamfruzyna.android.lister.DialogFragments.NewListDialog;
@@ -57,7 +58,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     public static Fab fab;
 
     //rebuilds the list of items
-    public static void updateList()
+    public void updateList()
     {
         if(lists.size() > 0)
         {
@@ -68,103 +69,73 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
             {
                 if(!temp.get(i).done)
                 {
-                    if(DataContainer.showArchived)
-                    {
-                        items.add(temp.get(i));
-                    }
-                    else if(!temp.get(i).archived)
-                    {
-                        items.add(temp.get(i));
-                    }
+                    items.add(temp.get(i));
                 }
             }
             for (int i = 0; i < temp.size(); i++)
             {
                 if(temp.get(i).done)
                 {
-                    if(DataContainer.showArchived)
-                    {
-                        items.add(temp.get(i));
-                    }
-                    else if(!temp.get(i).archived)
-                    {
-                        items.add(temp.get(i));
-                    }
+                    items.add(temp.get(i));
                 }
             }
             list.removeAllViews();
             LayoutInflater inflater = LayoutInflater.from(c);
             for (int i = 0; i < items.size(); i++)
             {
-                final int j = i;
-                View view = inflater.inflate(R.layout.item, list, false);
-                //init checkbox and set text
-                final CheckBox cb = (CheckBox) view.findViewById(R.id.checkbox);
-                cb.setText(items.get(i).item);
-                cb.setTextColor(Color.parseColor(items.get(i).color));
-                cb.setChecked(items.get(i).done);
-                if(items.get(i).done)
+                if(items.get(i).item.equals(("")))
                 {
-                    cb.setPaintFlags(cb.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                } else
-                {
-                    cb.setPaintFlags(0);
+                    items.remove(i);
                 }
-
-                if(items.get(i).archived)
+                else
                 {
-                    cb.setTextColor(Color.parseColor("#808080"));
-                }
-
-                cb.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
+                    final int j = i;
+                    View view = inflater.inflate(R.layout.item, list, false);
+                    //init checkbox and set text
+                    final CheckBox cb = (CheckBox) view.findViewById(R.id.checkbox);
+                    cb.setText(items.get(i).item);
+                    cb.setTextColor(Color.parseColor(items.get(i).color));
+                    cb.setChecked(items.get(i).done);
+                    if(items.get(i).done)
                     {
-                        if(!items.get(j).archived)
+                        cb.setPaintFlags(cb.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                    } else
+                    {
+                        cb.setPaintFlags(0);
+                    }
+
+                    cb.setOnClickListener(new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
                         {
                             items.get(j).done = cb.isChecked();
-                            if (cb.isChecked())
-                            {
-                                cb.setPaintFlags(cb.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                            } else
-                            {
-                                cb.setPaintFlags(0);
-                            }
-                            IO.save(WLActivity.lists);
+                                if (cb.isChecked())
+                                {
+                                    cb.setPaintFlags(cb.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                                } else
+                                {
+                                    cb.setPaintFlags(0);
+                                }
+                                IO.save(WLActivity.lists);
+
                         }
-                    }
-                });
-                cb.setOnLongClickListener(new View.OnLongClickListener()
-                {
-                    @Override
-                    public boolean onLongClick(View v)
+                    });
+                    cb.setOnLongClickListener(new View.OnLongClickListener()
                     {
-                        if(!items.get(j).archived)
+                        @Override
+                        public boolean onLongClick(View v)
                         {
-                            items.get(j).archived = true;
-                            WLActivity.lists.get(WLActivity.current).items = items;
-                            if(DataContainer.showArchived)
-                            {
-                                cb.setTextColor(Color.parseColor("#808080"));
-                            }
-                            else
-                            {
-                                cb.setTextColor(Color.parseColor("#FFFFFF"));
-                            }
-                            IO.save(WLActivity.lists);
+                            DialogFragment dialog = new EditItemDialog();
+                            Bundle args = new Bundle();
+                            args.putInt("position", j);
+                            dialog.setArguments(args);
+                            dialog.show(getFragmentManager(), "");
+                            return false;
                         }
-                        else
-                        {
-                            items.get(j).archived = false;
-                            WLActivity.lists.get(WLActivity.current).items = items;
-                            cb.setTextColor(Color.parseColor("#000000"));
-                            IO.save(WLActivity.lists);
-                        }
-                        return false;
-                    }
-                });
-                list.addView(view);
+                    });
+                    list.addView(view);
+                }
             }
             sb.append("Tags: ");
             for(int i = 0; i < lists.get(current).tags.size(); i++)

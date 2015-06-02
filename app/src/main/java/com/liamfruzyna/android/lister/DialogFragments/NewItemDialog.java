@@ -37,8 +37,8 @@ public class NewItemDialog extends DialogFragment
                     public void onClick(DialogInterface dialog, int id)
                     {
                         EditText name = (EditText) v.findViewById(R.id.name);
-                        list.items.add(new Item(name.getText().toString(), false, false));
-                        WLActivity.updateList();
+                        list.items.add(new Item(name.getText().toString(), false));
+                        ((WLActivity) getActivity()).updateList();
                         WLActivity.fab.showFab();
                     }
                 })

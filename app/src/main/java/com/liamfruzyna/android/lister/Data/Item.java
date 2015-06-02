@@ -18,7 +18,6 @@ import java.util.List;
 public class Item
 {
     public Boolean done;
-    public Boolean archived;
     public String item;
 
     public String color = "#000000";
@@ -26,7 +25,7 @@ public class Item
     public List<String> tags = new ArrayList<>();
 
     //the constructor if you don't know what this is don't ask me
-    public Item(String item, Boolean done, Boolean archived)
+    public Item(String item, Boolean done)
     {
         this.item = item;
         /*if(DataContainer.showNotifications && !archived)
@@ -35,7 +34,6 @@ public class Item
         }*/
         parseItem();
         this.done = done;
-        this.archived = archived;
     }
 
     public void parseItem()

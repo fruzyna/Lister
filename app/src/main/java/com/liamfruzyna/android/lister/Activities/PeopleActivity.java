@@ -82,67 +82,48 @@ public class PeopleActivity extends ActionBarActivity implements AdapterView.OnI
 
     public void updateList()
     {
-        List<Item> temp = getPeopleItems(getPeople().get(current));
-        items = new ArrayList<Item>();
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < temp.size(); i++)
+        if(getPeople().size() > 0)
         {
-            if(!temp.get(i).done)
+            List<Item> temp = getPeopleItems(getPeople().get(current));
+            items = new ArrayList<Item>();
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < temp.size(); i++)
             {
-                if(DataContainer.showArchived)
-                {
-                    items.add(temp.get(i));
-                }
-                else if(!temp.get(i).archived)
+                if(!temp.get(i).done)
                 {
                     items.add(temp.get(i));
                 }
             }
-        }
-        for (int i = 0; i < temp.size(); i++)
-        {
-            if(temp.get(i).done)
+            for (int i = 0; i < temp.size(); i++)
             {
-                if(DataContainer.showArchived)
-                {
-                    items.add(temp.get(i));
-                }
-                else if(!temp.get(i).archived)
+                if(temp.get(i).done)
                 {
                     items.add(temp.get(i));
                 }
             }
-        }
-        list.removeAllViews();
-        LayoutInflater inflater = LayoutInflater.from(this);
-        for (int i = 0; i < items.size(); i++)
-        {
-            final int j = i;
-            View view = inflater.inflate(R.layout.item, list, false);
-            //init checkbox and set text
-            final CheckBox cb = (CheckBox) view.findViewById(R.id.checkbox);
-            cb.setText(items.get(i).item);
-            cb.setTextColor(Color.parseColor(items.get(i).color));
-            cb.setChecked(items.get(i).done);
-            if(items.get(i).done)
+            list.removeAllViews();
+            LayoutInflater inflater = LayoutInflater.from(this);
+            for (int i = 0; i < items.size(); i++)
             {
-                cb.setPaintFlags(cb.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            } else
-            {
-                cb.setPaintFlags(0);
-            }
+                final int j = i;
+                View view = inflater.inflate(R.layout.item, list, false);
+                //init checkbox and set text
+                final CheckBox cb = (CheckBox) view.findViewById(R.id.checkbox);
+                cb.setText(items.get(i).item);
+                cb.setTextColor(Color.parseColor(items.get(i).color));
+                cb.setChecked(items.get(i).done);
+                if(items.get(i).done)
+                {
+                    cb.setPaintFlags(cb.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                } else
+                {
+                    cb.setPaintFlags(0);
+                }
 
-            if(items.get(i).archived)
-            {
-                cb.setTextColor(Color.parseColor("#808080"));
-            }
-
-            cb.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
+                cb.setOnClickListener(new View.OnClickListener()
                 {
-                    if(!items.get(j).archived)
+                    @Override
+                    public void onClick(View v)
                     {
                         items.get(j).done = cb.isChecked();
                         if (cb.isChecked())
@@ -154,40 +135,11 @@ public class PeopleActivity extends ActionBarActivity implements AdapterView.OnI
                         }
                         IO.save(WLActivity.lists);
                     }
-                }
-            });
-            cb.setOnLongClickListener(new View.OnLongClickListener()
-            {
-                @Override
-                public boolean onLongClick(View v)
-                {
-                    if(!items.get(j).archived)
-                    {
-                        items.get(j).archived = true;
-                        WLActivity.lists.get(WLActivity.current).items = items;
-                        if(DataContainer.showArchived)
-                        {
-                            cb.setTextColor(Color.parseColor("#808080"));
-                        }
-                        else
-                        {
-                            cb.setTextColor(Color.parseColor("#FFFFFF"));
-                        }
-                        IO.save(WLActivity.lists);
-                    }
-                    else
-                    {
-                        items.get(j).archived = false;
-                        WLActivity.lists.get(WLActivity.current).items = items;
-                        cb.setTextColor(Color.parseColor("#000000"));
-                        IO.save(WLActivity.lists);
-                    }
-                    return false;
-                }
-            });
-            list.addView(view);
+                });
+                list.addView(view);
+            }
+            IO.save(lists);
         }
-        IO.save(lists);
     }
 
     @Override

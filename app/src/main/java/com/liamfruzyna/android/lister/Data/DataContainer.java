@@ -9,7 +9,6 @@ import java.util.List;
 public class DataContainer
 {
     public static String dir = "";
-    public static Boolean showArchived = false;
     //public static Boolean showNotifications = true;
 
     public static List<WishList> lists;

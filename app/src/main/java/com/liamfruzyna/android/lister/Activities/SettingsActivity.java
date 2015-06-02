@@ -43,22 +43,6 @@ public class SettingsActivity extends Activity
         tv.setText("General");
 
         inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        v = inflater.inflate(R.layout.settings_checkbox, null);
-        layout.addView(v);
-        tv = (TextView) v.findViewById(R.id.textView);
-        tv.setText("Show Archived Items");
-        cb = (CheckBox) v.findViewById(R.id.checkBox);
-        cb.setChecked(DataContainer.showArchived);
-        cb.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                DataContainer.showArchived = cb.isChecked();
-            }
-        });
-
-        inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         v = inflater.inflate(R.layout.settings_text_item, null);
         layout.addView(v);
         TextView by = (TextView) v.findViewById(R.id.big);
@@ -96,8 +80,8 @@ public class SettingsActivity extends Activity
         layout.addView(v);
         TextView number = (TextView) v.findViewById(R.id.big);
         TextView description = (TextView) v.findViewById(R.id.little);
-        number.setText("Lister Version 1.6.1");
-        description.setText("Public Save Files");
+        number.setText("Lister Version 1.7.0");
+        description.setText("Replaced Archiving with Editing");
 
         inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         v = inflater.inflate(R.layout.settings_text_item, null);

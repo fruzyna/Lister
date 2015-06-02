@@ -119,28 +119,14 @@ public class TagsActivity extends ActionBarActivity implements AdapterView.OnIte
         {
             if(!temp.get(i).done)
             {
-                if(DataContainer.showArchived)
-                {
-                    items.add(temp.get(i));
-                }
-                else if(!temp.get(i).archived)
-                {
-                    items.add(temp.get(i));
-                }
+                items.add(temp.get(i));
             }
         }
         for (int i = 0; i < temp.size(); i++)
         {
             if(temp.get(i).done)
             {
-                if(DataContainer.showArchived)
-                {
-                    items.add(temp.get(i));
-                }
-                else if(!temp.get(i).archived)
-                {
-                    items.add(temp.get(i));
-                }
+                items.add(temp.get(i));
             }
         }
         list.removeAllViews();
@@ -162,18 +148,11 @@ public class TagsActivity extends ActionBarActivity implements AdapterView.OnIte
                 cb.setPaintFlags(0);
             }
 
-            if(items.get(i).archived)
-            {
-                cb.setTextColor(Color.parseColor("#808080"));
-            }
-
             cb.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
                 {
-                    if(!items.get(j).archived)
-                    {
                         items.get(j).done = cb.isChecked();
                         if (cb.isChecked())
                         {
@@ -183,36 +162,6 @@ public class TagsActivity extends ActionBarActivity implements AdapterView.OnIte
                             cb.setPaintFlags(0);
                         }
                         IO.save(WLActivity.lists);
-                    }
-                }
-            });
-            cb.setOnLongClickListener(new View.OnLongClickListener()
-            {
-                @Override
-                public boolean onLongClick(View v)
-                {
-                    if(!items.get(j).archived)
-                    {
-                        items.get(j).archived = true;
-                        WLActivity.lists.get(WLActivity.current).items = items;
-                        if(DataContainer.showArchived)
-                        {
-                            cb.setTextColor(Color.parseColor("#808080"));
-                        }
-                        else
-                        {
-                            cb.setTextColor(Color.parseColor("#FFFFFF"));
-                        }
-                        IO.save(WLActivity.lists);
-                    }
-                    else
-                    {
-                        items.get(j).archived = false;
-                        WLActivity.lists.get(WLActivity.current).items = items;
-                        cb.setTextColor(Color.parseColor("#000000"));
-                        IO.save(WLActivity.lists);
-                    }
-                    return false;
                 }
             });
             list.addView(view);

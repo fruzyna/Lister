@@ -57,7 +57,7 @@ public class NewListDialog extends DialogFragment
                         spin.setAdapter(sadapter);
                         spin.setSelection(lists.size() - 1);
                         WLActivity.current = spin.getSelectedItemPosition();
-                        WLActivity.updateList();
+                        ((WLActivity) getActivity()).updateList();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener()

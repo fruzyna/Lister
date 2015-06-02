@@ -40,7 +40,6 @@ public class IO
                     JSONObject jitem = new JSONObject();
                     jitem.put("item", items.get(j).item);
                     jitem.put("done", items.get(j).done);
-                    jitem.put("archived", items.get(j).archived);
                     jitems.put(jitem);
                 }
                 jlist.put("items", jitems);
@@ -72,7 +71,7 @@ public class IO
             JSONArray jitems = jlist.getJSONArray("items");
             for (int j = 0; j < jitems.length(); j++)
             {
-                Item item = new Item(jitems.getJSONObject(j).getString("item"), jitems.getJSONObject(j).getBoolean("done"), jitems.getJSONObject(j).getBoolean("archived"));
+                Item item = new Item(jitems.getJSONObject(j).getString("item"), jitems.getJSONObject(j).getBoolean("done"));
                 items.add(item);
             }
             List<String> tags = new ArrayList<String>();
