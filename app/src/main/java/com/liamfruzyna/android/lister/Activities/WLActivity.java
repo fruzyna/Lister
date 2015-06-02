@@ -126,6 +126,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
                         @Override
                         public boolean onLongClick(View v)
                         {
+                            fab.hideFab();
                             DialogFragment dialog = new EditItemDialog();
                             Bundle args = new Bundle();
                             args.putInt("position", j);

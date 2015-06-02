@@ -1,5 +1,6 @@
 package com.liamfruzyna.android.lister.Activities;
 
+import android.app.DialogFragment;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -17,6 +18,8 @@ import com.liamfruzyna.android.lister.Data.DataContainer;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.Item;
 import com.liamfruzyna.android.lister.Data.WishList;
+import com.liamfruzyna.android.lister.DialogFragments.EditItemDialog;
+import com.liamfruzyna.android.lister.DialogFragments.SuggestionDialog;
 import com.liamfruzyna.android.lister.R;
 
 import java.util.ArrayList;
@@ -139,6 +142,15 @@ public class PeopleActivity extends ActionBarActivity implements AdapterView.OnI
                 list.addView(view);
             }
             IO.save(lists);
+        }
+        else
+        {
+            DialogFragment dialog = new SuggestionDialog();
+            Bundle args = new Bundle();
+            args.putString("title", "No People Tagged");
+            args.putString("message", "You haven't tagged any people in your lists. To do that just add @name to an item (without spaces).");
+            dialog.setArguments(args);
+            dialog.show(getFragmentManager(), "");
         }
     }
 
