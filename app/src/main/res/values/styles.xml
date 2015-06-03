@@ -8,7 +8,7 @@
         <item name="colorPrimary">@color/main</item>
         <item name="colorPrimaryDark">@color/dark_main</item>
         <item name="android:buttonStyle">@style/ButtonTheme</item>
-        <item name="colorAccent">@color/main</item>
+        <item name="colorAccent">@color/fab</item>
     </style>
 
 </resources>

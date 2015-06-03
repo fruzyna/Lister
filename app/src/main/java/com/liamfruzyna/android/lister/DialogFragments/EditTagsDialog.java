@@ -48,14 +48,12 @@ public class EditTagsDialog extends DialogFragment
                     {
                         list.tags = new ArrayList<String>(Arrays.asList(tags.getText().toString().split(" ")));
                         ((WLActivity) getActivity()).updateList();
-                        WLActivity.fab.showFab();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener()
                 {
                     public void onClick(DialogInterface dialog, int id)
                     {
-                        WLActivity.fab.showFab();
                     }
                 });
         return builder.create();

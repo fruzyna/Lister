@@ -39,7 +39,6 @@ public class NewListDialog extends DialogFragment
                 {
                     public void onClick(DialogInterface dialog, int id)
                     {
-                        WLActivity.fab.showFab();
                         EditText name = (EditText) v.findViewById(R.id.name);
                         EditText tags = (EditText) v.findViewById(R.id.tags);
                         List<WishList> lists = WLActivity.lists;
@@ -64,7 +63,6 @@ public class NewListDialog extends DialogFragment
                 {
                     public void onClick(DialogInterface dialog, int id)
                     {
-                        WLActivity.fab.showFab();
                     }
                 });
         return builder.create();

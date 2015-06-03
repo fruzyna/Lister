@@ -48,14 +48,12 @@ public class EditItemDialog extends DialogFragment
                     {
                         WLActivity.items.get(position).item = item.getText().toString();
                         ((WLActivity) getActivity()).updateList();
-                        WLActivity.fab.showFab();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener()
                 {
                     public void onClick(DialogInterface dialog, int id)
                     {
-                        WLActivity.fab.showFab();
                     }
                 });
         return builder.create();

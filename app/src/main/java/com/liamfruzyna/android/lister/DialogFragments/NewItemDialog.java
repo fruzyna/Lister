@@ -39,14 +39,12 @@ public class NewItemDialog extends DialogFragment
                         EditText name = (EditText) v.findViewById(R.id.name);
                         list.items.add(new Item(name.getText().toString(), false));
                         ((WLActivity) getActivity()).updateList();
-                        WLActivity.fab.showFab();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener()
                 {
                     public void onClick(DialogInterface dialog, int id)
                     {
-                        WLActivity.fab.showFab();
                     }
                 });
         return builder.create();

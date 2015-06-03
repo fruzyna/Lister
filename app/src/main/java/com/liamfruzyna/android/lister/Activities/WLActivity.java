@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.os.Environment;
-import android.sax.Element;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -33,7 +33,6 @@ import com.liamfruzyna.android.lister.DialogFragments.EditTagsDialog;
 import com.liamfruzyna.android.lister.DialogFragments.NewItemDialog;
 import com.liamfruzyna.android.lister.DialogFragments.NewListDialog;
 import com.liamfruzyna.android.lister.DialogFragments.RemoveListDialog;
-import com.liamfruzyna.android.lister.Views.Fab;
 import com.liamfruzyna.android.lister.R;
 
 import org.json.JSONException;
@@ -55,7 +54,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     public static Context c;
     static RelativeLayout tagcv;
     static Spinner spin;
-    public static Fab fab;
+    public static FloatingActionButton fab;
 
     //rebuilds the list of items
     public void updateList()
@@ -126,7 +125,6 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
                         @Override
                         public boolean onLongClick(View v)
                         {
-                            fab.hideFab();
                             DialogFragment dialog = new EditItemDialog();
                             Bundle args = new Bundle();
                             args.putInt("position", j);
@@ -175,7 +173,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         }
 
         //init view widgets
-        fab = (Fab) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         tagcv = (RelativeLayout) findViewById(R.id.tag);
         list = (LinearLayout) findViewById(R.id.list);
 
@@ -195,8 +193,8 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         });
 
         //set up fab (Floating Action Button)
-        fab.setFabDrawable(getResources().getDrawable(R.drawable.ic_add_white));
-        fab.setFabColor(getResources().getColor(R.color.fab));
+        fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_add_white));
+        fab.setRippleColor(getResources().getColor(R.color.fab));
         fab.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -204,7 +202,6 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
             {
                 if(lists.size() > 0)
                 {
-                    fab.hideFab();
                     DialogFragment dialog = new NewListDialog();
                     dialog.show(getFragmentManager(), "");
                 }
@@ -243,7 +240,6 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
             updateList();
         } else
         {
-            fab.hideFab();
             DialogFragment dialog = new NewListDialog();
             dialog.show(getFragmentManager(), "");
         }
@@ -275,7 +271,6 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
                 {
                     DialogFragment dialog = new NewItemDialog();
                     dialog.show(getFragmentManager(), "");
-                    fab.hideFab();
                 }
             }
         });
@@ -337,5 +332,28 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void removeSnackbar(final WishList list)
+    {
+        final Context c = this;
+
+        Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), "List Deleted", Snackbar.LENGTH_LONG)
+                .setAction("UNDO", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        lists.add(list);
+                        List<String> names = new ArrayList<String>();
+                        for (int i = 0; i < lists.size(); i++) {
+                            names.add(lists.get(i).name);
+                        }
+                        ArrayAdapter<String> sadapter = new ArrayAdapter<String>(c, R.layout.spinner_item, names);
+                        sadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        Spinner spin = (Spinner) findViewById(R.id.spinner);
+                        spin.setAdapter(sadapter);
+                        updateList();
+                    }
+                })
+                .show();
     }
 }

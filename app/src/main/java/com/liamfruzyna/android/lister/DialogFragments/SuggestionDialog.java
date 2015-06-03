@@ -37,7 +37,6 @@ public class SuggestionDialog extends DialogFragment
                 .setTitle(title)
                 .setPositiveButton("OKAY", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        WLActivity.fab.showFab();
                     }
                 });
         return builder.create();

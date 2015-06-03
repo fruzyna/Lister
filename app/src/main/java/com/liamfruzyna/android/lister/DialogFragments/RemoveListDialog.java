@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -37,6 +39,7 @@ public class RemoveListDialog extends DialogFragment
                 {
                     public void onClick(DialogInterface dialog, int id)
                     {
+                        final WishList old = lists.get(current);
                         lists.remove(current);
                         //setup spinner
                         List<String> names = new ArrayList<String>();
@@ -56,7 +59,9 @@ public class RemoveListDialog extends DialogFragment
                             RelativeLayout tagcv = (RelativeLayout) getActivity().findViewById(R.id.tag);
                             list.removeAllViews();
                             tagcv.removeAllViews();
+
                         }
+                        ((WLActivity) getActivity()).removeSnackbar(old);
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
