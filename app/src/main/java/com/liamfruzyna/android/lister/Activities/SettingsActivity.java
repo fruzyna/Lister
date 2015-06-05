@@ -80,8 +80,8 @@ public class SettingsActivity extends Activity
         layout.addView(v);
         TextView number = (TextView) v.findViewById(R.id.big);
         TextView description = (TextView) v.findViewById(R.id.little);
-        number.setText("Lister Version 1.7.0");
-        description.setText("Replaced Archiving with Editing");
+        number.setText("Lister Version 1.7.1");
+        description.setText("UI Tweaks");
 
         inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         v = inflater.inflate(R.layout.settings_text_item, null);

@@ -54,10 +54,8 @@
                         android:id="@+id/top"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingBottom="8dp"
                         android:paddingLeft="8dp"
-                        android:paddingRight="8dp"
-                        android:paddingTop="8dp">
+                        android:paddingRight="8dp">
 
 
                         <Spinner
