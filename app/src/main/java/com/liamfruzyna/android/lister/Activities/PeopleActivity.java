@@ -14,11 +14,9 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
-import com.liamfruzyna.android.lister.Data.DataContainer;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.Item;
 import com.liamfruzyna.android.lister.Data.WishList;
-import com.liamfruzyna.android.lister.DialogFragments.EditItemDialog;
 import com.liamfruzyna.android.lister.DialogFragments.SuggestionDialog;
 import com.liamfruzyna.android.lister.R;
 
@@ -164,7 +162,7 @@ public class PeopleActivity extends ActionBarActivity implements AdapterView.OnI
         setSupportActionBar(toolbar);
         list = (LinearLayout) findViewById(R.id.list);
 
-        lists = DataContainer.lists;
+        lists = WLActivity.lists;
 
         System.out.println(lists.size());
 

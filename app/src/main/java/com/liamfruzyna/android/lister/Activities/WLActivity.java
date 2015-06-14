@@ -24,7 +24,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.liamfruzyna.android.lister.Data.DataContainer;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.Item;
 import com.liamfruzyna.android.lister.Data.WishList;
@@ -47,7 +46,6 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
 {
 
     public static List<WishList> lists = new ArrayList<WishList>();
-    public static List<Item> items = new ArrayList<Item>();
     public static int current = 0;
 
     static LinearLayout list;
@@ -62,7 +60,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         if(lists.size() > 0)
         {
             List<Item> temp = lists.get(current).items;
-            items = new ArrayList<Item>();
+            final List<Item> items = new ArrayList<Item>();
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < temp.size(); i++)
             {
@@ -78,6 +76,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
                     items.add(temp.get(i));
                 }
             }
+
             list.removeAllViews();
             LayoutInflater inflater = LayoutInflater.from(c);
             for (int i = 0; i < items.size(); i++)
@@ -90,11 +89,13 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
                 {
                     final int j = i;
                     View view = inflater.inflate(R.layout.item, list, false);
-                    //init checkbox and set text
+
+                    //init checkbox and set text, checked status, and color
                     final CheckBox cb = (CheckBox) view.findViewById(R.id.checkbox);
                     cb.setText(items.get(i).item);
                     cb.setTextColor(Color.parseColor(items.get(i).color));
                     cb.setChecked(items.get(i).done);
+
                     if(items.get(i).done)
                     {
                         cb.setPaintFlags(cb.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
@@ -122,15 +123,17 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
                     });
                     cb.setOnLongClickListener(new View.OnLongClickListener()
                     {
+                        int l = j;
+
                         @Override
                         public boolean onLongClick(View v)
                         {
                             DialogFragment dialog = new EditItemDialog();
                             Bundle args = new Bundle();
-                            args.putInt("position", j);
+                            args.putInt("position", l);
                             dialog.setArguments(args);
                             dialog.show(getFragmentManager(), "");
-                            return false;
+                            return true;
                         }
                     });
                     list.addView(view);
@@ -156,7 +159,6 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wl);
         c = this;
-        DataContainer.dir = getExternalStoragePublicDirectory("Lists").toString();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -319,14 +321,12 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         }
         else if (id == R.id.action_tags)
         {
-            DataContainer.lists = lists;
             Intent goTags = new Intent(this, TagsActivity.class);
             this.startActivity(goTags);
             return true;
         }
         else if (id == R.id.action_people)
         {
-            DataContainer.lists = lists;
             Intent goTags = new Intent(this, PeopleActivity.class);
             this.startActivity(goTags);
             return true;
@@ -334,23 +334,44 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         return super.onOptionsItemSelected(item);
     }
 
-    public void removeSnackbar(final WishList list)
+    public void removeListSnackbar(final WishList list)
     {
         final Context c = this;
 
-        Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), "List Deleted", Snackbar.LENGTH_LONG)
-                .setAction("UNDO", new View.OnClickListener() {
+        Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), "\"" + list.name + "\" Deleted", Snackbar.LENGTH_LONG)
+                .setAction("UNDO", new View.OnClickListener()
+                {
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(View v)
+                    {
                         lists.add(list);
                         List<String> names = new ArrayList<String>();
-                        for (int i = 0; i < lists.size(); i++) {
+                        for (int i = 0; i < lists.size(); i++)
+                        {
                             names.add(lists.get(i).name);
                         }
                         ArrayAdapter<String> sadapter = new ArrayAdapter<String>(c, R.layout.spinner_item, names);
                         sadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         Spinner spin = (Spinner) findViewById(R.id.spinner);
                         spin.setAdapter(sadapter);
+                        updateList();
+                    }
+                })
+                .show();
+    }
+
+    public void removeItemSnackbar(final Item item)
+    {
+        final Context c = this;
+
+        Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), "\"" + item.item + "\" Deleted", Snackbar.LENGTH_LONG)
+                .setAction("UNDO", new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        lists.get(current).items.add(item);
+                        IO.save(lists);
                         updateList();
                     }
                 })

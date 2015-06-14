@@ -1,8 +1,6 @@
 package com.liamfruzyna.android.lister.Activities;
 
 import android.app.Activity;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,7 +10,6 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.liamfruzyna.android.lister.Data.DataContainer;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.R;
 
@@ -54,7 +51,7 @@ public class SettingsActivity extends Activity
             @Override
             public void onClick(View view)
             {
-                File file = new File(DataContainer.dir, "data.json");
+                File file = new File(IO.fileDir, "data.json");
                 file.delete();
                 try
                 {

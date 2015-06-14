@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.liamfruzyna.android.lister.Activities.WLActivity;
+import com.liamfruzyna.android.lister.Data.IO;
+import com.liamfruzyna.android.lister.Data.Item;
 import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.R;
 
@@ -21,7 +23,7 @@ import java.util.Arrays;
  */
 public class EditItemDialog extends DialogFragment
 {
-    EditText item;
+    EditText editText;
     int position;
 
     @Override
@@ -32,21 +34,31 @@ public class EditItemDialog extends DialogFragment
     }
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    public Dialog onCreateDialog(Bundle savedInstanceState)
+    {
         // Use the Builder class for convenient dialog construction
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
         final View v = inflater.inflate(R.layout.new_item_item, null);
-        item = (EditText) v.findViewById(R.id.name);
+        editText = (EditText) v.findViewById(R.id.name);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        final WishList list = WLActivity.lists.get(WLActivity.current);
-        builder.setMessage("Edit: " + WLActivity.items.get(position).item)
+        builder.setMessage("Edit: " + WLActivity.lists.get(WLActivity.current).items.get(position).item)
                 .setTitle("Edit List Item")
                 .setView(v)
                 .setPositiveButton("APPEND", new DialogInterface.OnClickListener()
                 {
                     public void onClick(DialogInterface dialog, int id)
                     {
-                        WLActivity.items.get(position).item = item.getText().toString();
+                        if (editText.getText().toString().equals(""))
+                        {
+                            System.out.println("[EditItemDialog] Removing Item " + position);
+                            Item item = WLActivity.lists.get(WLActivity.current).items.get(position);
+                            WLActivity.lists.get(WLActivity.current).items.remove(position);
+                            ((WLActivity) getActivity()).removeItemSnackbar(item);
+                        } else
+                        {
+                            WLActivity.lists.get(WLActivity.current).items.get(position).item = editText.getText().toString();
+                        }
+                        IO.save(WLActivity.lists);
                         ((WLActivity) getActivity()).updateList();
                     }
                 })
@@ -54,6 +66,7 @@ public class EditItemDialog extends DialogFragment
                 {
                     public void onClick(DialogInterface dialog, int id)
                     {
+                        //do nothing
                     }
                 });
         return builder.create();

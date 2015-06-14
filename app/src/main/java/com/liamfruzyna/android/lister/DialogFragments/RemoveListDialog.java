@@ -61,11 +61,14 @@ public class RemoveListDialog extends DialogFragment
                             tagcv.removeAllViews();
 
                         }
-                        ((WLActivity) getActivity()).removeSnackbar(old);
+                        ((WLActivity) getActivity()).removeListSnackbar(old);
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+                        //do nothing
                     }
                 });
         return builder.create();

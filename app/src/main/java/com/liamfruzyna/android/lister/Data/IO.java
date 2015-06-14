@@ -1,5 +1,7 @@
 package com.liamfruzyna.android.lister.Data;
 
+import android.os.Environment;
+
 import com.liamfruzyna.android.lister.Activities.WLActivity;
 
 import org.json.JSONArray;
@@ -21,7 +23,7 @@ import java.util.List;
  */
 public class IO
 {
-    static String fileDir = DataContainer.dir;
+    public static final String fileDir = Environment.getExternalStoragePublicDirectory("Lists").toString();
 
     //turns app data into a string of json data
     public static void save(List<WishList> lists)
@@ -91,6 +93,7 @@ public class IO
         File dir = new File(fileDir);
         dir.mkdirs();
         File file = new File(fileDir, "data.json");
+        System.out.println("[IO] Writing to " + file.toString());
         if(!file.exists())
         {
             try
@@ -103,7 +106,7 @@ public class IO
         }
         try
         {
-            BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+            BufferedWriter bw = new BufferedWriter(new FileWriter(file, false));
             bw.write(data);
             bw.close();
         } catch (IOException e)
@@ -116,6 +119,7 @@ public class IO
     public static String readFromFile()
     {
         File file = new File(fileDir, "data.json");
+        System.out.println("[IO] Reading from " + file.toString());
         if (!file.exists())
         {
             try

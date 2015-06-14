@@ -28,10 +28,6 @@ public class Item
     public Item(String item, Boolean done)
     {
         this.item = item;
-        /*if(DataContainer.showNotifications && !archived)
-        {
-            findDate();
-        }*/
         parseItem();
         this.done = done;
     }
