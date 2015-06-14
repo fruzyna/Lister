@@ -11,12 +11,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.liamfruzyna.android.lister.Data.IO;
+import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.R;
 
 import org.json.JSONException;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 
 /**
  * Activity for customizing app settings.
@@ -53,16 +55,7 @@ public class SettingsActivity extends Activity
             {
                 File file = new File(IO.fileDir, "data.json");
                 file.delete();
-                try
-                {
-                    IO.load();
-                } catch (JSONException e)
-                {
-                    e.printStackTrace();
-                } catch (MalformedURLException e)
-                {
-                    e.printStackTrace();
-                }
+                WLActivity.lists = new ArrayList<>();
             }
         });
 
