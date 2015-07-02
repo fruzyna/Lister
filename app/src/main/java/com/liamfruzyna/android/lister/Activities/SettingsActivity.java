@@ -1,9 +1,24 @@
 package com.liamfruzyna.android.lister.Activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceActivity;
+import android.preference.PreferenceCategory;
+import android.preference.PreferenceScreen;
+import android.support.v7.widget.AppCompatCheckBox;
+import android.support.v7.widget.AppCompatCheckedTextView;
+import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.AppCompatRadioButton;
+import android.support.v7.widget.AppCompatSpinner;
+import android.support.v7.widget.Toolbar;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
@@ -23,7 +38,7 @@ import java.util.ArrayList;
 /**
  * Activity for customizing app settings.
  */
-public class SettingsActivity extends Activity
+public class SettingsActivity extends PreferenceActivity
 {
     View v;
     CheckBox cb;
@@ -32,64 +47,110 @@ public class SettingsActivity extends Activity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.settings);
 
-        LinearLayout layout = (LinearLayout) findViewById(R.id.settings);
-        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        v = inflater.inflate(R.layout.subheader, null);
-        layout.addView(v);
-        TextView tv = (TextView) v.findViewById(R.id.textView);
-        tv.setText("General");
+        PreferenceScreen ps = getPreferenceManager().createPreferenceScreen(this);
 
-        inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        v = inflater.inflate(R.layout.settings_text_item, null);
-        layout.addView(v);
-        TextView by = (TextView) v.findViewById(R.id.big);
-        TextView link = (TextView) v.findViewById(R.id.little);
-        by.setText("Clear Data");
-        link.setText("delete the save file for data (may require app restart)");
-        v.setOnClickListener(new View.OnClickListener()
+        PreferenceCategory gen = new PreferenceCategory(this);
+        gen.setTitle("General");
+        ps.addPreference(gen);
+
+        Preference clear = new Preference(this);
+        clear.setTitle("Clear Data");
+        clear.setSummary("This may require app restart");
+        clear.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
         {
             @Override
-            public void onClick(View view)
+            public boolean onPreferenceClick(Preference preference)
             {
                 File file = new File(IO.fileDir, "data.json");
                 file.delete();
                 WLActivity.lists = new ArrayList<>();
+                return true;
             }
         });
+        gen.addPreference(clear);
 
-        inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        v = inflater.inflate(R.layout.subheader, null);
-        layout.addView(v);
-        tv = (TextView) v.findViewById(R.id.textView);
-        tv.setText("About");
+        PreferenceCategory about = new PreferenceCategory(this);
+        about.setTitle("About");
+        ps.addPreference(about);
 
-        inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        v = inflater.inflate(R.layout.settings_text_item, null);
-        layout.addView(v);
-        TextView number = (TextView) v.findViewById(R.id.big);
-        TextView description = (TextView) v.findViewById(R.id.little);
-        number.setText("Lister Version 1.7.1");
-        description.setText("UI Tweaks");
+        Preference version = new Preference(this);
+        version.setTitle("App Version");
+        try
+        {
+            version.setSummary(getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
+        } catch (PackageManager.NameNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        about.addPreference(version);
 
-        inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        v = inflater.inflate(R.layout.settings_text_item, null);
-        layout.addView(v);
-        by = (TextView) v.findViewById(R.id.big);
-        link = (TextView) v.findViewById(R.id.little);
-        by.setText("2014 Liam Fruzyna/mail929");
-        link.setText("liamfruzyna.com");
-        v.setOnClickListener(new View.OnClickListener()
+        Preference me = new Preference(this);
+        me.setTitle("2015 Liam Fruzyna");
+        me.setSummary("mail929.com");
+        me.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
         {
             @Override
-            public void onClick(View view)
+            public boolean onPreferenceClick(Preference preference)
             {
-                String url = "http://liamfruzyna.com";
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
-                startActivity(i);
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://mail929.com"));
+                startActivity(browserIntent);
+                return true;
             }
         });
+        about.addPreference(me);
+
+        setPreferenceScreen(ps);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState)
+    {
+        super.onPostCreate(savedInstanceState);
+
+        LinearLayout root = (LinearLayout)findViewById(android.R.id.list).getParent().getParent().getParent();
+        Toolbar bar = (Toolbar) LayoutInflater.from(this).inflate(R.layout.settings_toolbar, root, false);
+        bar.setTitleTextColor(Color.parseColor("#FFFFFF"));
+        bar.setTranslationZ(8);
+        root.addView(bar, 0);
+        bar.setNavigationOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                finish();
+            }
+        });
+    }
+
+    @Override
+    public View onCreateView(String name, Context context, AttributeSet attrs)
+    {
+        // Allow super to try and create a view first
+        final View result = super.onCreateView(name, context, attrs);
+        if (result != null)
+        {
+            return result;
+        }
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+        {
+            // If we're running pre-L, we need to 'inject' our tint aware Views in place of the
+            // standard framework versions
+            switch (name) {
+                case "EditText":
+                    return new AppCompatEditText(this, attrs);
+                case "Spinner":
+                    return new AppCompatSpinner(this, attrs);
+                case "CheckBox":
+                    return new AppCompatCheckBox(this, attrs);
+                case "RadioButton":
+                    return new AppCompatRadioButton(this, attrs);
+                case "CheckedTextView":
+                    return new AppCompatCheckedTextView(this, attrs);
+            }
+        }
+
+        return null;
     }
 }
