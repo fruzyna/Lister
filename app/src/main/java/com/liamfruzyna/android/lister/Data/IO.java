@@ -30,44 +30,46 @@ public class IO
     {
         try
         {
-            //JSONArray jlists = new JSONArray();
             for (int i = 0; i < lists.size(); i++)
             {
-                JSONObject jlist = new JSONObject();
-                jlist.put("name", lists.get(i).name);
-                JSONArray jitems = new JSONArray();
-                List<Item> items = lists.get(i).items;
-                for (int j = 0; j < items.size(); j++)
-                {
-                    JSONObject jitem = new JSONObject();
-                    jitem.put("item", items.get(j).item);
-                    jitem.put("done", items.get(j).done);
-                    jitems.put(jitem);
-                }
-                jlist.put("items", jitems);
-                JSONArray jtags = new JSONArray();
-                List<String> tags = lists.get(i).tags;
-                for (int j = 0; j < tags.size(); j++)
-                {
-                    jtags.put(tags.get(j));
-                }
-                jlist.put("tags", jtags);
-                writeToFile(lists.get(i).name, jlist.toString());
-                //jlists.put(jlist);
+                writeToFile(lists.get(i).name, getListString(lists.get(i)));
             }
-            //writeToFile(jlists.toString());
         } catch (JSONException e)
         {
             e.printStackTrace();
         }
     }
 
+    public static String getListString(WishList list) throws JSONException
+    {
+        JSONObject jlist = new JSONObject();
+        jlist.put("name", list.name);
+        JSONArray jitems = new JSONArray();
+        List<Item> items = list.items;
+        for (int j = 0; j < items.size(); j++)
+        {
+            JSONObject jitem = new JSONObject();
+            jitem.put("item", items.get(j).item);
+            jitem.put("done", items.get(j).done);
+            jitems.put(jitem);
+        }
+        jlist.put("items", jitems);
+        JSONArray jtags = new JSONArray();
+        List<String> tags = list.tags;
+        for (int j = 0; j < tags.size(); j++)
+        {
+            jtags.put(tags.get(j));
+        }
+        jlist.put("tags", jtags);
+        return jlist.toString();
+    }
+    
     //converts a string of json data to useable lists
     public static List<WishList> load() throws JSONException, MalformedURLException
     {
         List<WishList> lists = new ArrayList<WishList>();
         //JSONArray jlists = new JSONArray(readFromFile());
-        List<String> jlists =  readFromFile();
+        List<String> jlists = readFromFile();
         for (int i = 0; i < jlists.size(); i++)
         {
             //JSONObject jlist = jlists.getJSONObject(i);
@@ -88,6 +90,25 @@ public class IO
             lists.add(new WishList(jlist.getString("name"), items, tags));
         }
         return lists;
+    }
+
+    public static WishList readString(String json) throws JSONException
+    {
+        JSONObject jlist = new JSONObject(json);
+        List<Item> items = new ArrayList<Item>();
+        JSONArray jitems = jlist.getJSONArray("items");
+        for (int j = 0; j < jitems.length(); j++)
+        {
+            Item item = new Item(jitems.getJSONObject(j).getString("item"), jitems.getJSONObject(j).getBoolean("done"));
+            items.add(item);
+        }
+        List<String> tags = new ArrayList<String>();
+        JSONArray jtags = jlist.getJSONArray("tags");
+        for (int j = 0; j < jtags.length(); j++)
+        {
+            tags.add(jtags.getString(j));
+        }
+        return new WishList(jlist.getString("name"), items, tags);
     }
 
     //takes a string of data and writes it to the save file

@@ -54,6 +54,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     static Spinner spin;
     public static FloatingActionButton fab;
 
+
     //rebuilds the list of items
     public void updateList()
     {
@@ -194,6 +195,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         }
     }
 
+
     //main method that is run when app is started
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -322,13 +324,37 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         updateList();
     }
 
-    public void onResume()
-    {
+    @Override
+    public void onResume() {
         super.onResume();
+        System.out.println("On resume");
         if(lists.size() > 0 && lists != null)
         {
             updateList();
         }
+        //sets up spinner
+        spin = (Spinner) findViewById(R.id.spinner);
+        if (lists.size() > 0)
+        {
+            //creates a list of events level and distance to fill out the spinner
+            List<String> names = new ArrayList<String>();
+            for (int i = 0; i < lists.size(); i++)
+            {
+                names.add(lists.get(i).name);
+            }
+            //setup spinner
+            ArrayAdapter<String> sadapter = new ArrayAdapter<String>(this, R.layout.spinner_item, names);
+            sadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spin.setAdapter(sadapter);
+            current = spin.getSelectedItemPosition();
+            updateList();
+        } else
+        {
+            DialogFragment dialog = new NewListDialog();
+            dialog.show(getFragmentManager(), "");
+        }
+
+        spin.setOnItemSelectedListener(this);
     }
 
     //updates list when new list is selected in spinner

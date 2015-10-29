@@ -1,6 +1,7 @@
 package com.liamfruzyna.android.lister.Activities;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -27,6 +28,9 @@ import android.widget.TextView;
 
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.WishList;
+import com.liamfruzyna.android.lister.DialogFragments.ChooseListDialog;
+import com.liamfruzyna.android.lister.DialogFragments.EditItemDialog;
+import com.liamfruzyna.android.lister.DialogFragments.ImportListDialog;
 import com.liamfruzyna.android.lister.R;
 
 import org.json.JSONException;
@@ -76,6 +80,8 @@ public class SettingsActivity extends PreferenceActivity
             @Override
             public boolean onPreferenceClick(Preference preference)
             {
+                DialogFragment dialog = new ChooseListDialog();
+                dialog.show(getFragmentManager(), "");
                 return true;
             }
         });
@@ -89,6 +95,8 @@ public class SettingsActivity extends PreferenceActivity
             @Override
             public boolean onPreferenceClick(Preference preference)
             {
+                DialogFragment dialog = new ImportListDialog();
+                dialog.show(getFragmentManager(), "");
                 return true;
             }
         });
