@@ -57,11 +57,9 @@ public class SettingsActivity extends PreferenceActivity
         Preference clear = new Preference(this);
         clear.setTitle("Clear Data");
         clear.setSummary("This may require app restart");
-        clear.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
-        {
+        clear.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
-            public boolean onPreferenceClick(Preference preference)
-            {
+            public boolean onPreferenceClick(Preference preference) {
                 File file = new File(IO.fileDir, "data.json");
                 file.delete();
                 WLActivity.lists = new ArrayList<>();
@@ -69,6 +67,32 @@ public class SettingsActivity extends PreferenceActivity
             }
         });
         gen.addPreference(clear);
+
+        Preference share = new Preference(this);
+        share.setTitle("Share List");
+        share.setSummary("Share list with someone else");
+        share.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
+        {
+            @Override
+            public boolean onPreferenceClick(Preference preference)
+            {
+                return true;
+            }
+        });
+        gen.addPreference(share);
+
+        Preference importList = new Preference(this);
+        importList.setTitle("Import List");
+        importList.setSummary("Import list from someone else");
+        importList.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
+        {
+            @Override
+            public boolean onPreferenceClick(Preference preference)
+            {
+                return true;
+            }
+        });
+        gen.addPreference(importList);
 
         PreferenceCategory about = new PreferenceCategory(this);
         about.setTitle("About");

@@ -17,6 +17,7 @@ import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.R;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +40,9 @@ public class RemoveListDialog extends DialogFragment
                 {
                     public void onClick(DialogInterface dialog, int id)
                     {
+
+                        File file = new File(IO.fileDir, lists.get(current).name + ".json");
+                        file.delete();
                         final WishList old = lists.get(current);
                         lists.remove(current);
                         //setup spinner

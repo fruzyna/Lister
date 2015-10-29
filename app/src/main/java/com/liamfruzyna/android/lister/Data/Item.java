@@ -6,6 +6,7 @@ import com.liamfruzyna.android.lister.Activities.WLActivity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /*this is the object for items that are added into lists
@@ -23,6 +24,7 @@ public class Item
     public String color = "#000000";
     public List<String> people = new ArrayList<>();
     public List<String> tags = new ArrayList<>();
+    public Date date = new Date(2997, 4, 24);
 
     //the constructor if you don't know what this is don't ask me
     public Item(String item, Boolean done)
@@ -56,6 +58,34 @@ public class Item
             }
             this.color = "#" + color;
             System.out.println("Found Color: " + this.color);
+        }
+        if(item.contains("/"))
+        {
+            String[] date = item.split("/");
+            if(date.length == 3)
+            {
+                int day = Integer.parseInt(date[1]);
+                int month;
+                int year;
+                if (date[0].contains(" ")) {
+                    String[] start = date[0].split(" ");
+                    month = Integer.parseInt(start[start.length - 1]);
+                } else {
+                    month = Integer.parseInt(date[0]);
+                }
+                if (date[2].contains(" ")) {
+                    String[] end = date[2].split(" ");
+                    year = Integer.parseInt(end[0]);
+                } else {
+                    year = Integer.parseInt(date[2]);
+                }
+                if(year < 2000)
+                {
+                    year += 2000;
+                }
+                System.out.println("Found date: " + month + "/" + day + "/" + year);
+                this.date = new Date(year, month, day);
+            }
         }
     }
 

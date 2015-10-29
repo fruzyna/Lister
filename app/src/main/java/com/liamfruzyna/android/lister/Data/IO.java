@@ -30,7 +30,7 @@ public class IO
     {
         try
         {
-            JSONArray jlists = new JSONArray();
+            //JSONArray jlists = new JSONArray();
             for (int i = 0; i < lists.size(); i++)
             {
                 JSONObject jlist = new JSONObject();
@@ -52,9 +52,10 @@ public class IO
                     jtags.put(tags.get(j));
                 }
                 jlist.put("tags", jtags);
-                jlists.put(jlist);
+                writeToFile(lists.get(i).name, jlist.toString());
+                //jlists.put(jlist);
             }
-            writeToFile(jlists.toString());
+            //writeToFile(jlists.toString());
         } catch (JSONException e)
         {
             e.printStackTrace();
@@ -65,10 +66,12 @@ public class IO
     public static List<WishList> load() throws JSONException, MalformedURLException
     {
         List<WishList> lists = new ArrayList<WishList>();
-        JSONArray jlists = new JSONArray(readFromFile());
-        for (int i = 0; i < jlists.length(); i++)
+        //JSONArray jlists = new JSONArray(readFromFile());
+        List<String> jlists =  readFromFile();
+        for (int i = 0; i < jlists.size(); i++)
         {
-            JSONObject jlist = jlists.getJSONObject(i);
+            //JSONObject jlist = jlists.getJSONObject(i);
+            JSONObject jlist = new JSONObject(jlists.get(i));
             List<Item> items = new ArrayList<Item>();
             JSONArray jitems = jlist.getJSONArray("items");
             for (int j = 0; j < jitems.length(); j++)
@@ -88,11 +91,11 @@ public class IO
     }
 
     //takes a string of data and writes it to the save file
-    private static void writeToFile(String data)
+    private static void writeToFile(String name, String data)
     {
         File dir = new File(fileDir);
         dir.mkdirs();
-        File file = new File(fileDir, "data.json");
+        File file = new File(fileDir, name + ".json");
         System.out.println("[IO] Writing to " + file.toString());
         if(!file.exists())
         {
@@ -116,9 +119,9 @@ public class IO
     }
 
     //gets a string of data from the save file
-    public static String readFromFile()
+    public static List<String> readFromFile()
     {
-        File file = new File(fileDir, "data.json");
+        /*File file = new File(fileDir, "data.json");
         System.out.println("[IO] Reading from " + file.toString());
         if (!file.exists())
         {
@@ -144,6 +147,28 @@ public class IO
         {
             e.printStackTrace();
         }
-        return "";
+        return "";*/
+        List<String> data = new ArrayList<>();
+        File[] files = new File(fileDir).listFiles();
+        for(int i = 0; i < files.length; i++)
+        {
+            File file = files[i];
+            System.out.println("[IO] Reading from " + file.toString());
+            StringBuilder sb = new StringBuilder();
+            try
+            {
+                BufferedReader br = new BufferedReader(new FileReader(file));
+                String line;
+                while ((line = br.readLine()) != null)
+                {
+                    sb.append(line);
+                }
+                data.add(sb.toString());
+            } catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        return data;
     }
 }

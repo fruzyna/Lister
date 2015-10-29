@@ -45,7 +45,7 @@ import static android.os.Environment.getExternalStoragePublicDirectory;
 public class WLActivity extends ActionBarActivity implements AdapterView.OnItemSelectedListener
 {
 
-    public static List<WishList> lists = new ArrayList<WishList>();
+    public static List<WishList> lists = new ArrayList<>();
     public static int current = 0;
 
     static LinearLayout list;
@@ -59,9 +59,51 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     {
         if(lists.size() > 0)
         {
-            List<Item> temp = lists.get(current).items;
-            final List<Item> items = new ArrayList<Item>();
+            List<Item> savedBuild = new ArrayList<>();
+            List<Item> savedTodo = lists.get(current).items;
             StringBuilder sb = new StringBuilder();
+
+            if(savedTodo.size() >= 2)
+            {
+                boolean done = false;
+                while(!done)
+                {
+                    List<Item> build = new ArrayList<>();
+                    List<Item> todo = new ArrayList<>();
+                    build.add(savedTodo.get(0));
+                    for(int i = 1; i < savedTodo.size(); i++)
+                    {
+                        if(savedTodo.get(i).date.after(build.get(build.size()-1).date) || savedTodo.get(i).date.compareTo(build.get(build.size()-1).date) == 0)
+                        {
+                            build.add(savedTodo.get(i));
+                        }
+                        else
+                        {
+                            todo.add(savedTodo.get(i));
+                        }
+                    }
+                    for(int j = 0; j < savedBuild.size(); j++)
+                    {
+                        build.add(savedBuild.get(j));
+                    }
+                    savedTodo = todo;
+                    savedBuild = build;
+                    if(savedTodo.size() == 0)
+                    {
+                        done = true;
+                    }
+                }
+            }
+            else
+            {
+                for(int i = 0; i < savedTodo.size(); i++)
+                {
+                    savedBuild.add(savedTodo.get(i));
+                }
+            }
+            List<Item> temp = savedBuild;
+            final List<Item> items = new ArrayList<>();
+
             for (int i = 0; i < temp.size(); i++)
             {
                 if(!temp.get(i).done)

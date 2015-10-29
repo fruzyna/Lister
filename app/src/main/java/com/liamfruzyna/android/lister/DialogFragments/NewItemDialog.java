@@ -32,7 +32,7 @@ public class NewItemDialog extends DialogFragment
         builder.setMessage("Add a new item to " + list.name)
                 .setTitle("New Item")
                 .setView(v)
-                .setPositiveButton("CREATE", new DialogInterface.OnClickListener()
+                .setPositiveButton("ADD", new DialogInterface.OnClickListener()
                 {
                     public void onClick(DialogInterface dialog, int id)
                     {
