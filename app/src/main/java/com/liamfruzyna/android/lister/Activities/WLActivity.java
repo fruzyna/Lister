@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.Item;
 import com.liamfruzyna.android.lister.Data.WishList;
+import com.liamfruzyna.android.lister.DialogFragments.ArchiveListDialog;
 import com.liamfruzyna.android.lister.DialogFragments.EditItemDialog;
 import com.liamfruzyna.android.lister.DialogFragments.EditTagsDialog;
 import com.liamfruzyna.android.lister.DialogFragments.NewItemDialog;
@@ -40,12 +41,11 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.os.Environment.getExternalStoragePublicDirectory;
-
 public class WLActivity extends ActionBarActivity implements AdapterView.OnItemSelectedListener
 {
 
     public static List<WishList> lists = new ArrayList<>();
+    public static List<WishList> unArchieved = new ArrayList<>();
     public static int current = 0;
 
     static LinearLayout list;
@@ -58,10 +58,11 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     //rebuilds the list of items
     public void updateList()
     {
-        if(lists.size() > 0)
+        if(unArchieved.size() > 0)
         {
             List<Item> savedBuild = new ArrayList<>();
-            List<Item> savedTodo = lists.get(current).items;
+            System.out.println("Selected Item:" + spin.getSelectedItemPosition());
+            List<Item> savedTodo = unArchieved.get(current).items;
             StringBuilder sb = new StringBuilder();
 
             if(savedTodo.size() >= 2)
@@ -183,15 +184,15 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
                 }
             }
             sb.append("Tags: ");
-            for(int i = 0; i < lists.get(current).tags.size(); i++)
+            for(int i = 0; i < unArchieved.get(current).tags.size(); i++)
             {
-                sb.append(lists.get(current).tags.get(i) + " ");
+                sb.append(unArchieved.get(current).tags.get(i) + " ");
             }
             TextView tv = new TextView(c);
             tv.setText(sb.toString());
             tagcv.removeAllViews();
             tagcv.addView(tv);
-            IO.save(lists);
+            IO.save(unArchieved);
         }
     }
 
@@ -229,7 +230,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
             @Override
             public boolean onLongClick(View v)
             {
-                if (lists.size() > 0)
+                if (unArchieved.size() > 0)
                 {
                     DialogFragment dialog = new EditTagsDialog();
                     dialog.show(getFragmentManager(), "");
@@ -246,7 +247,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
             @Override
             public void onClick(View view)
             {
-                if(lists.size() > 0)
+                if(unArchieved.size() > 0)
                 {
                     DialogFragment dialog = new NewListDialog();
                     dialog.show(getFragmentManager(), "");
@@ -268,15 +269,23 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
             lists = new ArrayList<WishList>();
         }
 
+        for(int i = 0; i < lists.size(); i++)
+        {
+            if(!lists.get(i).archived)
+            {
+                unArchieved.add(lists.get(i));
+            }
+        }
+
         //sets up spinner
         spin = (Spinner) findViewById(R.id.spinner);
-        if (lists.size() > 0)
+        if (unArchieved.size() > 0)
         {
             //creates a list of events level and distance to fill out the spinner
             List<String> names = new ArrayList<String>();
-            for (int i = 0; i < lists.size(); i++)
+            for (int i = 0; i < unArchieved.size(); i++)
             {
-                names.add(lists.get(i).name);
+                names.add(unArchieved.get(i).name);
             }
             //setup spinner
             ArrayAdapter<String> sadapter = new ArrayAdapter<String>(this, R.layout.spinner_item, names);
@@ -297,9 +306,22 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         {
             public void onClick(View v)
             {
-                if (lists.size() > 0)
+                if (unArchieved.size() > 0)
                 {
                     DialogFragment dialog = new RemoveListDialog();
+                    dialog.show(getFragmentManager(), "");
+                }
+            }
+        });
+
+        ImageButton archiveList = (ImageButton) findViewById(R.id.archive);
+        archiveList.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v)
+            {
+                if(unArchieved.size() > 0)
+                {
+                    DialogFragment dialog = new ArchiveListDialog();
                     dialog.show(getFragmentManager(), "");
                 }
             }
@@ -313,7 +335,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
             @Override
             public void onClick(View v)
             {
-                if (lists.size() > 0)
+                if (unArchieved.size() > 0)
                 {
                     DialogFragment dialog = new NewItemDialog();
                     dialog.show(getFragmentManager(), "");
@@ -327,20 +349,19 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     @Override
     public void onResume() {
         super.onResume();
-        System.out.println("On resume");
-        if(lists.size() > 0 && lists != null)
+        if(unArchieved.size() > 0 && unArchieved != null)
         {
             updateList();
         }
         //sets up spinner
         spin = (Spinner) findViewById(R.id.spinner);
-        if (lists.size() > 0)
+        if (unArchieved.size() > 0)
         {
             //creates a list of events level and distance to fill out the spinner
             List<String> names = new ArrayList<String>();
-            for (int i = 0; i < lists.size(); i++)
+            for (int i = 0; i < unArchieved.size(); i++)
             {
-                names.add(lists.get(i).name);
+                names.add(unArchieved.get(i).name);
             }
             //setup spinner
             ArrayAdapter<String> sadapter = new ArrayAdapter<String>(this, R.layout.spinner_item, names);
@@ -412,11 +433,12 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
                     @Override
                     public void onClick(View v)
                     {
+                        unArchieved.add(list);
                         lists.add(list);
                         List<String> names = new ArrayList<String>();
-                        for (int i = 0; i < lists.size(); i++)
+                        for (int i = 0; i < unArchieved.size(); i++)
                         {
-                            names.add(lists.get(i).name);
+                            names.add(unArchieved.get(i).name);
                         }
                         ArrayAdapter<String> sadapter = new ArrayAdapter<String>(c, R.layout.spinner_item, names);
                         sadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -439,6 +461,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
                     public void onClick(View v)
                     {
                         lists.get(current).items.add(item);
+                        unArchieved.get(current).items.add(item);
                         IO.save(lists);
                         updateList();
                     }

@@ -44,6 +44,7 @@ public class IO
     {
         JSONObject jlist = new JSONObject();
         jlist.put("name", list.name);
+        jlist.put("archived", list.archived);
         JSONArray jitems = new JSONArray();
         List<Item> items = list.items;
         for (int j = 0; j < items.size(); j++)
@@ -87,7 +88,12 @@ public class IO
             {
                 tags.add(jtags.getString(j));
             }
-            lists.add(new WishList(jlist.getString("name"), items, tags));
+            boolean archived = false;
+            if(jlist.has("archived"))
+            {
+                archived = jlist.getBoolean("archived");
+            }
+            lists.add(new WishList(jlist.getString("name"), items, tags, archived));
         }
         return lists;
     }
@@ -108,7 +114,12 @@ public class IO
         {
             tags.add(jtags.getString(j));
         }
-        return new WishList(jlist.getString("name"), items, tags);
+        boolean archived = false;
+        if(jlist.has("archived"))
+        {
+            archived = jlist.getBoolean("archived");
+        }
+        return new WishList(jlist.getString("name"), items, tags, archived);
     }
 
     //takes a string of data and writes it to the save file

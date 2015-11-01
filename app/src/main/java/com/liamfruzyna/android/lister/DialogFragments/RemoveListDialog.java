@@ -51,20 +51,7 @@ public class RemoveListDialog extends DialogFragment
                         {
                             names.add(lists.get(i).name);
                         }
-                        ArrayAdapter<String> sadapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item, names);
-                        sadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        Spinner spin = (Spinner) getActivity().findViewById(R.id.spinner);
-                        spin.setAdapter(sadapter);
-                        current = spin.getSelectedItemPosition();
-                        if (names.size() == 0)
-                        {
-                            IO.save(lists);
-                            LinearLayout list = (LinearLayout) getActivity().findViewById(R.id.list);
-                            RelativeLayout tagcv = (RelativeLayout) getActivity().findViewById(R.id.tag);
-                            list.removeAllViews();
-                            tagcv.removeAllViews();
-
-                        }
+                        IO.save(lists);
                         ((WLActivity) getActivity()).removeListSnackbar(old);
                     }
                 })

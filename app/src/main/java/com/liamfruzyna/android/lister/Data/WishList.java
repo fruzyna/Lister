@@ -10,15 +10,17 @@ import java.util.List;
  */
 public class WishList
 {
-    public List<Item> items = new ArrayList<Item>();
-    public List<String> tags = new ArrayList<String>();
+    public List<Item> items = new ArrayList<>();
+    public List<String> tags = new ArrayList<>();
     public String name;
+    public boolean archived = false;
 
-    public WishList(String name, List<Item> items, List<String> tags)
+    public WishList(String name, List<Item> items, List<String> tags, boolean archived)
     {
         this.name = name;
         this.items = items;
         this.tags = tags;
+        this.archived = archived;
     }
 
     public WishList(String name, List<String> tags)

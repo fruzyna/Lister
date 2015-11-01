@@ -76,6 +76,15 @@
                             android:layout_alignParentRight="true"
                             android:background="@drawable/ic_remove"/>
 
+                        <ImageButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/archive"
+                            android:layout_centerVertical="true"
+                            android:layout_toLeftOf="@+id/remove"
+                            android:layout_toStartOf="@+id/remove"
+                            android:background="@drawable/ic_remove" />
+
                     </RelativeLayout>
 
                     <View

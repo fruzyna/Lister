@@ -29,8 +29,6 @@ import org.w3c.dom.Text;
  */
 public class ChooseListDialog extends DialogFragment
 {
-
-
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState)
     {
