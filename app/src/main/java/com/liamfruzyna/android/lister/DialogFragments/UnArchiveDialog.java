@@ -11,23 +11,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.liamfruzyna.android.lister.Activities.WLActivity;
 import com.liamfruzyna.android.lister.Data.IO;
-import com.liamfruzyna.android.lister.Data.Item;
 import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.R;
 
 import org.json.JSONException;
-import org.w3c.dom.Text;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Created by mail929 on 10/29/15.
+ * Created by mail929 on 10/31/15.
  */
-public class ChooseListDialog extends DialogFragment
+public class UnArchiveDialog extends DialogFragment
 {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState)
@@ -37,8 +38,16 @@ public class ChooseListDialog extends DialogFragment
         final View v = inflater.inflate(R.layout.share_list_item, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         ListView list = (ListView) v.findViewById(R.id.listView);
+        final List<WishList> archived = new ArrayList<>();
+        for(int i = 0; i < WLActivity.lists.size(); i++)
+        {
+            if(WLActivity.lists.get(i).archived)
+            {
+                archived.add(WLActivity.lists.get(i));
+            }
+        }
 
-        list.setAdapter(new ArrayAdapter<WishList>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, WLActivity.lists) {
+        list.setAdapter(new ArrayAdapter<WishList>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, archived) {
             public View getView(final int position, View convertView, ViewGroup parent) {
                 View view;
                 if (convertView == null) {
@@ -47,8 +56,7 @@ public class ChooseListDialog extends DialogFragment
                 }
                 view = super.getView(position, convertView, parent);
 
-                ((TextView) view.findViewById(android.R.id.text1)).setText(WLActivity.lists.get(position).name);
-                System.out.println("Adding: " + WLActivity.lists.get(position).name);
+                ((TextView) view.findViewById(android.R.id.text1)).setText(archived.get(position).name);
                 return view;
             }
         });
@@ -56,21 +64,14 @@ public class ChooseListDialog extends DialogFragment
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-                sharingIntent.setType("text/plain");
-                String shareBody = null;
-                try {
-                    shareBody = IO.getListString(WLActivity.lists.get(position));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "New List");
-                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-                startActivity(Intent.createChooser(sharingIntent, "Share via"));
+                List<WishList> unArchieved = WLActivity.unArchieved;
+                unArchieved.add(archived.get(position));
+                archived.get(position).archived = false;
+                IO.save(WLActivity.lists);
             }
         });
-        builder.setMessage("Choose a list to share")
-                .setTitle("Share a List")
+        builder.setMessage("Choose a list to unarchive")
+                .setTitle("Unarchive a List")
                 .setView(v)
                 .setNegativeButton("BACK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {

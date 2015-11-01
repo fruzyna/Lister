@@ -31,6 +31,7 @@ import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.DialogFragments.ChooseListDialog;
 import com.liamfruzyna.android.lister.DialogFragments.EditItemDialog;
 import com.liamfruzyna.android.lister.DialogFragments.ImportListDialog;
+import com.liamfruzyna.android.lister.DialogFragments.UnArchiveDialog;
 import com.liamfruzyna.android.lister.R;
 
 import org.json.JSONException;
@@ -101,6 +102,21 @@ public class SettingsActivity extends PreferenceActivity
             }
         });
         gen.addPreference(importList);
+
+        Preference unArchive = new Preference(this);
+        unArchive.setTitle("Unarchive List");
+        unArchive.setSummary("Unarchive a list so that it can be seen again");
+        unArchive.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
+        {
+            @Override
+            public boolean onPreferenceClick(Preference preference)
+            {
+                DialogFragment dialog = new UnArchiveDialog();
+                dialog.show(getFragmentManager(), "");
+                return true;
+            }
+        });
+        gen.addPreference(unArchive);
 
         PreferenceCategory about = new PreferenceCategory(this);
         about.setTitle("About");
