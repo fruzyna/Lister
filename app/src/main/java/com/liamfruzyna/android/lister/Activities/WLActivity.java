@@ -45,6 +45,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
 {
 
     public static List<WishList> lists = new ArrayList<>();
+    public static List<Item> items = new ArrayList<>();
     public static List<WishList> unArchieved = new ArrayList<>();
     public static int current = 0;
 
@@ -104,7 +105,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
                 }
             }
             List<Item> temp = savedBuild;
-            final List<Item> items = new ArrayList<>();
+            items = new ArrayList<>();
 
             for (int i = 0; i < temp.size(); i++)
             {

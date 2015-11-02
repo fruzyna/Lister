@@ -41,18 +41,29 @@ public class RemoveListDialog extends DialogFragment
                     public void onClick(DialogInterface dialog, int id)
                     {
 
+
                         File file = new File(IO.fileDir, lists.get(current).name + ".json");
                         file.delete();
-                        final WishList old = lists.get(current);
-                        lists.remove(current);
+                        final WishList old = WLActivity.unArchieved.get(current);
+                        lists.remove(WLActivity.unArchieved.get(current));
+                        WLActivity.unArchieved.remove(current);
                         //setup spinner
-                        List<String> names = new ArrayList<String>();
-                        for (int i = 0; i < lists.size(); i++)
-                        {
-                            names.add(lists.get(i).name);
-                        }
                         IO.save(lists);
                         ((WLActivity) getActivity()).removeListSnackbar(old);
+                        List<WishList> unArchieved = WLActivity.unArchieved;
+                        Spinner spin = (Spinner) getActivity().findViewById(R.id.spinner);
+                        //creates a list of events level and distance to fill out the spinner
+                        List<String> names = new ArrayList<String>();
+                        for (int i = 0; i < unArchieved.size(); i++)
+                        {
+                            names.add(unArchieved.get(i).name);
+                        }
+                        //setup spinner
+                        ArrayAdapter<String> sadapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item, names);
+                        sadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        spin.setAdapter(sadapter);
+                        WLActivity.current = spin.getSelectedItemPosition();
+                        ((WLActivity) getActivity()).updateList();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener()

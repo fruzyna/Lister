@@ -41,7 +41,7 @@ public class EditItemDialog extends DialogFragment
         final View v = inflater.inflate(R.layout.new_item_item, null);
         editText = (EditText) v.findViewById(R.id.name);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("Edit: " + WLActivity.lists.get(WLActivity.current).items.get(position).item)
+        builder.setMessage("Edit: " + WLActivity.items.get(position).item)
                 .setTitle("Edit List Item")
                 .setView(v)
                 .setPositiveButton("APPEND", new DialogInterface.OnClickListener()
@@ -51,12 +51,12 @@ public class EditItemDialog extends DialogFragment
                         if (editText.getText().toString().equals(""))
                         {
                             System.out.println("[EditItemDialog] Removing Item " + position);
-                            Item item = WLActivity.lists.get(WLActivity.current).items.get(position);
-                            WLActivity.lists.get(WLActivity.current).items.remove(position);
+                            Item item = WLActivity.items.get(position);
+                            WLActivity.items.remove(position);
                             ((WLActivity) getActivity()).removeItemSnackbar(item);
                         } else
                         {
-                            WLActivity.lists.get(WLActivity.current).items.get(position).item = editText.getText().toString();
+                            WLActivity.items.get(position).item = editText.getText().toString();
                         }
                         IO.save(WLActivity.lists);
                         ((WLActivity) getActivity()).updateList();

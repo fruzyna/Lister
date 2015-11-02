@@ -65,9 +65,12 @@ public class UnArchiveDialog extends DialogFragment
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
                 List<WishList> unArchieved = WLActivity.unArchieved;
-                unArchieved.add(archived.get(position));
-                archived.get(position).archived = false;
-                IO.save(WLActivity.lists);
+                if(!unArchieved.contains(archived.get(position)))
+                {
+                    unArchieved.add(archived.get(position));
+                    archived.get(position).archived = false;
+                    IO.save(WLActivity.lists);
+                }
             }
         });
         builder.setMessage("Choose a list to unarchive")

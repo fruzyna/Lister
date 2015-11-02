@@ -86,6 +86,27 @@ public class Item
                 System.out.println("Found date: " + month + "/" + day + "/" + year);
                 this.date = new Date(year, month, day);
             }
+            else if(date.length == 2)
+            {
+                int day;
+                int month;
+                int year;
+                if (date[0].contains(" ")) {
+                    String[] start = date[0].split(" ");
+                    month = Integer.parseInt(start[start.length - 1]);
+                } else {
+                    month = Integer.parseInt(date[0]);
+                }
+                if (date[1].contains(" ")) {
+                    String[] end = date[1].split(" ");
+                    day = Integer.parseInt(end[0]);
+                } else {
+                    day = Integer.parseInt(date[1]);
+                }
+                year = Calendar.getInstance().getTime().getYear();
+                System.out.println("Found date: " + month + "/" + day + "/" + year);
+                this.date = new Date(year, month, day);
+            }
         }
     }
 
