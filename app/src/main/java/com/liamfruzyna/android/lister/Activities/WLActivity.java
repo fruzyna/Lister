@@ -56,55 +56,50 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     public static FloatingActionButton fab;
 
 
+    public Item findEarliest(List<Item> items)
+    {
+        Item earliest = items.get(0);
+        if(items.size() > 1)
+        {
+            for(int i = 1; i < items.size(); i++)
+            {
+                if(items.get(i).date.before(earliest.date))
+                {
+                    earliest = items.get(i);
+                }
+            }
+        }
+        return earliest;
+    }
+
+    public List<Item> newList(List<Item> items)
+    {
+        List<Item> copy = new ArrayList<>();
+        for(int i = 0; i < items.size(); i++)
+        {
+            copy.add(items.get(i));
+        }
+        return copy;
+    }
+
     //rebuilds the list of items
     public void updateList()
     {
         if(unArchieved.size() > 0)
         {
-            List<Item> savedBuild = new ArrayList<>();
             System.out.println("Selected Item:" + spin.getSelectedItemPosition());
-            List<Item> savedTodo = unArchieved.get(current).items;
+            List<Item> savedTodo = newList(unArchieved.get(current).items);
             StringBuilder sb = new StringBuilder();
 
-            if(savedTodo.size() >= 2)
+            List<Item> build = new ArrayList<>();
+            while(savedTodo.size() > 0)
             {
-                boolean done = false;
-                while(!done)
-                {
-                    List<Item> build = new ArrayList<>();
-                    List<Item> todo = new ArrayList<>();
-                    build.add(savedTodo.get(0));
-                    for(int i = 1; i < savedTodo.size(); i++)
-                    {
-                        if(savedTodo.get(i).date.after(build.get(build.size()-1).date) || savedTodo.get(i).date.compareTo(build.get(build.size()-1).date) == 0)
-                        {
-                            build.add(savedTodo.get(i));
-                        }
-                        else
-                        {
-                            todo.add(savedTodo.get(i));
-                        }
-                    }
-                    for(int j = 0; j < savedBuild.size(); j++)
-                    {
-                        build.add(savedBuild.get(j));
-                    }
-                    savedTodo = todo;
-                    savedBuild = build;
-                    if(savedTodo.size() == 0)
-                    {
-                        done = true;
-                    }
-                }
+                Item item = findEarliest(savedTodo);
+                build.add(item);
+                savedTodo.remove(item);
             }
-            else
-            {
-                for(int i = 0; i < savedTodo.size(); i++)
-                {
-                    savedBuild.add(savedTodo.get(i));
-                }
-            }
-            List<Item> temp = savedBuild;
+
+            List<Item> temp = build;
             items = new ArrayList<>();
 
             for (int i = 0; i < temp.size(); i++)

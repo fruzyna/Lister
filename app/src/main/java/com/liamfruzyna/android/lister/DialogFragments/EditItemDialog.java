@@ -53,6 +53,7 @@ public class EditItemDialog extends DialogFragment
                             System.out.println("[EditItemDialog] Removing Item " + position);
                             Item item = WLActivity.items.get(position);
                             WLActivity.items.remove(position);
+                            WLActivity.lists.get(WLActivity.current).items.remove(item);
                             ((WLActivity) getActivity()).removeItemSnackbar(item);
                         } else
                         {
