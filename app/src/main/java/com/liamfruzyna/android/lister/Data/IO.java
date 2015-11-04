@@ -153,33 +153,6 @@ public class IO
     //gets a string of data from the save file
     public static List<String> readFromFile()
     {
-        /*File file = new File(fileDir, "data.json");
-        System.out.println("[IO] Reading from " + file.toString());
-        if (!file.exists())
-        {
-            try
-            {
-                file.createNewFile();
-            } catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
-        StringBuilder sb = new StringBuilder();
-        try
-        {
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String line;
-            while ((line = br.readLine()) != null)
-            {
-                sb.append(line);
-            }
-            return sb.toString();
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        return "";*/
         List<String> data = new ArrayList<>();
         File[] files = new File(fileDir).listFiles();
         for(int i = 0; i < files.length; i++)

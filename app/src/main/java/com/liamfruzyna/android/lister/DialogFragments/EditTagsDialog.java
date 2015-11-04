@@ -32,7 +32,7 @@ public class EditTagsDialog extends DialogFragment
         tags = (EditText) v.findViewById(R.id.name);
         tags.setHint("Tags");
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        final WishList list = WLActivity.lists.get(WLActivity.current);
+        final WishList list = WLActivity.getCurrentList();
         StringBuilder sb = new StringBuilder();
         for(int i = 0; i < list.tags.size(); i++)
         {
@@ -46,7 +46,7 @@ public class EditTagsDialog extends DialogFragment
                 {
                     public void onClick(DialogInterface dialog, int id)
                     {
-                        list.tags = new ArrayList<String>(Arrays.asList(tags.getText().toString().split(" ")));
+                        list.tags = new ArrayList<>(Arrays.asList(tags.getText().toString().split(" ")));
                         ((WLActivity) getActivity()).updateList();
                     }
                 })

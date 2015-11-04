@@ -134,7 +134,7 @@ public class PeopleActivity extends ActionBarActivity implements AdapterView.OnI
                         {
                             cb.setPaintFlags(0);
                         }
-                        IO.save(WLActivity.lists);
+                        IO.save(WLActivity.getLists());
                     }
                 });
                 list.addView(view);
@@ -162,7 +162,7 @@ public class PeopleActivity extends ActionBarActivity implements AdapterView.OnI
         setSupportActionBar(toolbar);
         list = (LinearLayout) findViewById(R.id.list);
 
-        lists = WLActivity.lists;
+        lists = WLActivity.getLists();
 
         System.out.println(lists.size());
 

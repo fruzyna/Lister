@@ -160,7 +160,7 @@ public class TagsActivity extends ActionBarActivity implements AdapterView.OnIte
                         {
                             cb.setPaintFlags(0);
                         }
-                        IO.save(WLActivity.lists);
+                        IO.save(WLActivity.getLists());
                 }
             });
             list.addView(view);
@@ -178,7 +178,7 @@ public class TagsActivity extends ActionBarActivity implements AdapterView.OnIte
         setSupportActionBar(toolbar);
         list = (LinearLayout) findViewById(R.id.list);
 
-        lists = WLActivity.lists;
+        lists = WLActivity.getLists();
 
         System.out.println(lists.size());
 

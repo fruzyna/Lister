@@ -34,6 +34,7 @@ public class Item
         this.done = done;
     }
 
+    //looks for tags within a list item
     public void parseItem()
     {
         if(item.contains("@"))
@@ -61,6 +62,7 @@ public class Item
         }
         if(item.contains("/"))
         {
+            //date
             String[] date = item.split("/");
             if(date.length == 3)
             {
@@ -136,104 +138,5 @@ public class Item
             System.out.println("Found Tag: " + tag);
             tags.add(tag);
         }
-    }
-    
-    //looks for dates in the list items and creates a notification if there is
-    public void findDate()
-    {
-        String s = item;
-        boolean found = false;
-        int hour = 12;
-        int min = 0;
-        if(s.indexOf(":") != -1)
-        {
-            found = true;
-            s = s.substring(0, s.indexOf(":"));
-            s = s.substring(1 + s.lastIndexOf(" "));
-            if(isInt(s))
-            {
-                hour = Integer.parseInt(s);
-            }
-            else
-            {
-                found = false;
-            }
-            s = item;
-            s = s.substring(1 + s.indexOf(":"));
-            s = s.substring(0, 2);
-            if(isInt(s))
-            {
-                min = Integer.parseInt(s);
-            }
-            else
-            {
-                found = false;
-            }
-        }
-        s = item;
-        int month = 0;
-        int day = 0;
-        int year = 0;
-        if(s.indexOf("/") != -1)
-        {
-            found = true;
-            s = s.substring(0, s.indexOf("/"));
-            s = s.substring(1 + s.lastIndexOf(" "));
-            if(isInt(s))
-            {
-                month = Integer.parseInt(s) - 1;
-            }
-            else
-            {
-                found = false;
-            }
-            s = item;
-            s = s.substring(1 + s.indexOf("/"));
-            s = s.substring(0, s.indexOf("/"));
-            if(isInt(s))
-            {
-                day = Integer.parseInt(s);
-            }
-            else
-            {
-                found = false;
-            }
-            s = item;
-            s = s.substring(1 + s.indexOf("/"));
-            s = s.substring(1 + s.indexOf("/"));
-            s = s.substring(0, 4);
-            if(isInt(s))
-            {
-                year = Integer.parseInt(s);
-            }
-            else if(isInt(s.substring(0, 2)))
-            {
-                year = Integer.parseInt(s.substring(0, 2));
-            }
-            else
-            {
-                found = false;
-            }
-            if(year < 2000)
-            {
-                year += 2000;
-            }
-        }
-        if(found)
-        {
-            Calendar calendar =  Calendar.getInstance();
-            calendar.set(year, month, day, hour, min, 0);
-        }
-    }
-
-    //checks if the string found that could be a date is a number or not
-    public static boolean isInt(String s)
-    {
-        try{
-            Integer.parseInt(s);
-        }catch(NumberFormatException e){
-            return false;
-        }
-        return true;
     }
 }
