@@ -262,8 +262,9 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         //makes sure that lists isn't null
         if (lists == null)
         {
-            lists = new ArrayList<WishList>();
+            lists = new ArrayList<>();
         }
+        unArchieved = new ArrayList<>();
 
         for(int i = 0; i < lists.size(); i++)
         {
@@ -343,7 +344,8 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     }
 
     @Override
-    public void onResume() {
+    public void onResume()
+    {
         super.onResume();
         if(unArchieved.size() > 0 && unArchieved != null)
         {
