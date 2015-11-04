@@ -75,6 +75,7 @@ public class Item
                 } else {
                     month = Integer.parseInt(date[0]);
                 }
+                month -= 1;
                 if (date[2].contains(" ")) {
                     String[] end = date[2].split(" ");
                     year = Integer.parseInt(end[0]);
@@ -99,6 +100,7 @@ public class Item
                 } else {
                     month = Integer.parseInt(date[0]);
                 }
+                month -= 1;
                 if (date[1].contains(" ")) {
                     String[] end = date[1].split(" ");
                     day = Integer.parseInt(end[0]);

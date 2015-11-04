@@ -39,6 +39,8 @@ import org.json.JSONException;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class WLActivity extends ActionBarActivity implements AdapterView.OnItemSelectedListener
@@ -143,6 +145,19 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         cb.setText(items.get(i).item);
         cb.setTextColor(Color.parseColor(items.get(i).color));
         cb.setChecked(items.get(i).done);
+
+        //color item text based off date
+        Date date = items.get(i).date;
+        Date today = Calendar.getInstance().getTime();
+        int compare = date.compareTo(today);
+        if(date.getYear() == today.getYear() && date.getMonth() == today.getMonth() && date.getDate() == today.getDate() && !items.get(i).done)
+        {
+            cb.setTextColor(Color.parseColor("#FFA500"));
+        }
+        else if(date.compareTo(today) < 0 && !items.get(i).done)
+        {
+            cb.setTextColor(Color.RED);
+        }
 
         if(items.get(i).done)
         {
