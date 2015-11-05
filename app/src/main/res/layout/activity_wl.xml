@@ -74,7 +74,7 @@
                             android:layout_centerVertical="true"
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentRight="true"
-                            android:background="@drawable/ic_close_black_24dp"/>
+                            android:background="@drawable/ic_close_indigo_100_24dp"/>
 
                         <ImageButton
                             android:layout_width="wrap_content"
@@ -83,7 +83,7 @@
                             android:layout_centerVertical="true"
                             android:layout_toLeftOf="@+id/remove"
                             android:layout_toStartOf="@+id/remove"
-                            android:background="@drawable/ic_check_black_24dp" />
+                            android:background="@drawable/ic_check_indigo_100_24dp" />
 
                     </RelativeLayout>
 

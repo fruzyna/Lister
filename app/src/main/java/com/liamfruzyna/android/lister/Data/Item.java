@@ -66,6 +66,7 @@ public class Item
             String[] date = item.split("/");
             if(date.length == 3)
             {
+                //if the date has month day and year
                 int day = Integer.parseInt(date[1]);
                 int month;
                 int year;
@@ -91,6 +92,7 @@ public class Item
             }
             else if(date.length == 2)
             {
+                //if the date just has month and day
                 int day;
                 int month;
                 int year;
@@ -114,6 +116,7 @@ public class Item
         }
     }
 
+    //finds all the people in all the list's items
     public void findPeople(String[] strings)
     {
         for(int i = 1; i < strings.length; i++)
@@ -128,6 +131,7 @@ public class Item
         }
     }
 
+    //finds all the tags in all the list's items    
     public void findTags(String[] strings)
     {
         for(int i = 1; i < strings.length; i++)
