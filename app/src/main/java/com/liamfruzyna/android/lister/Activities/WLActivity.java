@@ -39,15 +39,17 @@ import org.json.JSONException;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class WLActivity extends ActionBarActivity implements AdapterView.OnItemSelectedListener
 {
 
-    public static List<WishList> lists = new ArrayList<>();
-    public static List<Item> items = new ArrayList<>();
-    public static List<WishList> unArchieved = new ArrayList<>();
-    public static int current = 0;
+    private static List<WishList> lists = new ArrayList<>();
+    private static List<Item> items = new ArrayList<>();
+    private static List<WishList> unArchived = new ArrayList<>();
+    private static int current = 0;
 
     static LinearLayout list;
     public static Context c;
@@ -55,6 +57,25 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     static Spinner spin;
     public static FloatingActionButton fab;
 
+    public static WishList getCurrentList()
+    {
+        return unArchived.get(current);
+    }
+
+    public static List<Item> getItems()
+    {
+        return items;
+    }
+
+    public static List<WishList> getLists()
+    {
+        return lists;
+    }
+
+    public static List<WishList> getUnArchived()
+    {
+        return unArchived;
+    }
 
     public Item findEarliest(List<Item> items)
     {
@@ -82,41 +103,128 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         return copy;
     }
 
+    public List<Item> sortByDate(List<Item> todo)
+    {
+        List<Item> build = new ArrayList<>();
+        while(todo.size() > 0)
+        {
+            Item item = findEarliest(todo);
+            build.add(item);
+            todo.remove(item);
+        }
+        return build;
+    }
+
+    public List<Item> sortByDone(List<Item> temp)
+    {
+        List<Item> items = new ArrayList<>();
+
+        for (int i = 0; i < temp.size(); i++)
+        {
+            if(!temp.get(i).done)
+            {
+                items.add(temp.get(i));
+            }
+        }
+        for (int i = 0; i < temp.size(); i++)
+        {
+            if(temp.get(i).done)
+            {
+                items.add(temp.get(i));
+            }
+        }
+        return items;
+    }
+
+    public View createItem(LayoutInflater inflater, final int i)
+    {
+        View view = inflater.inflate(R.layout.item, list, false);
+
+        //init checkbox and set text, checked status, and color
+        final CheckBox cb = (CheckBox) view.findViewById(R.id.checkbox);
+        cb.setText(items.get(i).item);
+        cb.setTextColor(Color.parseColor(items.get(i).color));
+        cb.setChecked(items.get(i).done);
+
+        //color item text based off date (late is red, day of it orange)
+        Date date = items.get(i).date;
+        Date today = Calendar.getInstance().getTime();
+        int compare = date.compareTo(today);
+        if(date.getYear() == today.getYear() && date.getMonth() == today.getMonth() && date.getDate() == today.getDate() && !items.get(i).done)
+        {
+            cb.setTextColor(Color.parseColor("#FFA500"));
+        }
+        else if(date.compareTo(today) < 0 && !items.get(i).done)
+        {
+            cb.setTextColor(Color.RED);
+        }
+
+        //if item is done cross it out
+        if(items.get(i).done)
+        {
+            cb.setPaintFlags(cb.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        } else
+        {
+            cb.setPaintFlags(0);
+        }
+
+        //listen for checkbox to be checked
+        cb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                items.get(i).done = cb.isChecked();
+                //if it is checked cross it out
+                if (cb.isChecked()) {
+                    cb.setPaintFlags(cb.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                } else {
+                    cb.setPaintFlags(0);
+                }
+                IO.save(WLActivity.lists);
+
+            }
+        });
+
+        //listen for item to be long pressed
+        cb.setOnLongClickListener(new View.OnLongClickListener()
+        {
+            @Override
+            public boolean onLongClick(View v)
+            {
+                //when it is open up the dialog to edit it
+                DialogFragment dialog = new EditItemDialog();
+                Bundle args = new Bundle();
+                args.putInt("position", i);
+                dialog.setArguments(args);
+                dialog.show(getFragmentManager(), "");
+                return true;
+            }
+        });
+        return view;
+    }
+
+    //creates the textview with a lists tags
+    public TextView createTags()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Tags: ");
+        for(int i = 0; i < unArchived.get(current).tags.size(); i++)
+        {
+            sb.append(unArchived.get(current).tags.get(i) + " ");
+        }
+        TextView tv = new TextView(c);
+        tv.setText(sb.toString());
+        return tv;
+    }
+
     //rebuilds the list of items
     public void updateList()
     {
-        if(unArchieved.size() > 0)
+        if(unArchived.size() > 0)
         {
-            System.out.println("Selected Item:" + spin.getSelectedItemPosition());
-            List<Item> savedTodo = newList(unArchieved.get(current).items);
-            StringBuilder sb = new StringBuilder();
+            //reorganizes all the items by date then doneness
+            items = sortByDone(sortByDate(newList(unArchived.get(current).items)));
 
-            List<Item> build = new ArrayList<>();
-            while(savedTodo.size() > 0)
-            {
-                Item item = findEarliest(savedTodo);
-                build.add(item);
-                savedTodo.remove(item);
-            }
-
-            List<Item> temp = build;
-            items = new ArrayList<>();
-
-            for (int i = 0; i < temp.size(); i++)
-            {
-                if(!temp.get(i).done)
-                {
-                    items.add(temp.get(i));
-                }
-            }
-            for (int i = 0; i < temp.size(); i++)
-            {
-                if(temp.get(i).done)
-                {
-                    items.add(temp.get(i));
-                }
-            }
-
+            //populates the list with the items
             list.removeAllViews();
             LayoutInflater inflater = LayoutInflater.from(c);
             for (int i = 0; i < items.size(); i++)
@@ -127,71 +235,17 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
                 }
                 else
                 {
-                    final int j = i;
-                    View view = inflater.inflate(R.layout.item, list, false);
-
-                    //init checkbox and set text, checked status, and color
-                    final CheckBox cb = (CheckBox) view.findViewById(R.id.checkbox);
-                    cb.setText(items.get(i).item);
-                    cb.setTextColor(Color.parseColor(items.get(i).color));
-                    cb.setChecked(items.get(i).done);
-
-                    if(items.get(i).done)
-                    {
-                        cb.setPaintFlags(cb.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                    } else
-                    {
-                        cb.setPaintFlags(0);
-                    }
-
-                    cb.setOnClickListener(new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            items.get(j).done = cb.isChecked();
-                                if (cb.isChecked())
-                                {
-                                    cb.setPaintFlags(cb.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                                } else
-                                {
-                                    cb.setPaintFlags(0);
-                                }
-                                IO.save(WLActivity.lists);
-
-                        }
-                    });
-                    cb.setOnLongClickListener(new View.OnLongClickListener()
-                    {
-                        int l = j;
-
-                        @Override
-                        public boolean onLongClick(View v)
-                        {
-                            DialogFragment dialog = new EditItemDialog();
-                            Bundle args = new Bundle();
-                            args.putInt("position", l);
-                            dialog.setArguments(args);
-                            dialog.show(getFragmentManager(), "");
-                            return true;
-                        }
-                    });
-                    list.addView(view);
+                    list.addView(createItem(inflater, i));
                 }
             }
-            sb.append("Tags: ");
-            for(int i = 0; i < unArchieved.get(current).tags.size(); i++)
-            {
-                sb.append(unArchieved.get(current).tags.get(i) + " ");
-            }
-            TextView tv = new TextView(c);
-            tv.setText(sb.toString());
+
+            //populates the tags
             tagcv.removeAllViews();
-            tagcv.addView(tv);
-            IO.save(unArchieved);
+            tagcv.addView(createTags());
+
+            IO.save(lists);
         }
     }
-
 
     //main method that is run when app is started
     @Override
@@ -201,6 +255,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         setContentView(R.layout.activity_wl);
         c = this;
 
+        //setup the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -226,7 +281,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
             @Override
             public boolean onLongClick(View v)
             {
-                if (unArchieved.size() > 0)
+                if (unArchived.size() > 0)
                 {
                     DialogFragment dialog = new EditTagsDialog();
                     dialog.show(getFragmentManager(), "");
@@ -243,7 +298,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
             @Override
             public void onClick(View view)
             {
-                if(unArchieved.size() > 0)
+                if(unArchived.size() > 0)
                 {
                     DialogFragment dialog = new NewListDialog();
                     dialog.show(getFragmentManager(), "");
@@ -264,46 +319,30 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         {
             lists = new ArrayList<>();
         }
-        unArchieved = new ArrayList<>();
 
-        for(int i = 0; i < lists.size(); i++)
-        {
-            if(!lists.get(i).archived)
-            {
-                unArchieved.add(lists.get(i));
-            }
-        }
+        unArchived = populateUnArchived();
 
         //sets up spinner
         spin = (Spinner) findViewById(R.id.spinner);
-        if (unArchieved.size() > 0)
+        if (unArchived.size() > 0)
         {
-            //creates a list of events level and distance to fill out the spinner
-            List<String> names = new ArrayList<String>();
-            for (int i = 0; i < unArchieved.size(); i++)
-            {
-                names.add(unArchieved.get(i).name);
-            }
-            //setup spinner
-            ArrayAdapter<String> sadapter = new ArrayAdapter<String>(this, R.layout.spinner_item, names);
-            sadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spin.setAdapter(sadapter);
-            current = spin.getSelectedItemPosition();
-            updateList();
-        } else
+            setupSpinner();
+        }
+        else
         {
+            //if there are no lists prompt to make a new one
             DialogFragment dialog = new NewListDialog();
             dialog.show(getFragmentManager(), "");
         }
-
         spin.setOnItemSelectedListener(this);
 
+        //setup button to delete current list
         ImageButton removelist = (ImageButton) findViewById(R.id.remove);
         removelist.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v)
             {
-                if (unArchieved.size() > 0)
+                if (unArchived.size() > 0)
                 {
                     DialogFragment dialog = new RemoveListDialog();
                     dialog.show(getFragmentManager(), "");
@@ -311,12 +350,13 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
             }
         });
 
+        //setup button to archive list
         ImageButton archiveList = (ImageButton) findViewById(R.id.archive);
         archiveList.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v)
             {
-                if(unArchieved.size() > 0)
+                if(unArchived.size() > 0)
                 {
                     DialogFragment dialog = new ArchiveListDialog();
                     dialog.show(getFragmentManager(), "");
@@ -324,6 +364,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
             }
         });
 
+        //setup button to create a new item
         LinearLayout container = (LinearLayout) findViewById(R.id.newitem);
         LayoutInflater inflater = LayoutInflater.from(this);
         View view = inflater.inflate(R.layout.add_item, container, false);
@@ -332,7 +373,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
             @Override
             public void onClick(View v)
             {
-                if (unArchieved.size() > 0)
+                if (unArchived.size() > 0)
                 {
                     DialogFragment dialog = new NewItemDialog();
                     dialog.show(getFragmentManager(), "");
@@ -340,39 +381,65 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
             }
         });
         container.addView(view);
+
         updateList();
     }
 
+    //repopulates the spinner
+    public static void setupSpinner()
+    {
+        //creates a list of events level and distance to fill out the spinner
+        List<String> names = new ArrayList<String>();
+        for (int i = 0; i < unArchived.size(); i++)
+        {
+            names.add(unArchived.get(i).name);
+        }
+
+        //sets up adapter
+        ArrayAdapter<String> sadapter = new ArrayAdapter<>(c, R.layout.spinner_item, names);
+        sadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spin.setAdapter(sadapter);
+        current = spin.getSelectedItemPosition();
+
+        ((WLActivity)c).updateList();
+    }
+
+    //finds all the unAchived lists and groups them
+    public List<WishList> populateUnArchived()
+    {
+        List<WishList> unArchived = new ArrayList<>();
+        for(int i = 0; i < lists.size(); i++)
+        {
+            if(!lists.get(i).archived)
+            {
+                unArchived.add(lists.get(i));
+            }
+        }
+        return unArchived;
+    }
+
+    //method that is run when app is resumed
     @Override
     public void onResume()
     {
         super.onResume();
-        if(unArchieved.size() > 0 && unArchieved != null)
+
+        //repopulate the list if there are lists to populate it with
+        if(unArchived.size() > 0 && unArchived != null)
         {
             updateList();
         }
-        //sets up spinner
+
+        //re-sets up spinner
         spin = (Spinner) findViewById(R.id.spinner);
-        if (unArchieved.size() > 0)
+        if (unArchived.size() > 0)
         {
-            //creates a list of events level and distance to fill out the spinner
-            List<String> names = new ArrayList<String>();
-            for (int i = 0; i < unArchieved.size(); i++)
-            {
-                names.add(unArchieved.get(i).name);
-            }
-            //setup spinner
-            ArrayAdapter<String> sadapter = new ArrayAdapter<String>(this, R.layout.spinner_item, names);
-            sadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spin.setAdapter(sadapter);
-            current = spin.getSelectedItemPosition();
-            updateList();
+            setupSpinner();
         } else
         {
             DialogFragment dialog = new NewListDialog();
             dialog.show(getFragmentManager(), "");
         }
-
         spin.setOnItemSelectedListener(this);
     }
 
@@ -387,6 +454,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     //when nothing is selected in the spinner
     @Override public void onNothingSelected(AdapterView<?> parent){}
 
+    //inflates the option menu when the menu button is selected
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
@@ -395,6 +463,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         return true;
     }
 
+    //listens for options in menu to be pressed
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
@@ -421,6 +490,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         return super.onOptionsItemSelected(item);
     }
 
+    //creates snackbar when list is removed
     public void removeListSnackbar(final WishList list)
     {
         final Context c = this;
@@ -431,23 +501,17 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
                     @Override
                     public void onClick(View v)
                     {
-                        unArchieved.add(list);
+                        //undoes the removal when undo is chosen
+                        unArchived.add(list);
                         lists.add(list);
-                        List<String> names = new ArrayList<String>();
-                        for (int i = 0; i < unArchieved.size(); i++)
-                        {
-                            names.add(unArchieved.get(i).name);
-                        }
-                        ArrayAdapter<String> sadapter = new ArrayAdapter<String>(c, R.layout.spinner_item, names);
-                        sadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        Spinner spin = (Spinner) findViewById(R.id.spinner);
-                        spin.setAdapter(sadapter);
-                        updateList();
+                        IO.save(lists);
+                        setupSpinner();
                     }
                 })
                 .show();
     }
 
+    //creates snackbar when item is removed
     public void removeItemSnackbar(final Item item)
     {
         final Context c = this;
@@ -458,8 +522,9 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
                     @Override
                     public void onClick(View v)
                     {
+                        //undoes the removal when undo is chosen
                         lists.get(current).items.add(item);
-                        unArchieved.get(current).items.add(item);
+                        unArchived.get(current).items.add(item);
                         IO.save(lists);
                         updateList();
                     }

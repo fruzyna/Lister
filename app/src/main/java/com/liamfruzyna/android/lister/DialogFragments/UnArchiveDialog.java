@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,15 +11,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.liamfruzyna.android.lister.Activities.WLActivity;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.R;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,14 +35,15 @@ public class UnArchiveDialog extends DialogFragment
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         ListView list = (ListView) v.findViewById(R.id.listView);
         final List<WishList> archived = new ArrayList<>();
-        for(int i = 0; i < WLActivity.lists.size(); i++)
+        for(int i = 0; i < WLActivity.getLists().size(); i++)
         {
-            if(WLActivity.lists.get(i).archived)
+            if(WLActivity.getLists().get(i).archived)
             {
-                archived.add(WLActivity.lists.get(i));
+                archived.add(WLActivity.getLists().get(i));
             }
         }
 
+        //sets up list of archived items
         list.setAdapter(new ArrayAdapter<WishList>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, archived) {
             public View getView(final int position, View convertView, ViewGroup parent) {
                 View view;
@@ -60,19 +57,23 @@ public class UnArchiveDialog extends DialogFragment
                 return view;
             }
         });
+
+        //sets up listener for choosing an archived list
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-                List<WishList> unArchieved = WLActivity.unArchieved;
-                if(!unArchieved.contains(archived.get(position)))
+                List<WishList> unArchived = WLActivity.getUnArchived();
+                if(!unArchived.contains(archived.get(position)))
                 {
-                    unArchieved.add(archived.get(position));
+                    unArchived.add(archived.get(position));
                     archived.get(position).archived = false;
-                    IO.save(WLActivity.lists);
+                    IO.save(WLActivity.getLists());
                 }
             }
         });
+
+        //setup dialog
         builder.setMessage("Choose a list to unarchive")
                 .setTitle("Unarchive a List")
                 .setView(v)

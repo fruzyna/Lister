@@ -28,7 +28,7 @@ public class NewItemDialog extends DialogFragment
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
         final View v = inflater.inflate(R.layout.new_item_item, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        final WishList list = WLActivity.lists.get(WLActivity.current);
+        final WishList list = WLActivity.getCurrentList();
         builder.setMessage("Add a new item to " + list.name)
                 .setTitle("New Item")
                 .setView(v)

@@ -39,12 +39,11 @@ public class ImportListDialog extends DialogFragment
                     public void onClick(DialogInterface dialog, int id)
                     {
                         try {
-                            WLActivity.lists.add(IO.readString(editText.getText().toString()));
+                            WLActivity.getLists().add(IO.readString(editText.getText().toString()));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        IO.save(WLActivity.lists);
-                        //((WLActivity) getActivity()).updateList();
+                        IO.save(WLActivity.getLists());
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {

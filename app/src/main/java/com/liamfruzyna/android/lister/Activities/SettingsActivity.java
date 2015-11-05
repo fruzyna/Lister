@@ -39,14 +39,13 @@ import org.json.JSONException;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Activity for customizing app settings.
  */
 public class SettingsActivity extends PreferenceActivity
 {
-    View v;
-    CheckBox cb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -59,6 +58,7 @@ public class SettingsActivity extends PreferenceActivity
         gen.setTitle("General");
         ps.addPreference(gen);
 
+        //Button that clears all lists, it requires a restart for now
         Preference clear = new Preference(this);
         clear.setTitle("Clear Data");
         clear.setSummary("This may require app restart");
@@ -67,12 +67,14 @@ public class SettingsActivity extends PreferenceActivity
             public boolean onPreferenceClick(Preference preference) {
                 File file = new File(IO.fileDir, "data.json");
                 file.delete();
-                WLActivity.lists = new ArrayList<>();
+                List<WishList> lists = WLActivity.getLists();
+                lists = new ArrayList<>();
                 return true;
             }
         });
         gen.addPreference(clear);
 
+        //Shares a list's data with the android share menu
         Preference share = new Preference(this);
         share.setTitle("Share List");
         share.setSummary("Share list with someone else");
@@ -88,6 +90,7 @@ public class SettingsActivity extends PreferenceActivity
         });
         gen.addPreference(share);
 
+        //Prompts for a list's data and saves that
         Preference importList = new Preference(this);
         importList.setTitle("Import List");
         importList.setSummary("Import list from someone else");
@@ -103,6 +106,7 @@ public class SettingsActivity extends PreferenceActivity
         });
         gen.addPreference(importList);
 
+        //Prompts to choose a list to unarchive
         Preference unArchive = new Preference(this);
         unArchive.setTitle("Unarchive List");
         unArchive.setSummary("Unarchive a list so that it can be seen again");
@@ -122,6 +126,7 @@ public class SettingsActivity extends PreferenceActivity
         about.setTitle("About");
         ps.addPreference(about);
 
+        //The version number of the app
         Preference version = new Preference(this);
         version.setTitle("App Version");
         try
@@ -133,6 +138,7 @@ public class SettingsActivity extends PreferenceActivity
         }
         about.addPreference(version);
 
+        //About me and a link to my site
         Preference me = new Preference(this);
         me.setTitle("2015 Liam Fruzyna");
         me.setSummary("mail929.com");
@@ -156,6 +162,7 @@ public class SettingsActivity extends PreferenceActivity
     {
         super.onPostCreate(savedInstanceState);
 
+        //sets up the view
         LinearLayout root = (LinearLayout)findViewById(android.R.id.list).getParent().getParent().getParent();
         Toolbar bar = (Toolbar) LayoutInflater.from(this).inflate(R.layout.settings_toolbar, root, false);
         bar.setTitleTextColor(Color.parseColor("#FFFFFF"));

@@ -38,7 +38,8 @@ public class ChooseListDialog extends DialogFragment
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         ListView list = (ListView) v.findViewById(R.id.listView);
 
-        list.setAdapter(new ArrayAdapter<WishList>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, WLActivity.lists) {
+        //setup list of lists to share
+        list.setAdapter(new ArrayAdapter<WishList>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, WLActivity.getLists()) {
             public View getView(final int position, View convertView, ViewGroup parent) {
                 View view;
                 if (convertView == null) {
@@ -47,11 +48,12 @@ public class ChooseListDialog extends DialogFragment
                 }
                 view = super.getView(position, convertView, parent);
 
-                ((TextView) view.findViewById(android.R.id.text1)).setText(WLActivity.lists.get(position).name);
-                System.out.println("Adding: " + WLActivity.lists.get(position).name);
+                ((TextView) view.findViewById(android.R.id.text1)).setText(WLActivity.getLists().get(position).name);
                 return view;
             }
         });
+
+        //listen for list chosen
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
@@ -60,7 +62,7 @@ public class ChooseListDialog extends DialogFragment
                 sharingIntent.setType("text/plain");
                 String shareBody = null;
                 try {
-                    shareBody = IO.getListString(WLActivity.lists.get(position));
+                    shareBody = IO.getListString(WLActivity.getLists().get(position));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -69,6 +71,8 @@ public class ChooseListDialog extends DialogFragment
                 startActivity(Intent.createChooser(sharingIntent, "Share via"));
             }
         });
+
+        //setup dialog
         builder.setMessage("Choose a list to share")
                 .setTitle("Share a List")
                 .setView(v)

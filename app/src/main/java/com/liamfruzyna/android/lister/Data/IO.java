@@ -25,7 +25,7 @@ public class IO
 {
     public static final String fileDir = Environment.getExternalStoragePublicDirectory("Lists").toString();
 
-    //turns app data into a string of json data
+    //writes list datas to files for each list
     public static void save(List<WishList> lists)
     {
         try
@@ -40,6 +40,7 @@ public class IO
         }
     }
 
+    //creates a json string based off of a list
     public static String getListString(WishList list) throws JSONException
     {
         JSONObject jlist = new JSONObject();
@@ -65,15 +66,13 @@ public class IO
         return jlist.toString();
     }
     
-    //converts a string of json data to useable lists
+    //creates lists from all the save files
     public static List<WishList> load() throws JSONException, MalformedURLException
     {
         List<WishList> lists = new ArrayList<WishList>();
-        //JSONArray jlists = new JSONArray(readFromFile());
         List<String> jlists = readFromFile();
         for (int i = 0; i < jlists.size(); i++)
         {
-            //JSONObject jlist = jlists.getJSONObject(i);
             JSONObject jlist = new JSONObject(jlists.get(i));
             List<Item> items = new ArrayList<Item>();
             JSONArray jitems = jlist.getJSONArray("items");
@@ -98,6 +97,7 @@ public class IO
         return lists;
     }
 
+    //creates a single list from a json string
     public static WishList readString(String json) throws JSONException
     {
         JSONObject jlist = new JSONObject(json);
@@ -122,7 +122,7 @@ public class IO
         return new WishList(jlist.getString("name"), items, tags, archived);
     }
 
-    //takes a string of data and writes it to the save file
+    //takes a list's json string and saves it to a file
     private static void writeToFile(String name, String data)
     {
         File dir = new File(fileDir);
@@ -150,36 +150,9 @@ public class IO
         }
     }
 
-    //gets a string of data from the save file
+    //creates a list of strings from all the save files
     public static List<String> readFromFile()
     {
-        /*File file = new File(fileDir, "data.json");
-        System.out.println("[IO] Reading from " + file.toString());
-        if (!file.exists())
-        {
-            try
-            {
-                file.createNewFile();
-            } catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
-        StringBuilder sb = new StringBuilder();
-        try
-        {
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String line;
-            while ((line = br.readLine()) != null)
-            {
-                sb.append(line);
-            }
-            return sb.toString();
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        return "";*/
         List<String> data = new ArrayList<>();
         File[] files = new File(fileDir).listFiles();
         for(int i = 0; i < files.length; i++)
