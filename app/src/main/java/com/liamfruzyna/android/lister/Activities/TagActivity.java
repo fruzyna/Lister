@@ -17,6 +17,7 @@ import android.widget.Spinner;
 
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.Item;
+import com.liamfruzyna.android.lister.Data.Util;
 import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.R;
 
@@ -43,58 +44,6 @@ public class TagActivity extends ActionBarActivity implements AdapterView.OnItem
             return people;
         }
 
-        //Takes a list of items and returns the earliest dated item
-    public Item findEarliest(List<Item> items)
-    {
-        Item earliest = items.get(0);
-        if(items.size() > 1)
-        {
-            for(int i = 1; i < items.size(); i++)
-            {
-                if(items.get(i).date.before(earliest.date))
-                {
-                    earliest = items.get(i);
-                }
-            }
-        }
-        return earliest;
-    }
-
-    //Takes a list of items and reorganized it based off date
-    public List<Item> sortByDate(List<Item> todo)
-    {
-        List<Item> build = new ArrayList<>();
-        while(todo.size() > 0)
-        {
-            Item item = findEarliest(todo);
-            build.add(item);
-            todo.remove(item);
-        }
-        return build;
-    }
-
-    //Takes a list of items and reorganizes it based off if they are done
-    public List<Item> sortByDone(List<Item> temp)
-    {
-        List<Item> items = new ArrayList<>();
-
-        for (int i = 0; i < temp.size(); i++)
-        {
-            if(!temp.get(i).done)
-            {
-                items.add(temp.get(i));
-            }
-        }
-        for (int i = 0; i < temp.size(); i++)
-        {
-            if(temp.get(i).done)
-            {
-                items.add(temp.get(i));
-            }
-        }
-        return items;
-    }
-
     //Gets all the items in unarchived lists containing a name
     public List<Item> getTagItems(String tag)
     {
@@ -105,7 +54,7 @@ public class TagActivity extends ActionBarActivity implements AdapterView.OnItem
     //updates the list on screen
     public void updateList()
     {
-            items = sortByDone(sortByDate(getTagItems(getTags().get(current))));
+            items = Util.sortByDone(Util.sortByDate(getTagItems(getTags().get(current))));
             list.removeAllViews();
             LayoutInflater inflater = LayoutInflater.from(this);
             for (int i = 0; i < items.size(); i++)

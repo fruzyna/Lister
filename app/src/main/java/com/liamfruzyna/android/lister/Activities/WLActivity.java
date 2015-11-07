@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.Item;
+import com.liamfruzyna.android.lister.Data.Util;
 import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.DialogFragments.ArchiveListDialog;
 import com.liamfruzyna.android.lister.DialogFragments.EditItemDialog;
@@ -76,68 +77,6 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     public static List<WishList> getUnArchived()
     {
         return unArchived;
-    }
-
-    //Takes a list of items and returns the earliest dated item
-    public Item findEarliest(List<Item> items)
-    {
-        Item earliest = items.get(0);
-        if(items.size() > 1)
-        {
-            for(int i = 1; i < items.size(); i++)
-            {
-                if(items.get(i).date.before(earliest.date))
-                {
-                    earliest = items.get(i);
-                }
-            }
-        }
-        return earliest;
-    }
-
-    //Takes a list of items and reorganizes it based off if they are done
-    public List<Item> newList(List<Item> items)
-    {
-        List<Item> copy = new ArrayList<>();
-        for(int i = 0; i < items.size(); i++)
-        {
-            copy.add(items.get(i));
-        }
-        return copy;
-    }
-
-    //Takes a list of items and reorganized it based off date
-    public List<Item> sortByDate(List<Item> todo)
-    {
-        List<Item> build = new ArrayList<>();
-        while(todo.size() > 0)
-        {
-            Item item = findEarliest(todo);
-            build.add(item);
-            todo.remove(item);
-        }
-        return build;
-    }
-
-    public List<Item> sortByDone(List<Item> temp)
-    {
-        List<Item> items = new ArrayList<>();
-
-        for (int i = 0; i < temp.size(); i++)
-        {
-            if(!temp.get(i).done)
-            {
-                items.add(temp.get(i));
-            }
-        }
-        for (int i = 0; i < temp.size(); i++)
-        {
-            if(temp.get(i).done)
-            {
-                items.add(temp.get(i));
-            }
-        }
-        return items;
     }
 
     public View createItem(LayoutInflater inflater, final int i)
@@ -231,7 +170,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         if(unArchived.size() > 0)
         {
             //reorganizes all the items by date then doneness
-            items = sortByDone(sortByDate(newList(unArchived.get(current).items)));
+            items = Util.sortByDone(Util.sortByDate(Util.newList(unArchived.get(current).items)));
 
             //populates the list with the items
             list.removeAllViews();
@@ -498,7 +437,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         }
         else if (id == R.id.action_dates)
         {
-            Intent goTags = new Intent(this, DatesActivity.class);
+            Intent goTags = new Intent(this, PeopleActivity.class);
             this.startActivity(goTags);
             return true;
         }
