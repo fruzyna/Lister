@@ -1,6 +1,7 @@
 package com.liamfruzyna.android.lister.Activities;
 
 import android.app.DialogFragment;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -21,6 +22,8 @@ import com.liamfruzyna.android.lister.DialogFragments.SuggestionDialog;
 import com.liamfruzyna.android.lister.R;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -34,27 +37,23 @@ public class PeopleActivity extends ActionBarActivity implements AdapterView.OnI
     Spinner spin;
     int current;
 
-    //finds all the different people there are
+    //finds all the different people in unarchived lists
     public List<String> getPeople()
     {
         List<String> people = new ArrayList<>();
-        for(int i = 0; i < lists.size(); i++)
-        {
-            for(int l = 0; l < lists.get(i).items.size(); l++)
-            {
-                for(int k = 0; k < lists.get(i).items.get(l).people.size(); k++)
-                {
-                    boolean found = false;
-                    for(int j = 0; j < people.size(); j++)
-                    {
-                        if(lists.get(i).items.get(l).people.get(k).equals(people.get(j)))
-                        {
-                            found = true;
+        for(int i = 0; i < lists.size(); i++) {
+            if (!lists.get(i).archived) {
+                for (int l = 0; l < lists.get(i).items.size(); l++) {
+                    for (int k = 0; k < lists.get(i).items.get(l).people.size(); k++) {
+                        boolean found = false;
+                        for (int j = 0; j < people.size(); j++) {
+                            if (lists.get(i).items.get(l).people.get(k).equals(people.get(j))) {
+                                found = true;
+                            }
                         }
-                    }
-                    if(!found)
-                    {
-                        people.add(lists.get(i).items.get(l).people.get(k));
+                        if (!found) {
+                            people.add(lists.get(i).items.get(l).people.get(k));
+                        }
                     }
                 }
             }
@@ -62,18 +61,74 @@ public class PeopleActivity extends ActionBarActivity implements AdapterView.OnI
         return people;
     }
 
+    //Takes a list of items and returns the earliest dated item
+    public Item findEarliest(List<Item> items)
+    {
+        Item earliest = items.get(0);
+        if(items.size() > 1)
+        {
+            for(int i = 1; i < items.size(); i++)
+            {
+                if(items.get(i).date.before(earliest.date))
+                {
+                    earliest = items.get(i);
+                }
+            }
+        }
+        return earliest;
+    }
+
+    //Takes a list of items and reorganized it based off date
+    public List<Item> sortByDate(List<Item> todo)
+    {
+        List<Item> build = new ArrayList<>();
+        while(todo.size() > 0)
+        {
+            Item item = findEarliest(todo);
+            build.add(item);
+            todo.remove(item);
+        }
+        return build;
+    }
+
+    //Takes a list of items and reorganizes it based off if they are done
+    public List<Item> sortByDone(List<Item> temp)
+    {
+        List<Item> items = new ArrayList<>();
+
+        for (int i = 0; i < temp.size(); i++)
+        {
+            if(!temp.get(i).done)
+            {
+                items.add(temp.get(i));
+            }
+        }
+        for (int i = 0; i < temp.size(); i++)
+        {
+            if(temp.get(i).done)
+            {
+                items.add(temp.get(i));
+            }
+        }
+        return items;
+    }
+
+    //Gets all the items in unarchived lists containing a name
     public List<Item> getPeopleItems(String person)
     {
         List<Item> items = new ArrayList<Item>();
         for(int i = 0; i < lists.size(); i++)
         {
-            for(int l = 0; l < lists.get(i).items.size(); l++)
+            if(!lists.get(i).archived)
             {
-                for(int k = 0; k < lists.get(i).items.get(l).people.size(); k++)
+                for(int l = 0; l < lists.get(i).items.size(); l++)
                 {
-                    if(lists.get(i).items.get(l).people.get(k).equals(person))
+                    for(int k = 0; k < lists.get(i).items.get(l).people.size(); k++)
                     {
-                        items.add(lists.get(i).items.get(l));
+                        if(lists.get(i).items.get(l).people.get(k).equals(person))
+                        {
+                            items.add(lists.get(i).items.get(l));
+                        }
                     }
                 }
             }
@@ -81,27 +136,12 @@ public class PeopleActivity extends ActionBarActivity implements AdapterView.OnI
         return items;
     }
 
+    //updates the list on screen
     public void updateList()
     {
         if(getPeople().size() > 0)
         {
-            List<Item> temp = getPeopleItems(getPeople().get(current));
-            items = new ArrayList<Item>();
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < temp.size(); i++)
-            {
-                if(!temp.get(i).done)
-                {
-                    items.add(temp.get(i));
-                }
-            }
-            for (int i = 0; i < temp.size(); i++)
-            {
-                if(temp.get(i).done)
-                {
-                    items.add(temp.get(i));
-                }
-            }
+            items = sortByDone(sortByDate(getPeopleItems(getPeople().get(current))));
             list.removeAllViews();
             LayoutInflater inflater = LayoutInflater.from(this);
             for (int i = 0; i < items.size(); i++)
@@ -119,6 +159,24 @@ public class PeopleActivity extends ActionBarActivity implements AdapterView.OnI
                 } else
                 {
                     cb.setPaintFlags(0);
+                }
+
+                //color item text based off date (late is red, day of it orange)
+                SharedPreferences settings = getSharedPreferences(IO.PREFS, 0);
+                boolean highlight = settings.getBoolean(IO.HIGHLIGHT_DATE_PREF, true);
+                if(highlight)
+                {
+                    Date date = items.get(i).date;
+                    Date today = Calendar.getInstance().getTime();
+                    int compare = date.compareTo(today);
+                    if(date.getYear() == today.getYear() && date.getMonth() == today.getMonth() && date.getDate() == today.getDate() && !items.get(i).done)
+                    {
+                        cb.setTextColor(Color.parseColor("#FFA500"));
+                    }
+                    else if(date.compareTo(today) < 0 && !items.get(i).done)
+                    {
+                        cb.setTextColor(Color.RED);
+                    }
                 }
 
                 cb.setOnClickListener(new View.OnClickListener()
@@ -178,6 +236,7 @@ public class PeopleActivity extends ActionBarActivity implements AdapterView.OnI
 
     }
 
+    //update the screen when a new name is selected
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
     {

@@ -1,5 +1,6 @@
 package com.liamfruzyna.android.lister.Activities;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -19,6 +20,8 @@ import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.R;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,88 +35,42 @@ public class TagsActivity extends ActionBarActivity implements AdapterView.OnIte
     Spinner spin;
     int current;
 
-    //finds all the different tags there are
-    public List<String> getTags()
+
+    //Takes a list of items and returns the earliest dated item
+    public Item findEarliest(List<Item> items)
     {
-        List<String> tags = new ArrayList<String>();
-        for(int i = 0; i < lists.size(); i++)
+        Item earliest = items.get(0);
+        if(items.size() > 1)
         {
-            for(int j = 0; j < lists.get(i).tags.size(); j++)
+            for(int i = 1; i < items.size(); i++)
             {
-                boolean found = false;
-                for(int l = 0; l < tags.size(); l++)
+                if(items.get(i).date.before(earliest.date))
                 {
-                    if(tags.get(l).equals(lists.get(i).tags.get(j)))
-                    {
-                        found = true;
-                    }
-                }
-                if(!found)
-                {
-                    tags.add(lists.get(i).tags.get(j));
-                }
-            }
-            for(int l = 0; l < lists.get(i).items.size(); l++)
-            {
-                for(int k = 0; k < lists.get(i).items.get(l).tags.size(); k++)
-                {
-                    boolean found = false;
-                    for(int j = 0; j < tags.size(); j++)
-                    {
-                        if(lists.get(i).items.get(l).tags.get(k).equals(tags.get(j)))
-                        {
-                            found = true;
-                        }
-                    }
-                    if(!found)
-                    {
-                        tags.add(lists.get(i).items.get(l).tags.get(k));
-                    }
+                    earliest = items.get(i);
                 }
             }
         }
-        return tags;
+        return earliest;
     }
 
-    public List<Item> getTagItems(String tag)
+    //Takes a list of items and reorganized it based off date
+    public List<Item> sortByDate(List<Item> todo)
     {
-        List<Item> items = new ArrayList<Item>();
-        for(int i = 0; i < lists.size(); i++)
+        List<Item> build = new ArrayList<>();
+        while(todo.size() > 0)
         {
-            boolean found = false;
-            for(int j = 0; j < lists.get(i).tags.size(); j++)
-            {
-                if(lists.get(i).tags.get(j).equals(tag))
-                {
-                    found = true;
-                    for(int l = 0; l < lists.get(i).items.size(); l++)
-                    {
-                        items.add(lists.get(i).items.get(l));
-                    }
-                }
-            }
-            if(!found)
-            {
-                for(int l = 0; l < lists.get(i).items.size(); l++)
-                {
-                    for(int k = 0; k < lists.get(i).items.get(l).tags.size(); k++)
-                    {
-                        if(lists.get(i).items.get(l).tags.get(k).equals(tag))
-                        {
-                            items.add(lists.get(i).items.get(l));
-                        }
-                    }
-                }
-            }
+            Item item = findEarliest(todo);
+            build.add(item);
+            todo.remove(item);
         }
-        return items;
+        return build;
     }
 
-    public void updateList()
+    //Takes a list of items and reorganizes it based off if they are done
+    public List<Item> sortByDone(List<Item> temp)
     {
-        List<Item> temp = getTagItems(getTags().get(current));
-        items = new ArrayList<Item>();
-        StringBuilder sb = new StringBuilder();
+        List<Item> items = new ArrayList<>();
+
         for (int i = 0; i < temp.size(); i++)
         {
             if(!temp.get(i).done)
@@ -128,6 +85,96 @@ public class TagsActivity extends ActionBarActivity implements AdapterView.OnIte
                 items.add(temp.get(i));
             }
         }
+        return items;
+    }
+
+    //finds all the different tags there are
+    public List<String> getTags()
+    {
+        List<String> tags = new ArrayList<String>();
+        for(int i = 0; i < lists.size(); i++)
+        {
+            if(!lists.get(i).archived)
+            {
+                for(int j = 0; j < lists.get(i).tags.size(); j++)
+                {
+                    boolean found = false;
+                    for(int l = 0; l < tags.size(); l++)
+                    {
+                        if(tags.get(l).equals(lists.get(i).tags.get(j)))
+                        {
+                            found = true;
+                        }
+                    }
+                    if(!found)
+                    {
+                        tags.add(lists.get(i).tags.get(j));
+                    }
+                }
+                for(int l = 0; l < lists.get(i).items.size(); l++)
+                {
+                    for(int k = 0; k < lists.get(i).items.get(l).tags.size(); k++)
+                    {
+                        boolean found = false;
+                        for(int j = 0; j < tags.size(); j++)
+                        {
+                            if(lists.get(i).items.get(l).tags.get(k).equals(tags.get(j)))
+                            {
+                                found = true;
+                            }
+                        }
+                        if(!found)
+                        {
+                            tags.add(lists.get(i).items.get(l).tags.get(k));
+                        }
+                    }
+                }
+            }
+        }
+        return tags;
+    }
+
+    public List<Item> getTagItems(String tag)
+    {
+        List<Item> items = new ArrayList<Item>();
+        for(int i = 0; i < lists.size(); i++)
+        {
+            if(!lists.get(i).archived)
+            {
+                boolean found = false;
+                for(int j = 0; j < lists.get(i).tags.size(); j++)
+                {
+                    if(lists.get(i).tags.get(j).equals(tag))
+                    {
+                        found = true;
+                        for(int l = 0; l < lists.get(i).items.size(); l++)
+                        {
+                            items.add(lists.get(i).items.get(l));
+                        }
+                    }
+                }
+                if(!found)
+                {
+                    for(int l = 0; l < lists.get(i).items.size(); l++)
+                    {
+                        for(int k = 0; k < lists.get(i).items.get(l).tags.size(); k++)
+                        {
+                            if(lists.get(i).items.get(l).tags.get(k).equals(tag))
+                            {
+                                items.add(lists.get(i).items.get(l));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return items;
+    }
+
+    public void updateList()
+    {
+        //reorganizes all the items by date then doneness
+        items = sortByDone(sortByDate(getTagItems(getTags().get(current))));
         list.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(this);
         for (int i = 0; i < items.size(); i++)
@@ -163,6 +210,25 @@ public class TagsActivity extends ActionBarActivity implements AdapterView.OnIte
                         IO.save(WLActivity.getLists());
                 }
             });
+
+            //color item text based off date (late is red, day of it orange)
+            SharedPreferences settings = getSharedPreferences(IO.PREFS, 0);
+            boolean highlight = settings.getBoolean(IO.HIGHLIGHT_DATE_PREF, true);
+            if(highlight)
+            {
+                Date date = items.get(i).date;
+                Date today = Calendar.getInstance().getTime();
+                int compare = date.compareTo(today);
+                if(date.getYear() == today.getYear() && date.getMonth() == today.getMonth() && date.getDate() == today.getDate() && !items.get(i).done)
+                {
+                    cb.setTextColor(Color.parseColor("#FFA500"));
+                }
+                else if(date.compareTo(today) < 0 && !items.get(i).done)
+                {
+                    cb.setTextColor(Color.RED);
+                }
+            }
+
             list.addView(view);
         }
         IO.save(lists);
@@ -193,6 +259,7 @@ public class TagsActivity extends ActionBarActivity implements AdapterView.OnIte
 
 
     }
+
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id)

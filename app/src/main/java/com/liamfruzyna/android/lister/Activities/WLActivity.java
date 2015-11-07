@@ -78,6 +78,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         return unArchived;
     }
 
+    //Takes a list of items and returns the earliest dated item
     public Item findEarliest(List<Item> items)
     {
         Item earliest = items.get(0);
@@ -94,6 +95,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         return earliest;
     }
 
+    //Takes a list of items and reorganizes it based off if they are done
     public List<Item> newList(List<Item> items)
     {
         List<Item> copy = new ArrayList<>();
@@ -104,6 +106,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         return copy;
     }
 
+    //Takes a list of items and reorganized it based off date
     public List<Item> sortByDate(List<Item> todo)
     {
         List<Item> build = new ArrayList<>();
