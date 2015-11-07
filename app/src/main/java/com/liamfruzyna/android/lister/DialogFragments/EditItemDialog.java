@@ -40,6 +40,7 @@ public class EditItemDialog extends DialogFragment
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
         final View v = inflater.inflate(R.layout.new_item_item, null);
         editText = (EditText) v.findViewById(R.id.name);
+        editText.setText(WLActivity.getItems().get(position).item);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage("Edit: " + WLActivity.getItems().get(position).item)
                 .setTitle("Edit List Item")
