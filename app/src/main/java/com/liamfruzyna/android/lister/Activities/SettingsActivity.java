@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
@@ -46,6 +48,7 @@ import java.util.List;
  */
 public class SettingsActivity extends PreferenceActivity
 {
+    SharedPreferences settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -121,6 +124,23 @@ public class SettingsActivity extends PreferenceActivity
             }
         });
         gen.addPreference(unArchive);
+
+        //Whether or not to highlight items based off date
+        Preference highlight = new CheckBoxPreference(this);
+        highlight.setTitle("Highlight Items");
+        highlight.setSummary("Highlight items based off their due dates");
+        settings = getSharedPreferences(IO.PREFS, 0);
+        ((CheckBoxPreference) highlight).setChecked(settings.getBoolean(IO.HIGHLIGHT_DATE_PREF, true));
+        highlight.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putBoolean(IO.HIGHLIGHT_DATE_PREF, ((CheckBoxPreference) preference).isChecked());
+                editor.commit();
+                return false;
+            }
+        });
+        gen.addPreference(highlight);
 
         PreferenceCategory about = new PreferenceCategory(this);
         about.setTitle("About");

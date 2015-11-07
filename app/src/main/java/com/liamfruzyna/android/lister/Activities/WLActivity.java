@@ -3,6 +3,7 @@ package com.liamfruzyna.android.lister.Activities;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -147,16 +148,21 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         cb.setChecked(items.get(i).done);
 
         //color item text based off date (late is red, day of it orange)
-        Date date = items.get(i).date;
-        Date today = Calendar.getInstance().getTime();
-        int compare = date.compareTo(today);
-        if(date.getYear() == today.getYear() && date.getMonth() == today.getMonth() && date.getDate() == today.getDate() && !items.get(i).done)
+        SharedPreferences settings = getSharedPreferences(IO.PREFS, 0);
+        boolean highlight = settings.getBoolean(IO.HIGHLIGHT_DATE_PREF, true);
+        if(highlight)
         {
-            cb.setTextColor(Color.parseColor("#FFA500"));
-        }
-        else if(date.compareTo(today) < 0 && !items.get(i).done)
-        {
-            cb.setTextColor(Color.RED);
+            Date date = items.get(i).date;
+            Date today = Calendar.getInstance().getTime();
+            int compare = date.compareTo(today);
+            if(date.getYear() == today.getYear() && date.getMonth() == today.getMonth() && date.getDate() == today.getDate() && !items.get(i).done)
+            {
+                cb.setTextColor(Color.parseColor("#FFA500"));
+            }
+            else if(date.compareTo(today) < 0 && !items.get(i).done)
+            {
+                cb.setTextColor(Color.RED);
+            }
         }
 
         //if item is done cross it out
