@@ -29,16 +29,12 @@ import java.util.List;
 /**
  * Created by mail929 on 5/23/15.
  */
-public class PeopleActivity extends ActionBarActivity implements AdapterView.OnItemSelectedListener
+public class PeopleActivity extends TagActivity
 {
-    List<WishList> lists;
-    LinearLayout list;
-    List<Item> items;
-    Spinner spin;
-    int current;
 
     //finds all the different people in unarchived lists
-    public List<String> getPeople()
+    @Override
+    public List<String> getTags()
     {
         List<String> people = new ArrayList<>();
         for(int i = 0; i < lists.size(); i++) {
@@ -61,60 +57,10 @@ public class PeopleActivity extends ActionBarActivity implements AdapterView.OnI
         return people;
     }
 
-    //Takes a list of items and returns the earliest dated item
-    public Item findEarliest(List<Item> items)
-    {
-        Item earliest = items.get(0);
-        if(items.size() > 1)
-        {
-            for(int i = 1; i < items.size(); i++)
-            {
-                if(items.get(i).date.before(earliest.date))
-                {
-                    earliest = items.get(i);
-                }
-            }
-        }
-        return earliest;
-    }
-
-    //Takes a list of items and reorganized it based off date
-    public List<Item> sortByDate(List<Item> todo)
-    {
-        List<Item> build = new ArrayList<>();
-        while(todo.size() > 0)
-        {
-            Item item = findEarliest(todo);
-            build.add(item);
-            todo.remove(item);
-        }
-        return build;
-    }
-
-    //Takes a list of items and reorganizes it based off if they are done
-    public List<Item> sortByDone(List<Item> temp)
-    {
-        List<Item> items = new ArrayList<>();
-
-        for (int i = 0; i < temp.size(); i++)
-        {
-            if(!temp.get(i).done)
-            {
-                items.add(temp.get(i));
-            }
-        }
-        for (int i = 0; i < temp.size(); i++)
-        {
-            if(temp.get(i).done)
-            {
-                items.add(temp.get(i));
-            }
-        }
-        return items;
-    }
 
     //Gets all the items in unarchived lists containing a name
-    public List<Item> getPeopleItems(String person)
+    @Override
+    public List<Item> getTagItems(String person)
     {
         List<Item> items = new ArrayList<Item>();
         for(int i = 0; i < lists.size(); i++)
@@ -137,113 +83,21 @@ public class PeopleActivity extends ActionBarActivity implements AdapterView.OnI
     }
 
     //updates the list on screen
+    @Override
     public void updateList()
     {
-        if(getPeople().size() > 0)
+        if(getTags().size() > 0)
         {
-            items = sortByDone(sortByDate(getPeopleItems(getPeople().get(current))));
-            list.removeAllViews();
-            LayoutInflater inflater = LayoutInflater.from(this);
-            for (int i = 0; i < items.size(); i++)
-            {
-                final int j = i;
-                View view = inflater.inflate(R.layout.item, list, false);
-                //init checkbox and set text
-                final CheckBox cb = (CheckBox) view.findViewById(R.id.checkbox);
-                cb.setText(items.get(i).item);
-                cb.setTextColor(Color.parseColor(items.get(i).color));
-                cb.setChecked(items.get(i).done);
-                if(items.get(i).done)
-                {
-                    cb.setPaintFlags(cb.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                } else
-                {
-                    cb.setPaintFlags(0);
-                }
-
-                //color item text based off date (late is red, day of it orange)
-                SharedPreferences settings = getSharedPreferences(IO.PREFS, 0);
-                boolean highlight = settings.getBoolean(IO.HIGHLIGHT_DATE_PREF, true);
-                if(highlight)
-                {
-                    Date date = items.get(i).date;
-                    Date today = Calendar.getInstance().getTime();
-                    int compare = date.compareTo(today);
-                    if(date.getYear() == today.getYear() && date.getMonth() == today.getMonth() && date.getDate() == today.getDate() && !items.get(i).done)
-                    {
-                        cb.setTextColor(Color.parseColor("#FFA500"));
-                    }
-                    else if(date.compareTo(today) < 0 && !items.get(i).done)
-                    {
-                        cb.setTextColor(Color.RED);
-                    }
-                }
-
-                cb.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        items.get(j).done = cb.isChecked();
-                        if (cb.isChecked())
-                        {
-                            cb.setPaintFlags(cb.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                        } else
-                        {
-                            cb.setPaintFlags(0);
-                        }
-                        IO.save(WLActivity.getLists());
-                    }
-                });
-                list.addView(view);
-            }
-            IO.save(lists);
-        }
-        else
-        {
-            DialogFragment dialog = new SuggestionDialog();
-            Bundle args = new Bundle();
-            args.putString("title", "No People Tagged");
-            args.putString("message", "You haven't tagged any people in your lists. To do that just add @name to an item (without spaces).");
-            dialog.setArguments(args);
-            dialog.show(getFragmentManager(), "");
-        }
+        super.updateList();
     }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
+    else
     {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tags);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        list = (LinearLayout) findViewById(R.id.list);
-
-        lists = WLActivity.getLists();
-
-        System.out.println(lists.size());
-
-        spin = (Spinner) findViewById(R.id.spinner);
-        ArrayAdapter<String> sadapter = new ArrayAdapter<String>(this, R.layout.spinner_item, getPeople());
-        sadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spin.setAdapter(sadapter);
-        current = spin.getSelectedItemPosition();
-        updateList();
-
-        spin.setOnItemSelectedListener(this);
-
-
+        DialogFragment dialog = new SuggestionDialog();
+        Bundle args = new Bundle();
+        args.putString("title", "No People Tagged");
+        args.putString("message", "You haven't tagged any people in your lists. To do that just add @name to an item (without spaces).");
+        dialog.setArguments(args);
+        dialog.show(getFragmentManager(), "");
     }
-
-    //update the screen when a new name is selected
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-    {
-        current = spin.getSelectedItemPosition();
-        updateList();
     }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent){}
 }

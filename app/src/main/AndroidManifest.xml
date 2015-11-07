@@ -30,6 +30,10 @@
             android:name=".Activities.PeopleActivity"
             android:label="People Viewer">
         </activity>
+        <activity
+            android:name=".Activities.DatesActivity"
+            android:label="Date Viewer">
+        </activity>
     </application>
 
 </manifest>
