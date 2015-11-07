@@ -5,8 +5,11 @@
           android:title="Tag Viewer"
           app:showAsAction="never"  />
     <item android:id="@+id/action_people"
-          android:title="People Viewer"
-          app:showAsAction="never"  />
+        android:title="People Viewer"
+        app:showAsAction="never"  />
+    <item android:id="@+id/action_dates"
+        android:title="Date Viewer"
+        app:showAsAction="never"  />
     <item android:id="@+id/action_settings"
         android:title="Settings"
         app:showAsAction="never" />
