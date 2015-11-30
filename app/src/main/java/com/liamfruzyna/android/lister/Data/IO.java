@@ -178,4 +178,9 @@ public class IO
         }
         return data;
     }
+
+    public static void log(String title, String message)
+    {
+        System.out.println("[" + title + "] " + message);
+    }
 }

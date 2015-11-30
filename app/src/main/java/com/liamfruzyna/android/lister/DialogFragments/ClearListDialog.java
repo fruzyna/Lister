@@ -5,48 +5,44 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
 
 import com.liamfruzyna.android.lister.Activities.WLActivity;
 import com.liamfruzyna.android.lister.Data.IO;
+import com.liamfruzyna.android.lister.Data.Item;
 import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Created by mail929 on 10/29/15.
+ * Created by mail929 on 11/30/15.
  */
-public class ArchiveListDialog extends DialogFragment
+public class ClearListDialog  extends DialogFragment
 {
-    List<WishList> lists = WLActivity.getUnArchived();
-    WishList current = WLActivity.getCurrentList();
-
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState)
-    {
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("Are you sure you want to archive " + current.name + "?")
-                .setTitle("Archive List?")
-                .setPositiveButton("ARCHIVE", new DialogInterface.OnClickListener()
+        final WishList list = WLActivity.getCurrentList();
+        builder.setMessage("Remove all items from " + list.name)
+                .setTitle("Clear List")
+                .setPositiveButton("CLEAR", new DialogInterface.OnClickListener()
                 {
                     public void onClick(DialogInterface dialog, int id)
                     {
-                        IO.log("ArchiveListDialog", "Archiving list " + current.name);
-                        current.archived = true;
-                        lists.remove(current);
-                        WLActivity.setupSpinner();
-                        IO.save(WLActivity.getLists());
+                        IO.log("ClearListDialog", "Clearing list " + list.name);
+                        list.items = new ArrayList<>();
+                        ((WLActivity) getActivity()).updateList();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener()
                 {
                     public void onClick(DialogInterface dialog, int id)
                     {
-                        //do nothing
                     }
                 });
         return builder.create();

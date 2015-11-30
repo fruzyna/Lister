@@ -30,6 +30,7 @@ import com.liamfruzyna.android.lister.Data.Item;
 import com.liamfruzyna.android.lister.Data.Util;
 import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.DialogFragments.ArchiveListDialog;
+import com.liamfruzyna.android.lister.DialogFragments.ClearListDialog;
 import com.liamfruzyna.android.lister.DialogFragments.EditItemDialog;
 import com.liamfruzyna.android.lister.DialogFragments.EditTagsDialog;
 import com.liamfruzyna.android.lister.DialogFragments.NewItemDialog;
@@ -326,6 +327,19 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
                     DialogFragment dialog = new NewItemDialog();
                     dialog.show(getFragmentManager(), "");
                 }
+            }
+        });
+        view.setOnLongClickListener(new View.OnLongClickListener()
+        {
+            @Override
+            public boolean onLongClick(View v)
+            {
+                if(unArchived.size() > 0)
+                {
+                    DialogFragment dialog = new ClearListDialog();
+                    dialog.show(getFragmentManager(), "");
+                }
+                return false;
             }
         });
         container.addView(view);
