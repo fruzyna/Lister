@@ -60,7 +60,7 @@ public class SettingsActivity extends PreferenceActivity
         PreferenceCategory gen = new PreferenceCategory(this);
         gen.setTitle("General");
         ps.addPreference(gen);
-
+/*
         //Button that clears all lists, it requires a restart for now
         Preference clear = new Preference(this);
         clear.setTitle("Clear Data");
@@ -75,7 +75,7 @@ public class SettingsActivity extends PreferenceActivity
                 return true;
             }
         });
-        gen.addPreference(clear);
+        gen.addPreference(clear);*/
 
         //Shares a list's data with the android share menu
         Preference share = new Preference(this);
