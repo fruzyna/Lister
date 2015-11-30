@@ -51,6 +51,7 @@ public class EditItemDialog extends DialogFragment
                     {
                         if (editText.getText().toString().equals(""))
                         {
+                            //remove the item
                             System.out.println("[EditItemDialog] Removing Item " + position);
                             Item item = WLActivity.getItems().get(position);
                             WLActivity.getItems().remove(position);
@@ -64,10 +65,22 @@ public class EditItemDialog extends DialogFragment
                         ((WLActivity) getActivity()).updateList();
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener()
+                .setNeutralButton("REMOVE", new DialogInterface.OnClickListener()
                 {
                     public void onClick(DialogInterface dialog, int id)
                     {
+                        //remove the item
+                        System.out.println("[EditItemDialog] Removing Item " + position);
+                        Item item = WLActivity.getItems().get(position);
+                        WLActivity.getItems().remove(position);
+                        WLActivity.getCurrentList().items.remove(item);
+                        ((WLActivity) getActivity()).removeItemSnackbar(item);
+                        IO.save(WLActivity.getLists());
+                        ((WLActivity) getActivity()).updateList();
+                    }
+                })
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
                         //do nothing
                     }
                 });
