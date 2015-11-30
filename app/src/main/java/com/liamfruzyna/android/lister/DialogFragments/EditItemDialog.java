@@ -52,13 +52,14 @@ public class EditItemDialog extends DialogFragment
                         if (editText.getText().toString().equals(""))
                         {
                             //remove the item
-                            System.out.println("[EditItemDialog] Removing Item " + position);
                             Item item = WLActivity.getItems().get(position);
+                            IO.log("EditItemDialog", "EditText is blank removing " + item);
                             WLActivity.getItems().remove(position);
                             WLActivity.getCurrentList().items.remove(item);
                             ((WLActivity) getActivity()).removeItemSnackbar(item);
                         } else
                         {
+                            IO.log("EditItemDialog", "Updating " + WLActivity.getItems().get(position).item + " to " + editText.getText().toString());
                             WLActivity.getItems().get(position).item = editText.getText().toString();
                         }
                         IO.save(WLActivity.getLists());
@@ -70,8 +71,8 @@ public class EditItemDialog extends DialogFragment
                     public void onClick(DialogInterface dialog, int id)
                     {
                         //remove the item
-                        System.out.println("[EditItemDialog] Removing Item " + position);
                         Item item = WLActivity.getItems().get(position);
+                        IO.log("EditItemDialog", "Removing " + item);
                         WLActivity.getItems().remove(position);
                         WLActivity.getCurrentList().items.remove(item);
                         ((WLActivity) getActivity()).removeItemSnackbar(item);

@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.liamfruzyna.android.lister.Activities.WLActivity;
+import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.Item;
 import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.R;
@@ -37,6 +38,7 @@ public class NewItemDialog extends DialogFragment
                     public void onClick(DialogInterface dialog, int id)
                     {
                         EditText name = (EditText) v.findViewById(R.id.name);
+                        IO.log("NewItemDialog", "Adding " + name.getText().toString() + " to " + list.name);
                         list.items.add(new Item(name.getText().toString(), false));
                         ((WLActivity) getActivity()).updateList();
                     }

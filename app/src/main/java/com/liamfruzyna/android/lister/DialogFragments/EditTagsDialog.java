@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.liamfruzyna.android.lister.Activities.WLActivity;
+import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.Item;
 import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.R;
@@ -46,6 +47,7 @@ public class EditTagsDialog extends DialogFragment
                 {
                     public void onClick(DialogInterface dialog, int id)
                     {
+                        IO.log("EditTagDialog", "Settings " + list.name + "'s tags to " + tags.getText().toString());
                         list.tags = new ArrayList<>(Arrays.asList(tags.getText().toString().split(" ")));
                         ((WLActivity) getActivity()).updateList();
                     }

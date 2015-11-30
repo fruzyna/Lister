@@ -39,9 +39,11 @@ public class ImportListDialog extends DialogFragment
                     public void onClick(DialogInterface dialog, int id)
                     {
                         try {
+                            IO.log("ImportListDialog", "Importing list from " + editText.getText().toString());
                             WLActivity.getLists().add(IO.readString(editText.getText().toString()));
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            IO.log("ImportListDialog", "Error reading list json");
                         }
                         IO.save(WLActivity.getLists());
                     }

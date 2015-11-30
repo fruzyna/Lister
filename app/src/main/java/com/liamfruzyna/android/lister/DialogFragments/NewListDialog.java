@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.liamfruzyna.android.lister.Activities.WLActivity;
+import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.R;
 import com.liamfruzyna.android.lister.Data.WishList;
 
@@ -41,6 +42,7 @@ public class NewListDialog extends DialogFragment
                     {
                         EditText name = (EditText) v.findViewById(R.id.name);
                         EditText tags = (EditText) v.findViewById(R.id.tags);
+                        IO.log("NewListDialog", "Creating list " + name.getText().toString());
                         List<WishList> lists = WLActivity.getLists();
                         WishList newList = new WishList(name.getText().toString(), new ArrayList<>(Arrays.asList(tags.getText().toString().split(" "))));
                         lists.add(newList);

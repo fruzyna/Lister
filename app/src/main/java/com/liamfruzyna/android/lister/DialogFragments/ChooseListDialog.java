@@ -58,6 +58,7 @@ public class ChooseListDialog extends DialogFragment
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
+                IO.log("ChooseListDialog", "Sharing list " + WLActivity.getLists().get(position).name);
                 Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
                 String shareBody = null;

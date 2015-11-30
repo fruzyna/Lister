@@ -130,7 +130,7 @@ public class IO
         File dir = new File(fileDir);
         dir.mkdirs();
         File file = new File(fileDir, name + ".json");
-        System.out.println("[IO] Writing to " + file.toString());
+        log("IO", "Writing to " + file.toString());
         if(!file.exists())
         {
             try
@@ -160,7 +160,7 @@ public class IO
         for(int i = 0; i < files.length; i++)
         {
             File file = files[i];
-            System.out.println("[IO] Reading from " + file.toString());
+            log("IO", "Reading from " + file.toString());
             StringBuilder sb = new StringBuilder();
             try
             {

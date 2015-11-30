@@ -66,6 +66,7 @@ public class UnArchiveDialog extends DialogFragment
                 List<WishList> unArchived = WLActivity.getUnArchived();
                 if(!unArchived.contains(archived.get(position)))
                 {
+                    IO.log("UnArchiveDialog", "Unarchiving list " + archived.get(position));
                     unArchived.add(archived.get(position));
                     archived.get(position).archived = false;
                     IO.save(WLActivity.getLists());
