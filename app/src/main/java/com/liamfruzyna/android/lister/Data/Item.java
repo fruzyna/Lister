@@ -45,20 +45,12 @@ public class Item
         }
         if(item.contains("*"))
         {
-            //tag
-            String[] tags = item.split("\\*");
-            findTags(tags);
         }
         if(item.contains("#"))
         {
-            //color
-            String color = item.split("#")[1];
-            if(color.contains(" "))
-            {
-                color = color.split(" ")[0];
-            }
-            this.color = "#" + color;
-            System.out.println("Found Color: " + this.color);
+            //tag
+            String[] tags = item.split("\\#");
+            findTags(tags);
         }
         if(item.contains("/"))
         {
@@ -143,6 +135,40 @@ public class Item
             }
             System.out.println("Found Tag: " + tag);
             tags.add(tag);
+
+            if(isColor(tag))
+            {
+                //color
+                String color = item.split("#")[1];
+                if(color.contains(" "))
+                {
+                    color = color.split(" ")[0];
+                }
+                this.color = "#" + color;
+                System.out.println("Found Color: " + this.color);
+            }
+        }
+    }
+
+    public boolean isColor(String color)
+    {
+        color = color.toLowerCase();
+        if(color.length() == 6)
+        {
+            for(int i = 0; i < color.length(); i++)
+            {
+                char c = color.charAt(i);
+                if(c != 'a' && c != 'b' && c != 'c' && c != 'c' && c != 'e' && c != 'f' &&
+                        c != '0' && c != '1' && c != '2' && c != '3' && c != '4' && c != '5' && c != '6' && c != '7' && c != '8' && c != '9')
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }
