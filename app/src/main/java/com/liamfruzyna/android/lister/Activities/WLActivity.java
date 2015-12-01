@@ -171,7 +171,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         if(unArchived.size() > 0)
         {
             //reorganizes all the items by date then doneness
-            items = Util.sortByDone(Util.sortByDate(Util.newList(unArchived.get(current).items)));
+            items = Util.sortByDone(Util.sortByPriority(Util.sortByDate(Util.newList(unArchived.get(current).items))));
 
             //populates the list with the items
             list.removeAllViews();

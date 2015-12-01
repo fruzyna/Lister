@@ -60,6 +60,28 @@ public class Util
         return items;
     }
 
+    //Takes a list of items and reorganizes it based off which have priority
+    public static List<Item> sortByPriority(List<Item> temp)
+    {
+        List<Item> items = new ArrayList<>();
+
+        for (int i = 0; i < temp.size(); i++)
+        {
+            if(temp.get(i).priority)
+            {
+                items.add(temp.get(i));
+            }
+        }
+        for (int i = 0; i < temp.size(); i++)
+        {
+            if(!temp.get(i).priority)
+            {
+                items.add(temp.get(i));
+            }
+        }
+        return items;
+    }
+
     //Takes a list of items and reorganizes it based off if they are done
     public static List<Item> newList(List<Item> items)
     {

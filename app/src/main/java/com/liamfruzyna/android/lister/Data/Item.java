@@ -20,6 +20,7 @@ public class Item
 {
     public Boolean done;
     public String item;
+    public Boolean priority;
 
     public String color = "#000000";
     public List<String> people = new ArrayList<>();
@@ -45,6 +46,11 @@ public class Item
         }
         if(item.contains("*"))
         {
+            priority = true;
+        }
+        else
+        {
+            priority = false;
         }
         if(item.contains("#"))
         {
