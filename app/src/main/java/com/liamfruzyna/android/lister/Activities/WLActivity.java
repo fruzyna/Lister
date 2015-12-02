@@ -11,6 +11,10 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -80,14 +84,31 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         return unArchived;
     }
 
+    public SpannableStringBuilder colorTags(String item, int color)
+    {
+        final SpannableStringBuilder sb = new SpannableStringBuilder(item);
+        final ForegroundColorSpan fcs = new ForegroundColorSpan(Color.argb(128, Color.red(color), Color.green(color), Color.blue(color)));
+        String[] words = item.split(" ");
+        for(int i = 0; i < words.length; i++)
+        {
+            if(words[i].charAt(0) == '#')
+            {
+                sb.setSpan(fcs, item.indexOf(words[i]), item.indexOf(words[i]) + words[i].length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            }
+        }
+
+        return sb;
+    }
+
     public View createItem(LayoutInflater inflater, final int i)
     {
         View view = inflater.inflate(R.layout.item, list, false);
 
         //init checkbox and set text, checked status, and color
         final CheckBox cb = (CheckBox) view.findViewById(R.id.checkbox);
-        cb.setText(items.get(i).item);
-        cb.setTextColor(Color.parseColor(items.get(i).color));
+        int color = Color.parseColor(items.get(i).color);
+        cb.setText(colorTags(items.get(i).item, color));
+        cb.setTextColor(color);
         cb.setChecked(items.get(i).done);
 
         //color item text based off date (late is red, day of it orange)
