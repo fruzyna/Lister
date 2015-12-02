@@ -145,7 +145,7 @@ public class Item
             if(isColor(tag))
             {
                 //color
-                String color = item.split("#")[1];
+                String color = tag;
                 if(color.contains(" "))
                 {
                     color = color.split(" ")[0];

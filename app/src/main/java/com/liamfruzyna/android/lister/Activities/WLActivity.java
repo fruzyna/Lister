@@ -12,6 +12,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
@@ -87,16 +88,31 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     public SpannableStringBuilder colorTags(String item, int color)
     {
         final SpannableStringBuilder sb = new SpannableStringBuilder(item);
-        final ForegroundColorSpan fcs = new ForegroundColorSpan(Color.argb(128, Color.red(color), Color.green(color), Color.blue(color)));
+        int alpha = Color.argb(128, Color.red(color), Color.green(color), Color.blue(color));
         String[] words = item.split(" ");
+        System.out.print("Building ");
         for(int i = 0; i < words.length; i++)
         {
             if(words[i].charAt(0) == '#')
             {
-                sb.setSpan(fcs, item.indexOf(words[i]), item.indexOf(words[i]) + words[i].length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                SpannableString s = new SpannableString(words[i]);
+                s.setSpan(new ForegroundColorSpan(alpha), 0, words[i].length(), 0);
+                sb.append(s);
+                System.out.print(s);
+            }
+            else
+            {
+                sb.append(words[i]);
+                System.out.print(words[i]);
+            }
+            if(i < words.length - 1)
+            {
+                sb.append(" ");
+                System.out.print(" ");
             }
         }
-
+        System.out.println();
+        System.out.println("Returning " + sb);
         return sb;
     }
 
@@ -107,7 +123,8 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         //init checkbox and set text, checked status, and color
         final CheckBox cb = (CheckBox) view.findViewById(R.id.checkbox);
         int color = Color.parseColor(items.get(i).color);
-        cb.setText(colorTags(items.get(i).item, color));
+        SpannableStringBuilder s = colorTags(items.get(i).item, color);
+        cb.setText(s.subSequence(s.length()/2, s.length()));
         cb.setTextColor(color);
         cb.setChecked(items.get(i).done);
 
