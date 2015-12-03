@@ -65,6 +65,12 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     static Spinner spin;
     public static FloatingActionButton fab;
 
+    public static void updateCurrent(int newCurrent)
+    {
+        current = newCurrent;
+        spin.setSelection(current);
+    }
+
     public static WishList getCurrentList()
     {
         return unArchived.get(current);
