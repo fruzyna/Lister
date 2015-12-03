@@ -124,6 +124,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         final CheckBox cb = (CheckBox) view.findViewById(R.id.checkbox);
         int color = Color.parseColor(items.get(i).color);
         SpannableStringBuilder s = colorTags(items.get(i).item, color);
+        //the returned string were being doubled so I cut it in half
         cb.setText(s.subSequence(s.length()/2, s.length()));
         cb.setTextColor(color);
         cb.setChecked(items.get(i).done);
@@ -489,7 +490,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         }
         else if (id == R.id.action_dates)
         {
-            Intent goTags = new Intent(this, PeopleActivity.class);
+            Intent goTags = new Intent(this, DatesActivity.class);
             this.startActivity(goTags);
             return true;
         }
