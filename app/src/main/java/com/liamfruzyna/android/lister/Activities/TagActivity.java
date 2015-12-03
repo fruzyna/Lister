@@ -7,6 +7,9 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -44,6 +47,38 @@ public class TagActivity extends ActionBarActivity implements AdapterView.OnItem
             return people;
         }
 
+    //takes an item string and colors the tags to be lighter
+    public SpannableStringBuilder colorTags(String item, int color)
+    {
+        final SpannableStringBuilder sb = new SpannableStringBuilder(item);
+        int alpha = Color.argb(128, Color.red(color), Color.green(color), Color.blue(color));
+        String[] words = item.split(" ");
+        System.out.print("Building ");
+        for(int i = 0; i < words.length; i++)
+        {
+            if(words[i].charAt(0) == '#')
+            {
+                SpannableString s = new SpannableString(words[i]);
+                s.setSpan(new ForegroundColorSpan(alpha), 0, words[i].length(), 0);
+                sb.append(s);
+                System.out.print(s);
+            }
+            else
+            {
+                sb.append(words[i]);
+                System.out.print(words[i]);
+            }
+            if(i < words.length - 1)
+            {
+                sb.append(" ");
+                System.out.print(" ");
+            }
+        }
+        System.out.println();
+        System.out.println("Returning " + sb);
+        return sb;
+    }
+
     //Gets all the items in unarchived lists containing a name
     public List<Item> getTagItems(String tag)
     {
@@ -54,7 +89,7 @@ public class TagActivity extends ActionBarActivity implements AdapterView.OnItem
     //updates the list on screen
     public void updateList()
     {
-            items = Util.sortByDone(Util.sortByDate(getTagItems(getTags().get(current))));
+            items = Util.sortByDone(Util.sortByPriority(Util.sortByDate(getTagItems(getTags().get(current)))));
             list.removeAllViews();
             LayoutInflater inflater = LayoutInflater.from(this);
             for (int i = 0; i < items.size(); i++)
@@ -63,7 +98,10 @@ public class TagActivity extends ActionBarActivity implements AdapterView.OnItem
                 View view = inflater.inflate(R.layout.item, list, false);
                 //init checkbox and set text
                 final CheckBox cb = (CheckBox) view.findViewById(R.id.checkbox);
-                cb.setText(items.get(i).item);
+                int color = Color.parseColor(items.get(i).color);
+                SpannableStringBuilder s = colorTags(items.get(i).item, color);
+                //the returned string were being doubled so I cut it in half
+                cb.setText(s.subSequence(s.length()/2, s.length()));
                 cb.setTextColor(Color.parseColor(items.get(i).color));
                 cb.setChecked(items.get(i).done);
                 if(items.get(i).done)
