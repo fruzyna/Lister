@@ -65,12 +65,6 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     static Spinner spin;
     public static FloatingActionButton fab;
 
-    public static void updateCurrent(int newCurrent)
-    {
-        current = newCurrent;
-        spin.setSelection(current);
-    }
-
     public static WishList getCurrentList()
     {
         return unArchived.get(current);
@@ -407,6 +401,25 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         ArrayAdapter<String> sadapter = new ArrayAdapter<>(c, R.layout.spinner_item, names);
         sadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spin.setAdapter(sadapter);
+        current = spin.getSelectedItemPosition();
+
+        ((WLActivity)c).updateList();
+    }
+
+    public static void openNewest()
+    {
+        //creates a list of events level and distance to fill out the spinner
+        List<String> names = new ArrayList<String>();
+        for (int i = 0; i < unArchived.size(); i++)
+        {
+            names.add(unArchived.get(i).name);
+        }
+
+        //sets up adapter
+        ArrayAdapter<String> sadapter = new ArrayAdapter<>(c, R.layout.spinner_item, names);
+        sadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spin.setAdapter(sadapter);
+        spin.setSelection(names.size() - 1);
         current = spin.getSelectedItemPosition();
 
         ((WLActivity)c).updateList();
