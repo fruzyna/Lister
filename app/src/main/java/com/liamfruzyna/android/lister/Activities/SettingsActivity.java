@@ -58,7 +58,7 @@ public class SettingsActivity extends PreferenceActivity
         PreferenceScreen ps = getPreferenceManager().createPreferenceScreen(this);
 
         PreferenceCategory gen = new PreferenceCategory(this);
-        gen.setTitle("General");
+        gen.setTitle("Lists");
         ps.addPreference(gen);
 /*
         //Button that clears all lists, it requires a restart for now
@@ -113,17 +113,19 @@ public class SettingsActivity extends PreferenceActivity
         Preference unArchive = new Preference(this);
         unArchive.setTitle("Unarchive List");
         unArchive.setSummary("Unarchive a list so that it can be seen again");
-        unArchive.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
-        {
+        unArchive.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
-            public boolean onPreferenceClick(Preference preference)
-            {
+            public boolean onPreferenceClick(Preference preference) {
                 DialogFragment dialog = new UnArchiveDialog();
                 dialog.show(getFragmentManager(), "");
                 return true;
             }
         });
         gen.addPreference(unArchive);
+
+        PreferenceCategory item = new PreferenceCategory(this);
+        item.setTitle("Items");
+        ps.addPreference(item);
 
         //Whether or not to highlight items based off date
         Preference highlight = new CheckBoxPreference(this);
@@ -140,7 +142,7 @@ public class SettingsActivity extends PreferenceActivity
                 return false;
             }
         });
-        gen.addPreference(highlight);
+        item.addPreference(highlight);
 
         PreferenceCategory about = new PreferenceCategory(this);
         about.setTitle("About");
