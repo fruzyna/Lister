@@ -99,6 +99,25 @@ public class TagActivity extends ActionBarActivity implements AdapterView.OnItem
                 //init checkbox and set text
                 final CheckBox cb = (CheckBox) view.findViewById(R.id.checkbox);
                 int color = Color.parseColor(items.get(i).color);
+
+                //color item text based off date (late is red, day of is orange)
+                SharedPreferences settings = getSharedPreferences(IO.PREFS, 0);
+                boolean highlight = settings.getBoolean(IO.HIGHLIGHT_DATE_PREF, true);
+                if(highlight)
+                {
+                    Date date = items.get(i).date;
+                    Date today = Calendar.getInstance().getTime();
+                    int compare = date.compareTo(today);
+                    if(date.getYear() == today.getYear() && date.getMonth() == today.getMonth() && date.getDate() == today.getDate() && !items.get(i).done)
+                    {
+                        color = Color.parseColor("#FFA500");
+                    }
+                    else if(date.compareTo(today) < 0 && !items.get(i).done)
+                    {
+                        color = Color.RED;
+                    }
+                }
+
                 SpannableStringBuilder s = colorTags(items.get(i).item, color);
                 //the returned string were being doubled so I cut it in half
                 cb.setText(s.subSequence(s.length()/2, s.length()));
@@ -110,24 +129,6 @@ public class TagActivity extends ActionBarActivity implements AdapterView.OnItem
                 } else
                 {
                     cb.setPaintFlags(0);
-                }
-
-                //color item text based off date (late is red, day of it orange)
-                SharedPreferences settings = getSharedPreferences(IO.PREFS, 0);
-                boolean highlight = settings.getBoolean(IO.HIGHLIGHT_DATE_PREF, true);
-                if(highlight)
-                {
-                    Date date = items.get(i).date;
-                    Date today = Calendar.getInstance().getTime();
-                    int compare = date.compareTo(today);
-                    if(date.getYear() == today.getYear() && date.getMonth() == today.getMonth() && date.getDate() == today.getDate() && !items.get(i).done)
-                    {
-                        cb.setTextColor(Color.parseColor("#FFA500"));
-                    }
-                    else if(date.compareTo(today) < 0 && !items.get(i).done)
-                    {
-                        cb.setTextColor(Color.RED);
-                    }
                 }
 
                 cb.setOnClickListener(new View.OnClickListener()

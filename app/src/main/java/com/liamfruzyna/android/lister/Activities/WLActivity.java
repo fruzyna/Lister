@@ -129,13 +129,8 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         //init checkbox and set text, checked status, and color
         final CheckBox cb = (CheckBox) view.findViewById(R.id.checkbox);
         int color = Color.parseColor(items.get(i).color);
-        SpannableStringBuilder s = colorTags(items.get(i).item, color);
-        //the returned string were being doubled so I cut it in half
-        cb.setText(s.subSequence(s.length()/2, s.length()));
-        cb.setTextColor(color);
-        cb.setChecked(items.get(i).done);
 
-        //color item text based off date (late is red, day of it orange)
+        //color item text based off date (late is red, day of is orange)
         SharedPreferences settings = getSharedPreferences(IO.PREFS, 0);
         boolean highlight = settings.getBoolean(IO.HIGHLIGHT_DATE_PREF, true);
         if(highlight)
@@ -145,13 +140,19 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
             int compare = date.compareTo(today);
             if(date.getYear() == today.getYear() && date.getMonth() == today.getMonth() && date.getDate() == today.getDate() && !items.get(i).done)
             {
-                cb.setTextColor(Color.parseColor("#FFA500"));
+                color = Color.parseColor("#FFA500");
             }
             else if(date.compareTo(today) < 0 && !items.get(i).done)
             {
-                cb.setTextColor(Color.RED);
+                color = Color.RED;
             }
         }
+
+        SpannableStringBuilder s = colorTags(items.get(i).item, color);
+        //the returned string were being doubled so I cut it in half
+        cb.setText(s.subSequence(s.length()/2, s.length()));
+        cb.setTextColor(color);
+        cb.setChecked(items.get(i).done);
 
         //if item is done cross it out
         if(items.get(i).done)
