@@ -426,7 +426,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         List<String> extra = new ArrayList<>();
         while(copy.size() > 0)
         {
-            int lowest = 0;
+            int lowest = 9999;
             int count = 0;
             for(int j = 0; j < copy.size(); j++)
             {
@@ -434,6 +434,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
                 {
                     if(copy.get(j).order < lowest)
                     {
+                        IO.log("WLActivity:sortLists", "New Lowest " + copy.get(j).name + " with order of " + copy.get(j).order);
                         lowest = copy.get(j).order;
                         count = j;
                     }
@@ -443,6 +444,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
                     extra.add(copy.get(j).name);
                 }
             }
+            IO.log("WLActivity:sortLists", "Adding " + copy.get(count).name + " with order of " + copy.get(count).order);
             names.add(copy.get(count).name);
             copy.remove(count);
         }
