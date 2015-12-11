@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBarActivity;
@@ -56,6 +57,9 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     private static List<Item> items = new ArrayList<>();
     private static List<WishList> unArchived = new ArrayList<>();
     private static int current = 0;
+    private static SharedPreferences prefs;
+    private static SharedPreferences.Editor editor;
+    private static List<String> names;
 
     static LinearLayout list;
     public static Context c;
@@ -203,13 +207,30 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         return tv;
     }
 
+    public WishList getListFromName(String name)
+    {
+        for(int i = 0; i < getUnArchived().size(); i++)
+        {
+            if(getUnArchived().get(i).name.equals(name))
+            {
+                return getUnArchived().get(i);
+            }
+        }
+        return null;
+    }
+
     //rebuilds the list of items
     public void updateList()
     {
         if(unArchived.size() > 0)
         {
+            spin.setSelection(prefs.getInt(IO.CURRENT_LIST_PREF, 0));
+            current = spin.getSelectedItemPosition();
+            IO.log("WLActivity:updateList", "Spinner is at " + spin.getSelectedItemPosition());
+            IO.log("WLActivity:updateList", "Set spinner to " + prefs.getInt(IO.CURRENT_LIST_PREF, 0));
+
             //reorganizes all the items by date then doneness
-            items = Util.sortByDone(Util.sortByPriority(Util.sortByDate(Util.newList(unArchived.get(current).items))));
+            items = Util.sortByDone(Util.sortByPriority(Util.sortByDate(Util.newList(getListFromName(names.get(current)).items))));
 
             //populates the list with the items
             list.removeAllViews();
@@ -241,6 +262,9 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wl);
         c = this;
+
+        prefs = getSharedPreferences(IO.PREFS, 0);
+        editor = prefs.edit();
 
         //setup the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -322,6 +346,11 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
             dialog.show(getFragmentManager(), "");
         }
         spin.setOnItemSelectedListener(this);
+        spin.setSelection(prefs.getInt(IO.CURRENT_LIST_PREF, 0));
+        current = spin.getSelectedItemPosition();
+        IO.log("WLActivity:updateList", "Spinner is at " + spin.getSelectedItemPosition());
+        IO.log("WLActivity:updateList", "Set spinner to " + prefs.getInt(IO.CURRENT_LIST_PREF, 0));
+
 
         //setup button to delete current list
         ImageButton removelist = (ImageButton) findViewById(R.id.remove);
@@ -385,15 +414,54 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         updateList();
     }
 
+    //Takes a list of lists and reorganizes it based off the order variable
+    public static List<String> sortLists(List<WishList> lists)
+    {
+        List<WishList> copy = new ArrayList<>();
+        for(int i = 0; i < lists.size(); i++)
+        {
+            copy.add(lists.get(i));
+        }
+        List<String> names = new ArrayList<>();
+        List<String> extra = new ArrayList<>();
+        while(copy.size() > 0)
+        {
+            int lowest = 0;
+            int count = 0;
+            for(int j = 0; j < copy.size(); j++)
+            {
+                if(copy.get(j).order != 0)
+                {
+                    if(copy.get(j).order < lowest)
+                    {
+                        lowest = copy.get(j).order;
+                        count = j;
+                    }
+                }
+                else
+                {
+                    extra.add(copy.get(j).name);
+                }
+            }
+            names.add(copy.get(count).name);
+            copy.remove(count);
+        }
+        for(int i = 0; i < extra.size(); i++)
+        {
+            if(!names.contains(extra.get(i)))
+            {
+                names.add(extra.get(i));
+            }
+        }
+
+        return names;
+    }
+
     //repopulates the spinner
     public static void setupSpinner()
     {
         //creates a list of events level and distance to fill out the spinner
-        List<String> names = new ArrayList<String>();
-        for (int i = 0; i < unArchived.size(); i++)
-        {
-            names.add(unArchived.get(i).name);
-        }
+        names = sortLists(unArchived);
 
         //sets up adapter
         ArrayAdapter<String> sadapter = new ArrayAdapter<>(c, R.layout.spinner_item, names);
@@ -407,11 +475,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     public static void openNewest()
     {
         //creates a list of events level and distance to fill out the spinner
-        List<String> names = new ArrayList<String>();
-        for (int i = 0; i < unArchived.size(); i++)
-        {
-            names.add(unArchived.get(i).name);
-        }
+        names = sortLists(unArchived);
 
         //sets up adapter
         ArrayAdapter<String> sadapter = new ArrayAdapter<>(c, R.layout.spinner_item, names);
@@ -419,6 +483,11 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         spin.setAdapter(sadapter);
         spin.setSelection(names.size() - 1);
         current = spin.getSelectedItemPosition();
+
+        editor.putInt(IO.CURRENT_LIST_PREF, current);
+        IO.log("WLActivity:openNewest", "Saved position of " + current);
+        IO.log("WLActivity:openNewest", "Position is saved as " + prefs.getInt(IO.CURRENT_LIST_PREF, 0));
+        editor.commit();
 
         ((WLActivity)c).updateList();
     }
@@ -467,6 +536,10 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id)
     {
         current = spin.getSelectedItemPosition();
+        editor.putInt(IO.CURRENT_LIST_PREF, current);
+        IO.log("WLActivity:onItemSelected", "Saved position of " + current);
+        IO.log("WLActivity:onItemSelected", "Position is saved as " + prefs.getInt(IO.CURRENT_LIST_PREF, 0));
+        editor.commit();
         updateList();
     }
 

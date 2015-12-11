@@ -25,6 +25,7 @@ public class IO
 {
     public static final String PREFS = "Lister Prefs";
     public static final String HIGHLIGHT_DATE_PREF = "HIGHLIGHT_DATE_PREF";
+    public static final String CURRENT_LIST_PREF = "CURRENT_LIST_PREF";
     public static final String fileDir = Environment.getExternalStoragePublicDirectory("Lists").toString();
 
     //writes list datas to files for each list
@@ -48,6 +49,7 @@ public class IO
         JSONObject jlist = new JSONObject();
         jlist.put("name", list.name);
         jlist.put("archived", list.archived);
+        jlist.put("order", list.order);
         JSONArray jitems = new JSONArray();
         List<Item> items = list.items;
         for (int j = 0; j < items.size(); j++)
@@ -94,7 +96,12 @@ public class IO
             {
                 archived = jlist.getBoolean("archived");
             }
-            lists.add(new WishList(jlist.getString("name"), items, tags, archived));
+            int order = 0;
+            if(jlist.has("order"))
+            {
+                order = jlist.getInt("order");
+            }
+            lists.add(new WishList(jlist.getString("name"), items, tags, archived, order));
         }
         return lists;
     }
@@ -121,7 +128,12 @@ public class IO
         {
             archived = jlist.getBoolean("archived");
         }
-        return new WishList(jlist.getString("name"), items, tags, archived);
+        int order = 0;
+        if(jlist.has("order"))
+        {
+            order = jlist.getInt("order");
+        }
+        return new WishList(jlist.getString("name"), items, tags, archived, order);
     }
 
     //takes a list's json string and saves it to a file

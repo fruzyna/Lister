@@ -1,6 +1,5 @@
 package com.liamfruzyna.android.lister.Activities;
 
-import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
@@ -24,24 +23,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.liamfruzyna.android.lister.Data.IO;
-import com.liamfruzyna.android.lister.Data.WishList;
-import com.liamfruzyna.android.lister.DialogFragments.ChooseListDialog;
-import com.liamfruzyna.android.lister.DialogFragments.EditItemDialog;
+import com.liamfruzyna.android.lister.DialogFragments.ShareListDialog;
 import com.liamfruzyna.android.lister.DialogFragments.ImportListDialog;
+import com.liamfruzyna.android.lister.DialogFragments.SortListsDialog;
 import com.liamfruzyna.android.lister.DialogFragments.UnArchiveDialog;
 import com.liamfruzyna.android.lister.R;
-
-import org.json.JSONException;
-
-import java.io.File;
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Activity for customizing app settings.
@@ -77,6 +66,20 @@ public class SettingsActivity extends PreferenceActivity
         });
         gen.addPreference(clear);*/
 
+        //Allows user to sort lists  to their choosing
+        Preference sort = new Preference(this);
+        sort.setTitle("Sort Lists");
+        sort.setSummary("Sort the order lists show up");
+        sort.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                DialogFragment dialog = new SortListsDialog();
+                dialog.show(getFragmentManager(), "");
+                return true;
+            }
+        });
+        gen.addPreference(sort);
+        
         //Shares a list's data with the android share menu
         Preference share = new Preference(this);
         share.setTitle("Share List");
@@ -86,7 +89,7 @@ public class SettingsActivity extends PreferenceActivity
             @Override
             public boolean onPreferenceClick(Preference preference)
             {
-                DialogFragment dialog = new ChooseListDialog();
+                DialogFragment dialog = new ShareListDialog();
                 dialog.show(getFragmentManager(), "");
                 return true;
             }
