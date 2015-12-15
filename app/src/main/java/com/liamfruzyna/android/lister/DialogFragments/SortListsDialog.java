@@ -67,7 +67,10 @@ public class SortListsDialog extends DialogFragment
                 ((Button) view.findViewById(R.id.up)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        lists.get(position).order++;
+                        if(lists.get(position).order < 9999)
+                        {
+                            lists.get(position).order++;
+                        }
                         tv.setText(lists.get(position).order + " - " + lists.get(position).name);
                         IO.save(WLActivity.getLists());
                     }

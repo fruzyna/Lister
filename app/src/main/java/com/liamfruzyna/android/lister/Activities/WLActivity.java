@@ -69,7 +69,14 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
 
     public static WishList getCurrentList()
     {
-        return unArchived.get(current);
+        for(int i = 0; i < unArchived.size(); i++)
+        {
+            if(unArchived.get(i).name.equals(names.get(current)))
+            {
+                return unArchived.get(i);
+            }
+        }
+        return null;
     }
 
     public static List<Item> getItems()
