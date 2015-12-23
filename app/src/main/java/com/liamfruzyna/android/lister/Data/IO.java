@@ -26,6 +26,8 @@ public class IO
     public static final String PREFS = "Lister Prefs";
     public static final String HIGHLIGHT_DATE_PREF = "HIGHLIGHT_DATE_PREF";
     public static final String CURRENT_LIST_PREF = "CURRENT_LIST_PREF";
+    public static final String PASSWORD_PREF = "PASSWORD_PREF";
+    public static final String HAS_PASSWORD_PREF = "HAS_PASSWORD_PREF";
     public static final String fileDir = Environment.getExternalStoragePublicDirectory("Lists").toString();
 
     //writes list datas to files for each list

@@ -26,6 +26,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.liamfruzyna.android.lister.Data.IO;
+import com.liamfruzyna.android.lister.DialogFragments.NewPasswordDialog;
 import com.liamfruzyna.android.lister.DialogFragments.ShareListDialog;
 import com.liamfruzyna.android.lister.DialogFragments.ImportListDialog;
 import com.liamfruzyna.android.lister.DialogFragments.SortListsDialog;
@@ -125,6 +126,20 @@ public class SettingsActivity extends PreferenceActivity
             }
         });
         gen.addPreference(unArchive);
+
+        //Prompts to set password for lists
+        Preference password = new Preference(this);
+        password.setTitle("Set Password");
+        password.setSummary("Password protects lists on app launch");
+        password.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                DialogFragment dialog = new NewPasswordDialog();
+                dialog.show(getFragmentManager(), "");
+                return true;
+            }
+        });
+        gen.addPreference(password);
 
         PreferenceCategory item = new PreferenceCategory(this);
         item.setTitle("Items");

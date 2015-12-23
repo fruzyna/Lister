@@ -39,6 +39,8 @@ import com.liamfruzyna.android.lister.DialogFragments.EditItemDialog;
 import com.liamfruzyna.android.lister.DialogFragments.EditTagsDialog;
 import com.liamfruzyna.android.lister.DialogFragments.NewItemDialog;
 import com.liamfruzyna.android.lister.DialogFragments.NewListDialog;
+import com.liamfruzyna.android.lister.DialogFragments.NewPasswordDialog;
+import com.liamfruzyna.android.lister.DialogFragments.PasswordDialog;
 import com.liamfruzyna.android.lister.DialogFragments.RemoveListDialog;
 import com.liamfruzyna.android.lister.R;
 
@@ -521,6 +523,8 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     {
         super.onResume();
 
+        checkPassword();
+
         //repopulate the list if there are lists to populate it with
         if(unArchived.size() > 0 && unArchived != null)
         {
@@ -562,6 +566,15 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.wl, menu);
         return true;
+    }
+
+    public void checkPassword()
+    {
+        if(prefs.getBoolean(IO.HAS_PASSWORD_PREF, false))
+        {
+            DialogFragment dialog = new PasswordDialog();
+            dialog.show(getFragmentManager(), "");
+        }
     }
 
     //listens for options in menu to be pressed
