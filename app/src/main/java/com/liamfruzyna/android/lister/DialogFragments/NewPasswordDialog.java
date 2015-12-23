@@ -56,6 +56,7 @@ public class NewPasswordDialog extends DialogFragment {
                     {
                         SharedPreferences.Editor editor = settings.edit();
                         editor.putBoolean(IO.HAS_PASSWORD_PREF, false);
+                        editor.commit();
                     }
                 });
         return builder.create();
