@@ -171,6 +171,10 @@ public class IO
     {
         List<String> data = new ArrayList<>();
         File[] files = new File(fileDir).listFiles();
+        if(files == null)
+        {
+            files = new File[0];
+        }
         for(int i = 0; i < files.length; i++)
         {
             File file = files[i];
