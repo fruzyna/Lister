@@ -207,9 +207,9 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     {
         StringBuilder sb = new StringBuilder();
         sb.append("Tags: ");
-        for(int i = 0; i < unArchived.get(current).tags.size(); i++)
+        for(int i = 0; i < getListFromName(names.get(current)).tags.size(); i++)
         {
-            sb.append(unArchived.get(current).tags.get(i) + " ");
+            sb.append(getListFromName(names.get(current)).tags.get(i) + " ");
         }
         TextView tv = new TextView(c);
         tv.setText(sb.toString());
