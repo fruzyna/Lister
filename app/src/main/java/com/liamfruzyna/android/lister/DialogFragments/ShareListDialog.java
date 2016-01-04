@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,7 +49,13 @@ public class ShareListDialog extends DialogFragment
                 }
                 view = super.getView(position, convertView, parent);
 
-                ((TextView) view.findViewById(android.R.id.text1)).setText(WLActivity.getLists().get(position).name);
+                WishList list = WLActivity.getLists().get(position);
+                TextView tv = (TextView) view.findViewById(android.R.id.text1);
+                tv.setText(list.name);
+                if(!WLActivity.getUnArchived().contains(list))
+                {
+                    tv.setTextColor(Color.rgb(128, 128, 128));
+                }
                 return view;
             }
         });
