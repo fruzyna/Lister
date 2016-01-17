@@ -37,21 +37,44 @@ public class PeopleActivity extends TagActivity
     public List<String> getTags()
     {
         List<String> people = new ArrayList<>();
-        for(int i = 0; i < lists.size(); i++) {
-            if (!lists.get(i).archived) {
-                for (int l = 0; l < lists.get(i).items.size(); l++) {
-                    for (int k = 0; k < lists.get(i).items.get(l).people.size(); k++) {
+        for (int i = 0; i < lists.size(); i++)
+        {
+            if (!lists.get(i).archived)
+            {
+                for (int l = 0; l < lists.get(i).items.size(); l++)
+                {
+                    for (int k = 0; k < lists.get(i).items.get(l).people.size(); k++)
+                    {
                         boolean found = false;
-                        for (int j = 0; j < people.size(); j++) {
-                            if (lists.get(i).items.get(l).people.get(k).equals(people.get(j))) {
+                        for (int j = 0; j < people.size(); j++)
+                        {
+                            if (lists.get(i).items.get(l).people.get(k).equals(people.get(j)))
+                            {
                                 found = true;
                             }
                         }
-                        if (!found) {
+                        if (!found)
+                        {
                             people.add(lists.get(i).items.get(l).people.get(k));
                         }
                     }
                 }
+                for (int k = 0; k < lists.get(i).people.size(); k++)
+                {
+                    boolean found = false;
+                    for (int j = 0; j < people.size(); j++)
+                    {
+                        if (lists.get(i).people.get(k).equals(people.get(j)))
+                        {
+                            found = true;
+                        }
+                    }
+                    if (!found)
+                    {
+                        people.add(lists.get(i).people.get(k));
+                    }
+                }
+
             }
         }
         return people;
@@ -63,17 +86,27 @@ public class PeopleActivity extends TagActivity
     public List<Item> getTagItems(String person)
     {
         List<Item> items = new ArrayList<Item>();
-        for(int i = 0; i < lists.size(); i++)
+        for (int i = 0; i < lists.size(); i++)
         {
-            if(!lists.get(i).archived)
+            if (!lists.get(i).archived)
             {
-                for(int l = 0; l < lists.get(i).items.size(); l++)
+                if(lists.get(i).people.contains(person))
                 {
-                    for(int k = 0; k < lists.get(i).items.get(l).people.size(); k++)
+                    for(int j = 0; j < lists.get(i).items.size(); j++)
                     {
-                        if(lists.get(i).items.get(l).people.get(k).equals(person))
+                        items.add(lists.get(i).items.get(j));
+                    }
+                }
+                else
+                {
+                    for (int l = 0; l < lists.get(i).items.size(); l++)
+                    {
+                        for (int k = 0; k < lists.get(i).items.get(l).people.size(); k++)
                         {
-                            items.add(lists.get(i).items.get(l));
+                            if (lists.get(i).items.get(l).people.get(k).equals(person))
+                            {
+                                items.add(lists.get(i).items.get(l));
+                            }
                         }
                     }
                 }
@@ -86,18 +119,17 @@ public class PeopleActivity extends TagActivity
     @Override
     public void updateList()
     {
-        if(getTags().size() > 0)
+        if (getTags().size() > 0)
         {
-        super.updateList();
-    }
-    else
-    {
-        DialogFragment dialog = new SuggestionDialog();
-        Bundle args = new Bundle();
-        args.putString("title", "No People Tagged");
-        args.putString("message", "You haven't tagged any people in your lists. To do that just add @name to an item (without spaces).");
-        dialog.setArguments(args);
-        dialog.show(getFragmentManager(), "");
-    }
+            super.updateList();
+        } else
+        {
+            DialogFragment dialog = new SuggestionDialog();
+            Bundle args = new Bundle();
+            args.putString("title", "No People Tagged");
+            args.putString("message", "You haven't tagged any people in your lists. To do that just add @name to an item (without spaces).");
+            dialog.setArguments(args);
+            dialog.show(getFragmentManager(), "");
+        }
     }
 }

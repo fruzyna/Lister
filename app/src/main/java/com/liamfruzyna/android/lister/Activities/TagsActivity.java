@@ -49,7 +49,7 @@ public class TagsActivity extends TagActivity
                             found = true;
                         }
                     }
-                    if(!found)
+                    if(!found && !lists.get(i).tags.get(j).contains("@"))
                     {
                         tags.add(lists.get(i).tags.get(j));
                     }

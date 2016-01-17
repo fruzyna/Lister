@@ -68,6 +68,12 @@ public class IO
         {
             jtags.put(tags.get(j));
         }
+        /* If people tags were separated this would be used to save them
+        List<String> people = list.people;
+        for(int j = 0; j < people.size(); j++)
+        {
+            jtags.put("@" + people.get(j));
+        }*/
         jlist.put("tags", jtags);
         return jlist.toString();
     }
