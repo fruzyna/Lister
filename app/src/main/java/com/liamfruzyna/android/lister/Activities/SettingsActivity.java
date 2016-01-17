@@ -126,7 +126,7 @@ public class SettingsActivity extends PreferenceActivity
             }
         });
         gen.addPreference(unArchive);
-
+/*
         //Prompts to set password for lists
         Preference password = new Preference(this);
         password.setTitle("Set Password");
@@ -139,7 +139,7 @@ public class SettingsActivity extends PreferenceActivity
                 return true;
             }
         });
-        gen.addPreference(password);
+        gen.addPreference(password);*/
 
         PreferenceCategory item = new PreferenceCategory(this);
         item.setTitle("Items");
