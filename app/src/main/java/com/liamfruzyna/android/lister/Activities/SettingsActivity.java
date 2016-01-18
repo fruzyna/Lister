@@ -180,7 +180,7 @@ public class SettingsActivity extends PreferenceActivity
 
         //About me and a link to my site
         Preference me = new Preference(this);
-        me.setTitle("2015 Liam Fruzyna");
+        me.setTitle("2014-16 Liam Fruzyna");
         me.setSummary("mail929.com");
         me.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
         {
