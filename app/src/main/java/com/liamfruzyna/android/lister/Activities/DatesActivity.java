@@ -1,6 +1,7 @@
 package com.liamfruzyna.android.lister.Activities;
 
 import com.liamfruzyna.android.lister.Data.Item;
+import com.liamfruzyna.android.lister.Data.WishList;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,20 +18,20 @@ public class DatesActivity extends TagActivity
     public List<String> getTags()
     {
         List<String> dates = new ArrayList<>();
-        for(int i = 0; i < lists.size(); i++) {
-            if (!lists.get(i).archived) {
-                for (int l = 0; l < lists.get(i).items.size(); l++) {
+        for(WishList list : lists) {
+            if (!list.archived) {
+                for (Item item : list.items) {
                     boolean found = false;
-                    for(int j = 0; j < dates.size(); j++)
+                    for(String date : dates)
                     {
-                        if(getDate(lists.get(i).items.get(l).date).equals(dates.get(j)))
+                        if(item.date.equals(date))
                         {
                             found = true;
                         }
                     }
                     if(!found)
                     {
-                        dates.add(getDate(lists.get(i).items.get(l).date));
+                        dates.add(getDate(item.date));
                     }
                 }
             }
@@ -44,15 +45,15 @@ public class DatesActivity extends TagActivity
     public List<Item> getTagItems(String person)
     {
         List<Item> items = new ArrayList<>();
-        for(int i = 0; i < lists.size(); i++)
+        for(WishList list : lists)
         {
-            if(!lists.get(i).archived)
+            if(!list.archived)
             {
-                for(int l = 0; l < lists.get(i).items.size(); l++)
+                for(Item item : list.items)
                 {
-                    if(getDate(lists.get(i).items.get(l).date).equals(person))
+                    if(getDate(item.date).equals(person))
                         {
-                            items.add(lists.get(i).items.get(l));
+                            items.add(item);
                         }
                 }
             }

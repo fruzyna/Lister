@@ -207,9 +207,9 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     {
         StringBuilder sb = new StringBuilder();
         sb.append("Tags: ");
-        for(int i = 0; i < getListFromName(names.get(current)).tags.size(); i++)
+        for(String list : getListFromName(names.get(current)).tags)
         {
-            sb.append(getListFromName(names.get(current)).tags.get(i) + " ");
+            sb.append(list + " ");
         }
         TextView tv = new TextView(c);
         tv.setText(sb.toString());
@@ -218,11 +218,11 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
 
     public WishList getListFromName(String name)
     {
-        for(int i = 0; i < getUnArchived().size(); i++)
+        for(WishList list : getUnArchived())
         {
-            if(getUnArchived().get(i).name.equals(name))
+            if(list.name.equals(name))
             {
-                return getUnArchived().get(i);
+                return list;
             }
         }
         return null;
@@ -426,11 +426,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     //Takes a list of lists and reorganizes it based off the order variable
     public static List<String> sortLists(List<WishList> lists)
     {
-        List<WishList> copy = new ArrayList<>();
-        for(int i = 0; i < lists.size(); i++)
-        {
-            copy.add(lists.get(i));
-        }
+        List<WishList> copy = new ArrayList<>(lists);
         List<String> names = new ArrayList<>();
         List<String> extra = new ArrayList<>();
         while(copy.size() > 0)
@@ -457,11 +453,11 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
             names.add(copy.get(count).name);
             copy.remove(count);
         }
-        for(int i = 0; i < extra.size(); i++)
+        for(String xtra : extra)
         {
-            if(!names.contains(extra.get(i)))
+            if(!names.contains(xtra))
             {
-                names.add(extra.get(i));
+                names.add(xtra);
             }
         }
 
@@ -507,11 +503,11 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     public List<WishList> populateUnArchived()
     {
         List<WishList> unArchived = new ArrayList<>();
-        for(int i = 0; i < lists.size(); i++)
+        for(WishList list : lists)
         {
-            if(!lists.get(i).archived)
+            if(!list.archived)
             {
-                unArchived.add(lists.get(i));
+                unArchived.add(list);
             }
         }
         return unArchived;
