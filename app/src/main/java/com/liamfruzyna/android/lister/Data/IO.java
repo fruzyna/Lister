@@ -35,9 +35,9 @@ public class IO
     {
         try
         {
-            for (int i = 0; i < lists.size(); i++)
+            for (WishList list : lists)
             {
-                writeToFile(lists.get(i).name, getListString(lists.get(i)));
+                writeToFile(list.name, getListString(list));
             }
         } catch (JSONException e)
         {
@@ -54,19 +54,19 @@ public class IO
         jlist.put("order", list.order);
         JSONArray jitems = new JSONArray();
         List<Item> items = list.items;
-        for (int j = 0; j < items.size(); j++)
+        for (Item item : items)
         {
             JSONObject jitem = new JSONObject();
-            jitem.put("item", items.get(j).item);
-            jitem.put("done", items.get(j).done);
+            jitem.put("item", item.item);
+            jitem.put("done", item.done);
             jitems.put(jitem);
         }
         jlist.put("items", jitems);
         JSONArray jtags = new JSONArray();
         List<String> tags = list.tags;
-        for (int j = 0; j < tags.size(); j++)
+        for (String tag : tags)
         {
-            jtags.put(tags.get(j));
+            jtags.put(tag);
         }
         /* If people tags were separated this would be used to save them
         List<String> people = list.people;
@@ -83,9 +83,9 @@ public class IO
     {
         List<WishList> lists = new ArrayList<WishList>();
         List<String> jlists = readFromFile();
-        for (int i = 0; i < jlists.size(); i++)
+        for (String jliststr : jlists)
         {
-            JSONObject jlist = new JSONObject(jlists.get(i));
+            JSONObject jlist = new JSONObject(jliststr);
             List<Item> items = new ArrayList<Item>();
             JSONArray jitems = jlist.getJSONArray("items");
             for (int j = 0; j < jitems.length(); j++)

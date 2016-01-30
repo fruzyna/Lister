@@ -14,11 +14,11 @@ public class Util
         Item earliest = items.get(0);
         if(items.size() > 1)
         {
-            for(int i = 1; i < items.size(); i++)
+            for(Item item : items)
             {
-                if(items.get(i).date.before(earliest.date))
+                if(item.date.before(earliest.date))
                 {
-                    earliest = items.get(i);
+                    earliest = item;
                 }
             }
         }
@@ -43,18 +43,18 @@ public class Util
     {
         List<Item> items = new ArrayList<>();
 
-        for (int i = 0; i < temp.size(); i++)
+        for (Item item : temp)
         {
-            if(!temp.get(i).done)
+            if(!item.done)
             {
-                items.add(temp.get(i));
+                items.add(item);
             }
         }
-        for (int i = 0; i < temp.size(); i++)
+        for (Item item : temp)
         {
-            if(temp.get(i).done)
+            if(item.done)
             {
-                items.add(temp.get(i));
+                items.add(item);
             }
         }
         return items;
@@ -65,18 +65,18 @@ public class Util
     {
         List<Item> items = new ArrayList<>();
 
-        for (int i = 0; i < temp.size(); i++)
+        for (Item item : temp)
         {
-            if(temp.get(i).priority)
+            if(!item.priority)
             {
-                items.add(temp.get(i));
+                items.add(item);
             }
         }
-        for (int i = 0; i < temp.size(); i++)
+        for (Item item : temp)
         {
-            if(!temp.get(i).priority)
+            if(item.priority)
             {
-                items.add(temp.get(i));
+                items.add(item);
             }
         }
         return items;
@@ -86,9 +86,9 @@ public class Util
     public static List<Item> newList(List<Item> items)
     {
         List<Item> copy = new ArrayList<>();
-        for(int i = 0; i < items.size(); i++)
+        for(Item item : items)
         {
-            copy.add(items.get(i));
+            copy.add(item);
         }
         return copy;
     }
