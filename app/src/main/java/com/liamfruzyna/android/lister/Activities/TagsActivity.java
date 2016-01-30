@@ -35,40 +35,40 @@ public class TagsActivity extends TagActivity
     public List<String> getTags()
     {
         List<String> tags = new ArrayList<String>();
-        for(int i = 0; i < lists.size(); i++)
+        for(WishList list : lists)
         {
-            if(!lists.get(i).archived)
+            if(!list.archived)
             {
-                for(int j = 0; j < lists.get(i).tags.size(); j++)
+                for(String tag : list.tags)
                 {
                     boolean found = false;
-                    for(int l = 0; l < tags.size(); l++)
+                    for(String tagg : tags)
                     {
-                        if(tags.get(l).equals(lists.get(i).tags.get(j)))
+                        if(tagg.equals(tag))
                         {
                             found = true;
                         }
                     }
-                    if(!found && !lists.get(i).tags.get(j).contains("@"))
+                    if(!found && !tag.contains("@"))
                     {
-                        tags.add(lists.get(i).tags.get(j));
+                        tags.add(tag);
                     }
                 }
-                for(int l = 0; l < lists.get(i).items.size(); l++)
+                for(Item item : list.items)
                 {
-                    for(int k = 0; k < lists.get(i).items.get(l).tags.size(); k++)
+                    for(String tag : item.tags)
                     {
                         boolean found = false;
-                        for(int j = 0; j < tags.size(); j++)
+                        for(String tagg : tags)
                         {
-                            if(lists.get(i).items.get(l).tags.get(k).equals(tags.get(j)))
+                            if(tag.equals(tagg))
                             {
                                 found = true;
                             }
                         }
                         if(!found)
                         {
-                            tags.add(lists.get(i).items.get(l).tags.get(k));
+                            tags.add(tag);
                         }
                     }
                 }
@@ -81,31 +81,31 @@ public class TagsActivity extends TagActivity
     public List<Item> getTagItems(String tag)
     {
         List<Item> items = new ArrayList<Item>();
-        for(int i = 0; i < lists.size(); i++)
+        for(WishList list : lists)
         {
-            if(!lists.get(i).archived)
+            if(!list.archived)
             {
                 boolean found = false;
-                for(int j = 0; j < lists.get(i).tags.size(); j++)
+                for(String tagg : list.tags)
                 {
-                    if(lists.get(i).tags.get(j).equals(tag))
+                    if(tagg.equals(tag))
                     {
                         found = true;
-                        for(int l = 0; l < lists.get(i).items.size(); l++)
+                        for(Item item : list.items)
                         {
-                            items.add(lists.get(i).items.get(l));
+                            items.add(item);
                         }
                     }
                 }
                 if(!found)
                 {
-                    for(int l = 0; l < lists.get(i).items.size(); l++)
+                    for(Item item : list.items)
                     {
-                        for(int k = 0; k < lists.get(i).items.get(l).tags.size(); k++)
+                        for(String tagg : item.tags)
                         {
-                            if(lists.get(i).items.get(l).tags.get(k).equals(tag))
+                            if(tagg.equals(tag))
                             {
-                                items.add(lists.get(i).items.get(l));
+                                items.add(item);
                             }
                         }
                     }
