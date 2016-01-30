@@ -35,11 +35,11 @@ public class UnArchiveDialog extends DialogFragment
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         ListView list = (ListView) v.findViewById(R.id.listView);
         final List<WishList> archived = new ArrayList<>();
-        for(int i = 0; i < WLActivity.getLists().size(); i++)
+        for(WishList wlist : WLActivity.getLists())
         {
-            if(WLActivity.getLists().get(i).archived)
+            if(wlist.archived)
             {
-                archived.add(WLActivity.getLists().get(i));
+                archived.add(wlist);
             }
         }
 
