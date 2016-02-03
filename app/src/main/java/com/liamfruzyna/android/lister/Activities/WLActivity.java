@@ -235,9 +235,15 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         {
             spin.setSelection(prefs.getInt(IO.CURRENT_LIST_PREF, 0));
             current = spin.getSelectedItemPosition();
+
             IO.log("WLActivity:updateList", "Spinner is at " + spin.getSelectedItemPosition());
             IO.log("WLActivity:updateList", "Set spinner to " + prefs.getInt(IO.CURRENT_LIST_PREF, 0));
 
+            if(current >= names.size())
+            {
+                current = names.size() - 1;
+                spin.setSelection(current);
+            }
             //reorganizes all the items by date then doneness
             items = Util.sortByDone(Util.sortByPriority(Util.sortByDate(Util.newList(getListFromName(names.get(current)).items))));
 
