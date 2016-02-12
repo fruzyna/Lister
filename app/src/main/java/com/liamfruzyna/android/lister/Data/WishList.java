@@ -15,6 +15,7 @@ public class WishList
     public List<String> tags = new ArrayList<>();
     public List<String> people = new ArrayList<>();
     public String name;
+    public boolean auto = false;
     public int order = 0;
     public boolean archived = false;
 
@@ -22,6 +23,15 @@ public class WishList
     {
         this.name = name;
         this.items = items;
+        this.tags = tags;
+        this.archived = archived;
+        this.order = order;
+        findPeople();
+    }
+
+    public WishList(String name, List<String> tags, boolean archived, int order)
+    {
+        this.name = name;
         this.tags = tags;
         this.archived = archived;
         this.order = order;

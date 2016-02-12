@@ -52,28 +52,37 @@ public class IO
         jlist.put("name", list.name);
         jlist.put("archived", list.archived);
         jlist.put("order", list.order);
-        JSONArray jitems = new JSONArray();
-        List<Item> items = list.items;
-        for (Item item : items)
+        jlist.put("auto", list.auto);
+        if(list.auto)
         {
-            JSONObject jitem = new JSONObject();
-            jitem.put("item", item.item);
-            jitem.put("done", item.done);
-            jitems.put(jitem);
+            AutoList alist = (AutoList) list;
+            JSONArray jcriteria = new JSONArray();
+            List<String> criteria = alist.criteria;
+            for (String c : criteria)
+            {
+                jcriteria.put(c);
+            }
+            jlist.put("criteria", jcriteria);
         }
-        jlist.put("items", jitems);
+        else
+        {
+            JSONArray jitems = new JSONArray();
+            List<Item> items = list.items;
+            for (Item item : items)
+            {
+                JSONObject jitem = new JSONObject();
+                jitem.put("item", item.item);
+                jitem.put("done", item.done);
+                jitems.put(jitem);
+            }
+            jlist.put("items", jitems);
+        }
         JSONArray jtags = new JSONArray();
         List<String> tags = list.tags;
         for (String tag : tags)
         {
             jtags.put(tag);
         }
-        /* If people tags were separated this would be used to save them
-        List<String> people = list.people;
-        for(int j = 0; j < people.size(); j++)
-        {
-            jtags.put("@" + people.get(j));
-        }*/
         jlist.put("tags", jtags);
         return jlist.toString();
     }
@@ -86,13 +95,8 @@ public class IO
         for (String jliststr : jlists)
         {
             JSONObject jlist = new JSONObject(jliststr);
-            List<Item> items = new ArrayList<Item>();
-            JSONArray jitems = jlist.getJSONArray("items");
-            for (int j = 0; j < jitems.length(); j++)
-            {
-                Item item = new Item(jitems.getJSONObject(j).getString("item"), jitems.getJSONObject(j).getBoolean("done"));
-                items.add(item);
-            }
+            List<Item> items = new ArrayList<>();
+            List<String> criteria = new ArrayList<>();
             List<String> tags = new ArrayList<String>();
             JSONArray jtags = jlist.getJSONArray("tags");
             for (int j = 0; j < jtags.length(); j++)
@@ -109,7 +113,39 @@ public class IO
             {
                 order = jlist.getInt("order");
             }
-            lists.add(new WishList(jlist.getString("name"), items, tags, archived, order));
+            if(jlist.has("auto"))
+            {
+                boolean auto = jlist.getBoolean("auto");
+                if(auto)
+                {
+                    JSONArray jcriteria = jlist.getJSONArray("criteria");
+                    for (int j = 0; j < jcriteria.length(); j++)
+                    {
+                        criteria.add((String) jcriteria.get(j));
+                    }
+                    lists.add(new AutoList(jlist.getString("name"), tags, archived, order, criteria));
+                }
+                else
+                {
+                    JSONArray jitems = jlist.getJSONArray("items");
+                    for (int j = 0; j < jitems.length(); j++)
+                    {
+                        Item item = new Item(jitems.getJSONObject(j).getString("item"), jitems.getJSONObject(j).getBoolean("done"));
+                        items.add(item);
+                    }
+                    lists.add(new WishList(jlist.getString("name"), items, tags, archived, order));
+                }
+            }
+            else
+            {
+                JSONArray jitems = jlist.getJSONArray("items");
+                for (int j = 0; j < jitems.length(); j++)
+                {
+                    Item item = new Item(jitems.getJSONObject(j).getString("item"), jitems.getJSONObject(j).getBoolean("done"));
+                    items.add(item);
+                }
+                lists.add(new WishList(jlist.getString("name"), items, tags, archived, order));
+            }
         }
         return lists;
     }
@@ -118,14 +154,10 @@ public class IO
     public static WishList readString(String json) throws JSONException
     {
         JSONObject jlist = new JSONObject(json);
-        List<Item> items = new ArrayList<Item>();
-        JSONArray jitems = jlist.getJSONArray("items");
-        for (int j = 0; j < jitems.length(); j++)
-        {
-            Item item = new Item(jitems.getJSONObject(j).getString("item"), jitems.getJSONObject(j).getBoolean("done"));
-            items.add(item);
-        }
-        List<String> tags = new ArrayList<String>();
+        List<Item> items = new ArrayList<>();
+        List<String> criteria = new ArrayList<>();
+        boolean auto = jlist.getBoolean("auto");
+        List<String> tags = new ArrayList<>();
         JSONArray jtags = jlist.getJSONArray("tags");
         for (int j = 0; j < jtags.length(); j++)
         {
@@ -141,7 +173,25 @@ public class IO
         {
             order = jlist.getInt("order");
         }
-        return new WishList(jlist.getString("name"), items, tags, archived, order);
+        if(auto)
+        {
+            JSONArray jcriteria = jlist.getJSONArray("criteria");
+            for (int j = 0; j < jcriteria.length(); j++)
+            {
+                criteria.add((String) jcriteria.get(j));
+            }
+            return new AutoList(jlist.getString("name"), tags, archived, order, criteria);
+        }
+        else
+        {
+            JSONArray jitems = jlist.getJSONArray("items");
+            for (int j = 0; j < jitems.length(); j++)
+            {
+                Item item = new Item(jitems.getJSONObject(j).getString("item"), jitems.getJSONObject(j).getBoolean("done"));
+                items.add(item);
+            }
+            return new WishList(jlist.getString("name"), items, tags, archived, order);
+        }
     }
 
     //takes a list's json string and saves it to a file
