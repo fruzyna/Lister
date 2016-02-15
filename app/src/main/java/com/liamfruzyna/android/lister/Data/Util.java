@@ -85,6 +85,10 @@ public class Util
     //Takes a list of items and reorganizes it based off if they are done
     public static List<Item> newList(List<Item> items)
     {
+        if(items == null)
+        {
+            items = new ArrayList<>();
+        }
         List<Item> copy = new ArrayList<>();
         for(Item item : items)
         {

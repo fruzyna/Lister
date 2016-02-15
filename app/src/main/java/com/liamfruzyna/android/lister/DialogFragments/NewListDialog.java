@@ -55,9 +55,9 @@ public class NewListDialog extends DialogFragment
             @Override
             public void onClick(View v)
             {
-                View view = linflater.inflate(R.layout.criteria_item, container, false);
-                setupSpinner(view);
-                views.add(view);
+                View newView = linflater.inflate(R.layout.criteria_item, container, false);
+                setupSpinner(newView);
+                views.add(newView);
             }
         });
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -78,6 +78,7 @@ public class NewListDialog extends DialogFragment
                         if (cb.isChecked())
                         {
                             List<String> criteria = new ArrayList<>();
+                            CheckBox done = (CheckBox) v.findViewById(R.id.checked);
                             for (View view : views)
                             {
                                 Spinner spinner = (Spinner) view.findViewById(R.id.spinner);
@@ -91,10 +92,10 @@ public class NewListDialog extends DialogFragment
                                         sb.append("tag ");
                                         if (mandatory.isChecked())
                                         {
-                                            sb.append("mandatory");
+                                            sb.append("mandatory ");
                                         } else
                                         {
-                                            sb.append("optional");
+                                            sb.append("optional ");
                                         }
                                         sb.append(((EditText) container.findViewById(R.id.editText)).getText().toString());
                                         break;
@@ -103,10 +104,10 @@ public class NewListDialog extends DialogFragment
                                         sb.append("person ");
                                         if (mandatory.isChecked())
                                         {
-                                            sb.append("mandatory");
+                                            sb.append("mandatory ");
                                         } else
                                         {
-                                            sb.append("optional");
+                                            sb.append("optional ");
                                         }
                                         sb.append(((EditText) container.findViewById(R.id.editText)).getText().toString());
                                         break;
@@ -115,11 +116,11 @@ public class NewListDialog extends DialogFragment
                                         sb.append("date_range ");
                                         if (mandatory.isChecked())
                                         {
-                                            sb.append("mandatory");
+                                            sb.append("mandatory ");
                                         }
                                         else
                                         {
-                                            sb.append("optional");
+                                            sb.append("optional ");
                                         }
                                         break;
                                     case 3:
@@ -127,11 +128,11 @@ public class NewListDialog extends DialogFragment
                                         sb.append("time ");
                                         if (mandatory.isChecked())
                                         {
-                                            sb.append("mandatory");
+                                            sb.append("mandatory ");
                                         }
                                         else
                                         {
-                                            sb.append("optional");
+                                            sb.append("optional ");
                                         }
                                         sb.append(((EditText) container.findViewById(R.id.editText)).getText().toString());
                                         break;
@@ -140,17 +141,17 @@ public class NewListDialog extends DialogFragment
                                         sb.append("day ");
                                         if (mandatory.isChecked())
                                         {
-                                            sb.append("mandatory");
+                                            sb.append("mandatory ");
                                         }
                                         else
                                         {
-                                            sb.append("optional");
+                                            sb.append("optional ");
                                         }
                                         break;
                                 }
                                 criteria.add(sb.toString());
                             }
-                            newList = new AutoList(name.getText().toString(), new ArrayList<>(Arrays.asList(tags.getText().toString().split(" "))), criteria);
+                            newList = new AutoList(name.getText().toString(), new ArrayList<>(Arrays.asList(tags.getText().toString().split(" "))), criteria, done.isChecked());
                         } else
                         {
                             newList = new WishList(name.getText().toString(), new ArrayList<>(Arrays.asList(tags.getText().toString().split(" "))));
@@ -178,34 +179,63 @@ public class NewListDialog extends DialogFragment
         sadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(sadapter);
         final LayoutInflater inflater = LayoutInflater.from(getActivity());
+
+        View sub = null;
+        switch (spinner.getSelectedItemPosition())
+        {
+            case 0:
+                //Tag
+                sub = inflater.inflate(R.layout.string_item, container, false);
+                break;
+            case 1:
+                //Person
+                sub = inflater.inflate(R.layout.string_item, container, false);
+                break;
+            case 2:
+                //Date Range
+                sub = inflater.inflate(R.layout.dates_item, container, false);
+                break;
+            case 3:
+                //Time
+                sub = inflater.inflate(R.layout.int_item, container, false);
+                break;
+            case 4:
+                //Day
+                sub = inflater.inflate(R.layout.day_item, container, false);
+                break;
+        }
+        container.addView(sub);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
+                container.removeAllViews();
+                View sub = null;
                 switch (position)
                 {
                     case 0:
                         //Tag
-                        inflater.inflate(R.layout.string_item, container, false);
+                        sub = inflater.inflate(R.layout.string_item, container, false);
                         break;
                     case 1:
                         //Person
-                        inflater.inflate(R.layout.string_item, container, false);
+                        sub = inflater.inflate(R.layout.string_item, container, false);
                         break;
                     case 2:
                         //Date Range
-                        inflater.inflate(R.layout.dates_item, container, false);
+                        sub = inflater.inflate(R.layout.dates_item, container, false);
                         break;
                     case 3:
                         //Time
-                        inflater.inflate(R.layout.int_item, container, false);
+                        sub = inflater.inflate(R.layout.int_item, container, false);
                         break;
                     case 4:
                         //Day
-                        inflater.inflate(R.layout.day_item, container, false);
+                        sub = inflater.inflate(R.layout.day_item, container, false);
                         break;
                 }
+                container.addView(sub);
             }
 
             @Override

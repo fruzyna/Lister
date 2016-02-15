@@ -62,6 +62,7 @@ public class IO
             {
                 jcriteria.put(c);
             }
+            jlist.put("showDone", alist.showDone);
             jlist.put("criteria", jcriteria);
         }
         else
@@ -118,12 +119,17 @@ public class IO
                 boolean auto = jlist.getBoolean("auto");
                 if(auto)
                 {
+                    boolean showDone = true;
+                    if(jlist.has("showDone"))
+                    {
+                        showDone = jlist.getBoolean("showDone");
+                    }
                     JSONArray jcriteria = jlist.getJSONArray("criteria");
                     for (int j = 0; j < jcriteria.length(); j++)
                     {
                         criteria.add((String) jcriteria.get(j));
                     }
-                    lists.add(new AutoList(jlist.getString("name"), tags, archived, order, criteria));
+                    lists.add(new AutoList(jlist.getString("name"), tags, archived, order, criteria, showDone));
                 }
                 else
                 {
@@ -175,12 +181,17 @@ public class IO
         }
         if(auto)
         {
+            boolean showDone = true;
+            if(jlist.has("showDone"))
+            {
+                showDone = jlist.getBoolean("showDone");
+            }
             JSONArray jcriteria = jlist.getJSONArray("criteria");
             for (int j = 0; j < jcriteria.length(); j++)
             {
                 criteria.add((String) jcriteria.get(j));
             }
-            return new AutoList(jlist.getString("name"), tags, archived, order, criteria);
+            return new AutoList(jlist.getString("name"), tags, archived, order, criteria, showDone);
         }
         else
         {

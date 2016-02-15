@@ -13,86 +13,114 @@ import java.util.List;
 public class AutoList extends WishList
 {
     List<String> criteria = new ArrayList<>();
+    boolean showDone;
 
-    public AutoList(String name, List<String> tags, boolean archived, int order, List<String> criteria)
+    public AutoList(String name, List<String> tags, boolean archived, int order, List<String> criteria, boolean showDone)
     {
         super(name, tags, archived, order);
         auto = true;
         this.criteria = criteria;
+        this.showDone = showDone;
         items = findItems();
     }
 
-    public AutoList(String name, List<String> tags, List<String> criteria)
+    public AutoList(String name, List<String> tags, List<String> criteria, boolean showDone)
     {
         super(name, tags);
         auto = true;
         this.criteria = criteria;
+        this.showDone = showDone;
         items = findItems();
     }
 
-    public ArrayList<Item> findItems()
+    public List<Item> findItems()
     {
+        List<Item> found = new ArrayList<>();
         for(WishList list : WLActivity.getUnArchived())
         {
-            for(Item item: list.items)
+            if(!list.auto)
             {
-                boolean add = false;
-                for(String c : criteria)
+                for(Item item : list.items)
                 {
-                    String[] parts = c.split(" ");
-                    String type = parts[0];
-                    String required = parts[1];
-                    if(required.equals("mandatory") || !add)
+                    boolean add = false;
+                    for(String c : criteria)
                     {
-                        if(type.equals("tag"))
+                        String[] parts = c.split(" ");
+                        String type = parts[0];
+                        String required = parts[1];
+                        System.out.println("Checking " + c);
+                        if(required.equals("mandatory") || !add)
                         {
-                            for(String tag : item.tags)
+                            if(type.equals("tag"))
                             {
-                                if(tag.equals(parts[2]))
+                                for(String tag : list.tags)
                                 {
-                                    add = true;
+                                    if(tag.equals(parts[2]))
+                                    {
+                                        add = true;
+                                    }
+                                }
+                                for(String tag : item.tags)
+                                {
+                                    if(tag.equals(parts[2]))
+                                    {
+                                        add = true;
+                                    }
                                 }
                             }
-                        }
-                        else if(type.equals("person"))
-                        {
-                            for(String tag : item.people)
+                            else if(type.equals("person"))
                             {
-                                if(tag.equals(parts[2]))
+                                for(String tag : list.people)
                                 {
-                                    add = true;
+                                    if(tag.equals(parts[2]))
+                                    {
+                                        add = true;
+                                    }
+                                }
+                                for(String tag : item.people)
+                                {
+                                    if(tag.equals(parts[2]))
+                                    {
+                                        add = true;
+                                    }
                                 }
                             }
-                        }
-                        else if(type.equals("date_range"))
-                        {
-
-                        }
-                        else if(type.equals("time"))
-                        {
-                            int days = Integer.parseInt(parts[3]);
-                            Date date = item.date;
-                            Calendar cal = Calendar.getInstance();
-                            Date current = new Date(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DATE));
-                            cal.add(Calendar.DATE, 7);
-                            Date goal = new Date(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
-                            if(date.before(goal) && date.after(current))
+                            else if(type.equals("date_range"))
                             {
-                                add = true;
+
+                            }
+                            else if(type.equals("time"))
+                            {
+                            }
+                            else if(type.equals("day"))
+                            {
+                            }
+                            else
+                            {
+                                IO.log("AutoList:findItems", "Type " + type + " not valid");
+                            }
+                            if(!add && required.equals("mandatory"))
+                            {
+                                break;
                             }
                         }
-                        else if(type.equals("day"))
-                        {
-
-                        }
-                        if(!add && required.equals("mandatory"))
-                        {
-                            break;
-                        }
+                    }
+                    if(!showDone && item.done)
+                    {
+                        add = false;
+                    }
+                    if(add)
+                    {
+                        found.add(item);
                     }
                 }
             }
         }
-        return null;
+        return found;
+    }
+
+    public List<String> getCriteria()
+    {
+        return criteria;
     }
 }

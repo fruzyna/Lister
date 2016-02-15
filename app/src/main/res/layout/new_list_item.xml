@@ -49,6 +49,7 @@
     </ScrollView>
 
     <Button
+        style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add Criterion"
@@ -56,4 +57,14 @@
         android:layout_gravity="center_horizontal"
         android:layout_below="@+id/scrollView2"
         android:layout_centerHorizontal="true"/>
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show Checked"
+        android:id="@+id/checked"
+        android:checked="true"
+        android:layout_alignBottom="@+id/auto"
+        android:layout_toRightOf="@+id/auto"
+        android:layout_toEndOf="@+id/auto"/>
 </RelativeLayout>
