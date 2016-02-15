@@ -34,6 +34,7 @@ public class NewListDialog extends DialogFragment
     List<View> views = new ArrayList<>();
     LinearLayout container;
     String[] types = {"Tag", "Person", "Date Range", "Time", "Day"};
+    String[] days = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState)
@@ -117,11 +118,11 @@ public class NewListDialog extends DialogFragment
                                         if (mandatory.isChecked())
                                         {
                                             sb.append("mandatory ");
-                                        }
-                                        else
+                                        } else
                                         {
                                             sb.append("optional ");
                                         }
+                                        sb.append( ((EditText) container.findViewById(R.id.editText1)).getText().toString() + " " + ((EditText) container.findViewById(R.id.editText2)).getText().toString());
                                         break;
                                     case 3:
                                         //time
@@ -129,8 +130,7 @@ public class NewListDialog extends DialogFragment
                                         if (mandatory.isChecked())
                                         {
                                             sb.append("mandatory ");
-                                        }
-                                        else
+                                        } else
                                         {
                                             sb.append("optional ");
                                         }
@@ -142,11 +142,11 @@ public class NewListDialog extends DialogFragment
                                         if (mandatory.isChecked())
                                         {
                                             sb.append("mandatory ");
-                                        }
-                                        else
+                                        } else
                                         {
                                             sb.append("optional ");
                                         }
+                                        sb.append(days[((Spinner) container.findViewById(R.id.spinner)).getSelectedItemPosition()]);
                                         break;
                                 }
                                 criteria.add(sb.toString());
@@ -202,6 +202,10 @@ public class NewListDialog extends DialogFragment
             case 4:
                 //Day
                 sub = inflater.inflate(R.layout.day_item, container, false);
+                Spinner day = (Spinner) sub.findViewById(R.id.spinner);
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item, days);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                day.setAdapter(adapter);
                 break;
         }
         container.addView(sub);
@@ -233,6 +237,10 @@ public class NewListDialog extends DialogFragment
                     case 4:
                         //Day
                         sub = inflater.inflate(R.layout.day_item, container, false);
+                        Spinner day = (Spinner) sub.findViewById(R.id.spinner);
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item, days);
+                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        day.setAdapter(adapter);
                         break;
                 }
                 container.addView(sub);
