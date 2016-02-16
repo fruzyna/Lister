@@ -17,11 +17,10 @@ import java.util.List;
 public class AutoList extends WishList
 {
     List<String> criteria = new ArrayList<>();
-    boolean showDone;
 
     public AutoList(String name, List<String> tags, boolean archived, int order, List<String> criteria, boolean showDone)
     {
-        super(name, tags, archived, order);
+        super(name, tags, archived, order, showDone);
         auto = true;
         this.criteria = criteria;
         this.showDone = showDone;
@@ -30,7 +29,7 @@ public class AutoList extends WishList
 
     public AutoList(String name, List<String> tags, List<String> criteria, boolean showDone)
     {
-        super(name, tags);
+        super(name, tags, showDone);
         auto = true;
         this.criteria = criteria;
         this.showDone = showDone;
@@ -175,10 +174,6 @@ public class AutoList extends WishList
                                 break;
                             }
                         }
-                    }
-                    if(!showDone && item.done)
-                    {
-                        add = false;
                     }
                     if(add)
                     {

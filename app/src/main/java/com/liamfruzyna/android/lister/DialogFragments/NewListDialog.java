@@ -72,6 +72,7 @@ public class NewListDialog extends DialogFragment
                         EditText name = (EditText) v.findViewById(R.id.name);
                         EditText tags = (EditText) v.findViewById(R.id.tags);
                         CheckBox cb = (CheckBox) v.findViewById(R.id.auto);
+                        CheckBox done = (CheckBox) v.findViewById(R.id.checked);
 
                         IO.log("NewListDialog", "Creating list " + name.getText().toString());
                         List<WishList> lists = WLActivity.getLists();
@@ -79,7 +80,6 @@ public class NewListDialog extends DialogFragment
                         if (cb.isChecked())
                         {
                             List<String> criteria = new ArrayList<>();
-                            CheckBox done = (CheckBox) v.findViewById(R.id.checked);
                             for (View view : views)
                             {
                                 Spinner spinner = (Spinner) view.findViewById(R.id.spinner);
@@ -154,7 +154,7 @@ public class NewListDialog extends DialogFragment
                             newList = new AutoList(name.getText().toString(), new ArrayList<>(Arrays.asList(tags.getText().toString().split(" "))), criteria, done.isChecked());
                         } else
                         {
-                            newList = new WishList(name.getText().toString(), new ArrayList<>(Arrays.asList(tags.getText().toString().split(" "))));
+                            newList = new WishList(name.getText().toString(), new ArrayList<>(Arrays.asList(tags.getText().toString().split(" "))), done.isChecked());
                         }
                         lists.add(newList);
                         List<WishList> unArchieved = WLActivity.getUnArchived();

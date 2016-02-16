@@ -32,7 +32,9 @@
         android:layout_height="wrap_content"
         android:text="AutoList?"
         android:id="@+id/auto"
-        android:layout_below="@+id/tags"/>
+        android:layout_below="@+id/tags"
+        android:layout_toRightOf="@+id/checked"
+        android:layout_toEndOf="@+id/checked"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -64,7 +66,7 @@
         android:text="Show Checked"
         android:id="@+id/checked"
         android:checked="true"
-        android:layout_alignBottom="@+id/auto"
-        android:layout_toRightOf="@+id/auto"
-        android:layout_toEndOf="@+id/auto"/>
+        android:layout_below="@+id/tags"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
 </RelativeLayout>

@@ -67,6 +67,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     public static Context c;
     static RelativeLayout tagcv;
     static RelativeLayout criteria;
+    static TextView autotv;
     static Spinner spin;
     public static FloatingActionButton fab;
 
@@ -267,6 +268,11 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
             {
                 wl.items = ((AutoList) wl).findItems();
                 criteria.addView(createcriteria());
+                autotv.setText("Auto");
+            }
+            else
+            {
+                autotv.setText("");
             }
             //reorganizes all the items by date then doneness
             items = Util.sortByDone(Util.sortByPriority(Util.sortByDate(Util.newList(wl.items))));
@@ -280,7 +286,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
                 {
                     items.remove(i);
                 }
-                else
+                else if(!items.get(i).done || wl.showDone)
                 {
                     list.addView(createItem(inflater, i));
                 }
@@ -325,6 +331,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         tagcv = (RelativeLayout) findViewById(R.id.tag);
         criteria = (RelativeLayout) findViewById(R.id.criterion);
         list = (LinearLayout) findViewById(R.id.list);
+        autotv = (TextView) findViewById(R.id.auto);
 
         //sets listener for editing tags
         tagcv.setOnLongClickListener(new View.OnLongClickListener()

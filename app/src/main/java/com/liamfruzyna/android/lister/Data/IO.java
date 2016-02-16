@@ -114,16 +114,16 @@ public class IO
             {
                 order = jlist.getInt("order");
             }
+            boolean showDone = true;
+            if(jlist.has("showDone"))
+            {
+                showDone = jlist.getBoolean("showDone");
+            }
             if(jlist.has("auto"))
             {
                 boolean auto = jlist.getBoolean("auto");
                 if(auto)
                 {
-                    boolean showDone = true;
-                    if(jlist.has("showDone"))
-                    {
-                        showDone = jlist.getBoolean("showDone");
-                    }
                     JSONArray jcriteria = jlist.getJSONArray("criteria");
                     for (int j = 0; j < jcriteria.length(); j++)
                     {
@@ -139,7 +139,7 @@ public class IO
                         Item item = new Item(jitems.getJSONObject(j).getString("item"), jitems.getJSONObject(j).getBoolean("done"));
                         items.add(item);
                     }
-                    lists.add(new WishList(jlist.getString("name"), items, tags, archived, order));
+                    lists.add(new WishList(jlist.getString("name"), items, tags, archived, order, showDone));
                 }
             }
             else
@@ -150,7 +150,7 @@ public class IO
                     Item item = new Item(jitems.getJSONObject(j).getString("item"), jitems.getJSONObject(j).getBoolean("done"));
                     items.add(item);
                 }
-                lists.add(new WishList(jlist.getString("name"), items, tags, archived, order));
+                lists.add(new WishList(jlist.getString("name"), items, tags, archived, order, showDone));
             }
         }
         return lists;
@@ -179,13 +179,13 @@ public class IO
         {
             order = jlist.getInt("order");
         }
+        boolean showDone = true;
+        if(jlist.has("showDone"))
+        {
+            showDone = jlist.getBoolean("showDone");
+        }
         if(auto)
         {
-            boolean showDone = true;
-            if(jlist.has("showDone"))
-            {
-                showDone = jlist.getBoolean("showDone");
-            }
             JSONArray jcriteria = jlist.getJSONArray("criteria");
             for (int j = 0; j < jcriteria.length(); j++)
             {
@@ -201,7 +201,7 @@ public class IO
                 Item item = new Item(jitems.getJSONObject(j).getString("item"), jitems.getJSONObject(j).getBoolean("done"));
                 items.add(item);
             }
-            return new WishList(jlist.getString("name"), items, tags, archived, order);
+            return new WishList(jlist.getString("name"), items, tags, archived, order, showDone);
         }
     }
 
