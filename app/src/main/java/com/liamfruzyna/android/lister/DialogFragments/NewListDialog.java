@@ -59,6 +59,7 @@ public class NewListDialog extends DialogFragment
                 View newView = linflater.inflate(R.layout.criteria_item, container, false);
                 setupSpinner(newView);
                 views.add(newView);
+                repopulate();
             }
         });
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

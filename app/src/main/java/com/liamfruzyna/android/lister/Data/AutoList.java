@@ -93,8 +93,11 @@ public class AutoList extends WishList
                                 SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy");
                                 try
                                 {
+                                    Calendar toCal = Calendar.getInstance();
+                                    toCal.setTime(sdf.parse(parts[3]));
+                                    toCal.add(Calendar.DAY_OF_YEAR, 1);
+                                    Date to = toCal.getTime();
                                     Date from = sdf.parse(parts[2]);
-                                    Date to = sdf.parse(parts[3]);
                                     if(item.date.after(from) && item.date.before(to))
                                     {
                                         add = true;
@@ -110,6 +113,7 @@ public class AutoList extends WishList
                                 Calendar byCal = Calendar.getInstance();
                                 byCal.add(Calendar.DAY_OF_YEAR, days);
                                 Calendar nowCal = Calendar.getInstance();
+                                nowCal.add(Calendar.DAY_OF_YEAR, -1);
                                 Date by = byCal.getTime();
                                 Date now = nowCal.getTime();
                                 if(item.date.before(by) && item.date.after(now))
@@ -188,5 +192,10 @@ public class AutoList extends WishList
     public List<String> getCriteria()
     {
         return criteria;
+    }
+
+    public void setCriteria(List<String> criteria)
+    {
+        this.criteria = criteria;
     }
 }

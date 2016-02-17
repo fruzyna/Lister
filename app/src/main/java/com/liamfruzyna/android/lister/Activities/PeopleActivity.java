@@ -61,6 +61,7 @@ public class PeopleActivity extends TagActivity
                 }
                 for (String person : list.people)
                 {
+                    IO.log("PeopleActivity:getTags", "Looking for " + person);
                     boolean found = false;
                     for (String sPerson : people)
                     {
@@ -71,6 +72,7 @@ public class PeopleActivity extends TagActivity
                     }
                     if (!found)
                     {
+                        IO.log("PeopleActivity:getTags", "Adding " + person);
                         people.add(person);
                     }
                 }
@@ -85,7 +87,7 @@ public class PeopleActivity extends TagActivity
     @Override
     public List<Item> getTagItems(String person)
     {
-        List<Item> items = new ArrayList<Item>();
+        List<Item> items = new ArrayList<>();
         for (WishList list : lists)
         {
             if (!list.archived)
