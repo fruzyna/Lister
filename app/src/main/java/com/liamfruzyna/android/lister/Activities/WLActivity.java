@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBarActivity;
@@ -219,7 +218,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     }
 
     //creates the textview with a lists criteria
-    public TextView createcriteria()
+    public TextView createCriteria()
     {
         StringBuilder sb = new StringBuilder();
         sb.append("Criteria:");
@@ -262,17 +261,31 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
                 spin.setSelection(current);
             }
 
-            WishList wl = getListFromName(names.get(current));
+            final WishList wl = getListFromName(names.get(current));
+
+            CheckBox showDone = (CheckBox) findViewById(R.id.showDone);
+            showDone.setChecked(wl.showDone);
+            showDone.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    wl.showDone = ((CheckBox) v).isChecked();
+                    updateList();
+                }
+            });
             criteria.removeAllViews();
             if(wl.auto)
             {
                 wl.items = ((AutoList) wl).findItems();
-                criteria.addView(createcriteria());
+                criteria.addView(createCriteria());
                 autotv.setText("Auto");
+                findViewById(R.id.newitem).setVisibility(View.GONE);
             }
             else
             {
                 autotv.setText("");
+                findViewById(R.id.newitem).setVisibility(View.VISIBLE);
             }
             //reorganizes all the items by date then doneness
             items = Util.sortByDone(Util.sortByPriority(Util.sortByDate(Util.newList(wl.items))));

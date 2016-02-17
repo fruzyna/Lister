@@ -95,6 +95,14 @@
                             android:layout_centerVertical="true"
                             android:layout_toRightOf="@id/spinner"/>
 
+                        <CheckBox
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/showDone"
+                            android:layout_centerVertical="true"
+                            android:layout_toLeftOf="@+id/archive"
+                            android:layout_toStartOf="@+id/archive"/>
+
                     </RelativeLayout>
 
                     <View
