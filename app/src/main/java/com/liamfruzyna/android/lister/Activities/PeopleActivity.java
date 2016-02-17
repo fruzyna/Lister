@@ -37,41 +37,43 @@ public class PeopleActivity extends TagActivity
     public List<String> getTags()
     {
         List<String> people = new ArrayList<>();
-        for (int i = 0; i < lists.size(); i++)
+        for (WishList list : lists)
         {
-            if (!lists.get(i).archived)
+            if (!list.archived)
             {
-                for (int l = 0; l < lists.get(i).items.size(); l++)
+                for (Item item : list.items)
                 {
-                    for (int k = 0; k < lists.get(i).items.get(l).people.size(); k++)
+                    for (String person : item.people)
                     {
                         boolean found = false;
                         for (int j = 0; j < people.size(); j++)
                         {
-                            if (lists.get(i).items.get(l).people.get(k).equals(people.get(j)))
+                            if (person.equals(people.get(j)))
                             {
                                 found = true;
                             }
                         }
                         if (!found)
                         {
-                            people.add(lists.get(i).items.get(l).people.get(k));
+                            people.add(person);
                         }
                     }
                 }
-                for (int k = 0; k < lists.get(i).people.size(); k++)
+                for (String person : list.people)
                 {
+                    IO.log("PeopleActivity:getTags", "Looking for " + person);
                     boolean found = false;
-                    for (int j = 0; j < people.size(); j++)
+                    for (String sPerson : people)
                     {
-                        if (lists.get(i).people.get(k).equals(people.get(j)))
+                        if (person.equals(sPerson))
                         {
                             found = true;
                         }
                     }
                     if (!found)
                     {
-                        people.add(lists.get(i).people.get(k));
+                        IO.log("PeopleActivity:getTags", "Adding " + person);
+                        people.add(person);
                     }
                 }
 
@@ -85,27 +87,27 @@ public class PeopleActivity extends TagActivity
     @Override
     public List<Item> getTagItems(String person)
     {
-        List<Item> items = new ArrayList<Item>();
-        for (int i = 0; i < lists.size(); i++)
+        List<Item> items = new ArrayList<>();
+        for (WishList list : lists)
         {
-            if (!lists.get(i).archived)
+            if (!list.archived)
             {
-                if(lists.get(i).people.contains(person))
+                if(list.people.contains(person))
                 {
-                    for(int j = 0; j < lists.get(i).items.size(); j++)
+                    for(Item item : list.items)
                     {
-                        items.add(lists.get(i).items.get(j));
+                        items.add(item);
                     }
                 }
                 else
                 {
-                    for (int l = 0; l < lists.get(i).items.size(); l++)
+                    for (Item item : list.items)
                     {
-                        for (int k = 0; k < lists.get(i).items.get(l).people.size(); k++)
+                        for (String personn : item.people)
                         {
-                            if (lists.get(i).items.get(l).people.get(k).equals(person))
+                            if (personn.equals(person))
                             {
-                                items.add(lists.get(i).items.get(l));
+                                items.add(item);
                             }
                         }
                     }

@@ -29,18 +29,18 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.liamfruzyna.android.lister.Data.AutoList;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.Item;
 import com.liamfruzyna.android.lister.Data.Util;
 import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.DialogFragments.ArchiveListDialog;
 import com.liamfruzyna.android.lister.DialogFragments.ClearListDialog;
+import com.liamfruzyna.android.lister.DialogFragments.EditCriteriaDialog;
 import com.liamfruzyna.android.lister.DialogFragments.EditItemDialog;
 import com.liamfruzyna.android.lister.DialogFragments.EditTagsDialog;
 import com.liamfruzyna.android.lister.DialogFragments.NewItemDialog;
 import com.liamfruzyna.android.lister.DialogFragments.NewListDialog;
-import com.liamfruzyna.android.lister.DialogFragments.NewPasswordDialog;
-import com.liamfruzyna.android.lister.DialogFragments.PasswordDialog;
 import com.liamfruzyna.android.lister.DialogFragments.RemoveListDialog;
 import com.liamfruzyna.android.lister.R;
 
@@ -66,6 +66,8 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     static LinearLayout list;
     public static Context c;
     static RelativeLayout tagcv;
+    static RelativeLayout criteria;
+    static TextView autotv;
     static Spinner spin;
     public static FloatingActionButton fab;
 
@@ -207,9 +209,23 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     {
         StringBuilder sb = new StringBuilder();
         sb.append("Tags: ");
-        for(int i = 0; i < getListFromName(names.get(current)).tags.size(); i++)
+        for(String list : getListFromName(names.get(current)).tags)
         {
-            sb.append(getListFromName(names.get(current)).tags.get(i) + " ");
+            sb.append(list + " ");
+        }
+        TextView tv = new TextView(c);
+        tv.setText(sb.toString());
+        return tv;
+    }
+
+    //creates the textview with a lists criteria
+    public TextView createcriteria()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Criteria:");
+        for(String c : ((AutoList) getListFromName(names.get(current))).getCriteria())
+        {
+            sb.append("\n" + c);
         }
         TextView tv = new TextView(c);
         tv.setText(sb.toString());
@@ -218,13 +234,14 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
 
     public WishList getListFromName(String name)
     {
-        for(int i = 0; i < getUnArchived().size(); i++)
+        for(WishList list : getUnArchived())
         {
-            if(getUnArchived().get(i).name.equals(name))
+            if(list.name.equals(name))
             {
-                return getUnArchived().get(i);
+                return list;
             }
         }
+        IO.log("WLActivity:getListFromName", "Returning null list");
         return null;
     }
 
@@ -235,11 +252,30 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         {
             spin.setSelection(prefs.getInt(IO.CURRENT_LIST_PREF, 0));
             current = spin.getSelectedItemPosition();
+
             IO.log("WLActivity:updateList", "Spinner is at " + spin.getSelectedItemPosition());
             IO.log("WLActivity:updateList", "Set spinner to " + prefs.getInt(IO.CURRENT_LIST_PREF, 0));
 
+            if(current >= names.size())
+            {
+                current = names.size() - 1;
+                spin.setSelection(current);
+            }
+
+            WishList wl = getListFromName(names.get(current));
+            criteria.removeAllViews();
+            if(wl.auto)
+            {
+                wl.items = ((AutoList) wl).findItems();
+                criteria.addView(createcriteria());
+                autotv.setText("Auto");
+            }
+            else
+            {
+                autotv.setText("");
+            }
             //reorganizes all the items by date then doneness
-            items = Util.sortByDone(Util.sortByPriority(Util.sortByDate(Util.newList(getListFromName(names.get(current)).items))));
+            items = Util.sortByDone(Util.sortByPriority(Util.sortByDate(Util.newList(wl.items))));
 
             //populates the list with the items
             list.removeAllViews();
@@ -250,7 +286,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
                 {
                     items.remove(i);
                 }
-                else
+                else if(!items.get(i).done || wl.showDone)
                 {
                     list.addView(createItem(inflater, i));
                 }
@@ -293,7 +329,9 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         //init view widgets
         fab = (FloatingActionButton) findViewById(R.id.fab);
         tagcv = (RelativeLayout) findViewById(R.id.tag);
+        criteria = (RelativeLayout) findViewById(R.id.criterion);
         list = (LinearLayout) findViewById(R.id.list);
+        autotv = (TextView) findViewById(R.id.auto);
 
         //sets listener for editing tags
         tagcv.setOnLongClickListener(new View.OnLongClickListener()
@@ -304,6 +342,21 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
                 if (unArchived.size() > 0)
                 {
                     DialogFragment dialog = new EditTagsDialog();
+                    dialog.show(getFragmentManager(), "");
+                }
+                return false;
+            }
+        });
+        
+        //sets listener for editing criteria
+        criteria.setOnLongClickListener(new View.OnLongClickListener()
+        {
+            @Override
+            public boolean onLongClick(View v)
+            {
+                if (getListFromName(names.get(current)).auto && unArchived.size() > 0)
+                {
+                    DialogFragment dialog = new EditCriteriaDialog();
                     dialog.show(getFragmentManager(), "");
                 }
                 return false;
@@ -426,11 +479,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     //Takes a list of lists and reorganizes it based off the order variable
     public static List<String> sortLists(List<WishList> lists)
     {
-        List<WishList> copy = new ArrayList<>();
-        for(int i = 0; i < lists.size(); i++)
-        {
-            copy.add(lists.get(i));
-        }
+        List<WishList> copy = new ArrayList<>(lists);
         List<String> names = new ArrayList<>();
         List<String> extra = new ArrayList<>();
         while(copy.size() > 0)
@@ -457,11 +506,11 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
             names.add(copy.get(count).name);
             copy.remove(count);
         }
-        for(int i = 0; i < extra.size(); i++)
+        for(String xtra : extra)
         {
-            if(!names.contains(extra.get(i)))
+            if(!names.contains(xtra))
             {
-                names.add(extra.get(i));
+                names.add(xtra);
             }
         }
 
@@ -507,11 +556,11 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     public List<WishList> populateUnArchived()
     {
         List<WishList> unArchived = new ArrayList<>();
-        for(int i = 0; i < lists.size(); i++)
+        for(WishList list : lists)
         {
-            if(!lists.get(i).archived)
+            if(!list.archived)
             {
-                unArchived.add(lists.get(i));
+                unArchived.add(list);
             }
         }
         return unArchived;

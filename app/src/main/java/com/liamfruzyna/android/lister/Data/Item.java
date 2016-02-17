@@ -25,7 +25,7 @@ public class Item
     public String color = "#000000";
     public List<String> people = new ArrayList<>();
     public List<String> tags = new ArrayList<>();
-    public Date date = new Date(2997, 4, 24);
+    public Date date = new Date(1097, 3, 24);
 
     //the constructor if you don't know what this is don't ask me
     public Item(String item, Boolean done)

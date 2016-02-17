@@ -92,38 +92,37 @@ public class TagActivity extends ActionBarActivity implements AdapterView.OnItem
             items = Util.sortByDone(Util.sortByPriority(Util.sortByDate(getTagItems(getTags().get(current)))));
             list.removeAllViews();
             LayoutInflater inflater = LayoutInflater.from(this);
-            for (int i = 0; i < items.size(); i++)
+            for (final Item item : items)
             {
-                final int j = i;
                 View view = inflater.inflate(R.layout.item, list, false);
                 //init checkbox and set text
                 final CheckBox cb = (CheckBox) view.findViewById(R.id.checkbox);
-                int color = Color.parseColor(items.get(i).color);
+                int color = Color.parseColor(item.color);
 
                 //color item text based off date (late is red, day of is orange)
                 SharedPreferences settings = getSharedPreferences(IO.PREFS, 0);
                 boolean highlight = settings.getBoolean(IO.HIGHLIGHT_DATE_PREF, true);
                 if(highlight)
                 {
-                    Date date = items.get(i).date;
+                    Date date = item.date;
                     Date today = Calendar.getInstance().getTime();
                     int compare = date.compareTo(today);
-                    if(date.getYear() == today.getYear() && date.getMonth() == today.getMonth() && date.getDate() == today.getDate() && !items.get(i).done)
+                    if(date.getYear() == today.getYear() && date.getMonth() == today.getMonth() && date.getDate() == today.getDate() && !item.done)
                     {
                         color = Color.parseColor("#FFA500");
                     }
-                    else if(date.compareTo(today) < 0 && !items.get(i).done)
+                    else if(date.compareTo(today) < 0 && !item.done)
                     {
                         color = Color.RED;
                     }
                 }
 
-                SpannableStringBuilder s = colorTags(items.get(i).item, color);
+                SpannableStringBuilder s = colorTags(item.item, color);
                 //the returned string were being doubled so I cut it in half
                 cb.setText(s.subSequence(s.length()/2, s.length()));
-                cb.setTextColor(Color.parseColor(items.get(i).color));
-                cb.setChecked(items.get(i).done);
-                if(items.get(i).done)
+                cb.setTextColor(Color.parseColor(item.color));
+                cb.setChecked(item.done);
+                if(item.done)
                 {
                     cb.setPaintFlags(cb.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 } else
@@ -136,7 +135,7 @@ public class TagActivity extends ActionBarActivity implements AdapterView.OnItem
                     @Override
                     public void onClick(View v)
                     {
-                        items.get(j).done = cb.isChecked();
+                        item.done = cb.isChecked();
                         if (cb.isChecked())
                         {
                             cb.setPaintFlags(cb.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
