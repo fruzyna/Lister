@@ -280,6 +280,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
                 {
                     wl.showDone = ((CheckBox) v).isChecked();
                     updateList();
+                    IO.save(lists);
                 }
             });
             criteria.removeAllViews();

@@ -53,6 +53,7 @@ public class IO
         jlist.put("archived", list.archived);
         jlist.put("order", list.order);
         jlist.put("auto", list.auto);
+        jlist.put("showDone", list.showDone);
         if(list.auto)
         {
             AutoList alist = (AutoList) list;
@@ -62,7 +63,6 @@ public class IO
             {
                 jcriteria.put(c);
             }
-            jlist.put("showDone", alist.showDone);
             jlist.put("criteria", jcriteria);
         }
         else
@@ -91,7 +91,7 @@ public class IO
     //creates lists from all the save files
     public static List<WishList> load() throws JSONException, MalformedURLException
     {
-        List<WishList> lists = new ArrayList<WishList>();
+        List<WishList> lists = new ArrayList<>();
         List<String> jlists = readFromFile();
         for (String jliststr : jlists)
         {
@@ -118,6 +118,7 @@ public class IO
             if(jlist.has("showDone"))
             {
                 showDone = jlist.getBoolean("showDone");
+                IO.log("IO:load", jlist.getString("name") + " is " + showDone);
             }
             if(jlist.has("auto"))
             {
