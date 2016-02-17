@@ -70,6 +70,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     static Spinner spin;
     public static FloatingActionButton fab;
 
+    //returns the list currently viewable on screen
     public static WishList getCurrentList()
     {
         for(int i = 0; i < unArchived.size(); i++)
@@ -82,21 +83,25 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         return null;
     }
 
+    //returns the items currently displayed on screen
     public static List<Item> getItems()
     {
         return items;
     }
 
+    //returns all the lists
     public static List<WishList> getLists()
     {
         return lists;
     }
 
+    //returns all the unarchived lists
     public static List<WishList> getUnArchived()
     {
         return unArchived;
     }
 
+    //takes an item and colors its tags
     public SpannableStringBuilder colorTags(String item, int color)
     {
         final SpannableStringBuilder sb = new SpannableStringBuilder(item);
@@ -128,6 +133,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         return sb;
     }
 
+    //creates the item view that is displayed on screen
     public View createItem(LayoutInflater inflater, final int i)
     {
         View view = inflater.inflate(R.layout.item, list, false);
@@ -231,6 +237,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         return tv;
     }
 
+    //takes the name of a list and returns the list object
     public WishList getListFromName(String name)
     {
         for(WishList list : getUnArchived())
@@ -281,11 +288,13 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
                 criteria.addView(createCriteria());
                 autotv.setText("Auto");
                 findViewById(R.id.newitem).setVisibility(View.GONE);
+                findViewById(R.id.criteria).setVisibility(View.VISIBLE);
             }
             else
             {
                 autotv.setText("");
                 findViewById(R.id.newitem).setVisibility(View.VISIBLE);
+                findViewById(R.id.criteria).setVisibility(View.GONE);
             }
             //reorganizes all the items by date then doneness
             items = Util.sortByDone(Util.sortByPriority(Util.sortByDate(Util.newList(wl.items))));
@@ -545,6 +554,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         ((WLActivity)c).updateList();
     }
 
+    //sets the current list to the last open list
     public static void openNewest()
     {
         //creates a list of events level and distance to fill out the spinner
