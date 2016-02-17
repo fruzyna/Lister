@@ -82,7 +82,7 @@ public class TagActivity extends ActionBarActivity implements AdapterView.OnItem
     //Gets all the items in unarchived lists containing a name
     public List<Item> getTagItems(String tag)
     {
-        List<Item> items = new ArrayList<Item>();
+        List<Item> items = new ArrayList<>();
         return items;
     }
 

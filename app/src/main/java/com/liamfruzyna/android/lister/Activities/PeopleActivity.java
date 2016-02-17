@@ -39,7 +39,7 @@ public class PeopleActivity extends TagActivity
         List<String> people = new ArrayList<>();
         for (WishList list : lists)
         {
-            if (!list.archived)
+            if (!list.archived && !list.auto)
             {
                 for (Item item : list.items)
                 {
@@ -90,7 +90,7 @@ public class PeopleActivity extends TagActivity
         List<Item> items = new ArrayList<>();
         for (WishList list : lists)
         {
-            if (!list.archived)
+            if (!list.archived && !list.auto)
             {
                 if(list.people.contains(person))
                 {

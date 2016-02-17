@@ -19,7 +19,7 @@ public class DatesActivity extends TagActivity
     {
         List<String> dates = new ArrayList<>();
         for(WishList list : lists) {
-            if (!list.archived) {
+            if (!list.archived && !list.auto) {
                 for (Item item : list.items) {
                     boolean found = false;
                     for(String date : dates)
@@ -47,7 +47,7 @@ public class DatesActivity extends TagActivity
         List<Item> items = new ArrayList<>();
         for(WishList list : lists)
         {
-            if(!list.archived)
+            if(!list.archived && !list.auto)
             {
                 for(Item item : list.items)
                 {

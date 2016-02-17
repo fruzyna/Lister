@@ -37,7 +37,7 @@ public class TagsActivity extends TagActivity
         List<String> tags = new ArrayList<String>();
         for(WishList list : lists)
         {
-            if(!list.archived)
+            if(!list.archived && !list.auto)
             {
                 for(String tag : list.tags)
                 {
@@ -83,7 +83,7 @@ public class TagsActivity extends TagActivity
         List<Item> items = new ArrayList<Item>();
         for(WishList list : lists)
         {
-            if(!list.archived)
+            if(!list.archived && !list.auto)
             {
                 boolean found = false;
                 for(String tagg : list.tags)
