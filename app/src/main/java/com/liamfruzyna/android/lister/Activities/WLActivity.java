@@ -37,6 +37,7 @@ import com.liamfruzyna.android.lister.DialogFragments.ArchiveListDialog;
 import com.liamfruzyna.android.lister.DialogFragments.ClearListDialog;
 import com.liamfruzyna.android.lister.DialogFragments.EditCriteriaDialog;
 import com.liamfruzyna.android.lister.DialogFragments.EditItemDialog;
+import com.liamfruzyna.android.lister.DialogFragments.EditListNameDialog;
 import com.liamfruzyna.android.lister.DialogFragments.EditTagsDialog;
 import com.liamfruzyna.android.lister.DialogFragments.NewItemDialog;
 import com.liamfruzyna.android.lister.DialogFragments.NewListDialog;
@@ -540,7 +541,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     }
 
     //repopulates the spinner
-    public static void setupSpinner()
+    public void setupSpinner()
     {
         //creates a list of events level and distance to fill out the spinner
         names = sortLists(unArchived);
@@ -550,6 +551,17 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         sadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spin.setAdapter(sadapter);
         current = spin.getSelectedItemPosition();
+
+        spin.setOnLongClickListener(new View.OnLongClickListener()
+        {
+            @Override
+            public boolean onLongClick(View v)
+            {
+                DialogFragment dialog = new EditListNameDialog();
+                dialog.show(getFragmentManager(), "");
+                return false;
+            }
+        });
 
         ((WLActivity)c).updateList();
     }

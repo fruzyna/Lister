@@ -38,7 +38,7 @@ public class ArchiveListDialog extends DialogFragment
                         IO.log("ArchiveListDialog", "Archiving list " + current.name);
                         current.archived = true;
                         lists.remove(current);
-                        WLActivity.setupSpinner();
+                        ((WLActivity) getActivity()).setupSpinner();
                         IO.save(WLActivity.getLists());
                     }
                 })

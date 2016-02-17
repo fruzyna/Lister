@@ -5,52 +5,48 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
 
 import com.liamfruzyna.android.lister.Activities.WLActivity;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.R;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * Created by mail929 on 11/25/14.
+ * Created by mail929 on 2/17/16.
  */
-
-public class RemoveListDialog extends DialogFragment
+public class EditListNameDialog extends DialogFragment
 {
-    List<WishList> lists = WLActivity.getLists();
-    WishList current = WLActivity.getCurrentList();
+    EditText name;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
+        final View v = inflater.inflate(R.layout.new_item_item, null);
+        name = (EditText) v.findViewById(R.id.name);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("Are you sure you want to delete " + current.name + "? You can never get it back.")
-                .setTitle("Delete List?")
-                .setPositiveButton("DELETE", new DialogInterface.OnClickListener()
+        final WishList list = WLActivity.getCurrentList();
+        name.setHint("name");
+        name.setText(list.name);
+        builder.setMessage("Edit name of " + list.name)
+                .setTitle("Edit Name")
+                .setView(v)
+                .setPositiveButton("APPEND", new DialogInterface.OnClickListener()
                 {
                     public void onClick(DialogInterface dialog, int id)
                     {
-                        IO.log("RemoveListDialog", "Removing and deleting list " + current.name);
-                        File file = new File(IO.fileDir, current.name + ".json");
-                        file.delete();
-                        lists.remove(current);
-                        WLActivity.getUnArchived().remove(current);
-                        IO.save(lists);
-                        ((WLActivity) getActivity()).removeListSnackbar(current);
+                        list.name = name.getText().toString();
                         ((WLActivity) getActivity()).setupSpinner();
+                        IO.save(WLActivity.getLists());
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener()
                 {
                     public void onClick(DialogInterface dialog, int id)
                     {
-                        //do nothing
                     }
                 });
         return builder.create();
