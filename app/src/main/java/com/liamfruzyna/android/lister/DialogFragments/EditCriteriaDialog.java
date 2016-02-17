@@ -42,11 +42,16 @@ public class EditCriteriaDialog extends DialogFragment
                 .setPositiveButton("APPEND", new DialogInterface.OnClickListener()
                 {
                     List<String> criteria = new ArrayList<>();
+
                     public void onClick(DialogInterface dialog, int id)
                     {
                         for (View view : views)
                         {
-                            criteria.add( ((EditText) view.findViewById(R.id.editText)).getText().toString() );
+                            String c = ((EditText) view.findViewById(R.id.editText)).getText().toString();
+                            if (!c.equals(""))
+                            {
+                                criteria.add(c);
+                            }
                         }
                         list.setCriteria(criteria);
                         ((WLActivity) getActivity()).updateList();
