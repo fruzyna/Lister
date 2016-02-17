@@ -49,10 +49,14 @@ public class AutoList extends WishList
                     for(String c : criteria)
                     {
                         String[] parts = c.split(" ");
-                        String type = parts[0];
-                        String required = parts[1];
+                        String type = parts[1];
+                        String required = parts[0];
                         System.out.println("Checking " + c);
-                        if(required.equals("mandatory") || !add)
+                        if(required.equals("mandatory"))
+                        {
+                            add = false;
+                        }
+                        if(!add)
                         {
                             if(type.equals("tag"))
                             {
@@ -173,7 +177,7 @@ public class AutoList extends WishList
                             {
                                 IO.log("AutoList:findItems", "Type " + type + " not valid");
                             }
-                            if(!add && required.equals("mandatory"))
+                            if(required.equals("mandatory") && !add)
                             {
                                 break;
                             }

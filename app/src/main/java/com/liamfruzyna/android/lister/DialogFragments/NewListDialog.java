@@ -87,66 +87,38 @@ public class NewListDialog extends DialogFragment
                                 LinearLayout container = (LinearLayout) view.findViewById(R.id.container);
                                 CheckBox mandatory = (CheckBox) view.findViewById(R.id.mandatory);
                                 StringBuilder sb = new StringBuilder();
+                                if (mandatory.isChecked())
+                                {
+                                    sb.append("mandatory ");
+                                } else
+                                {
+                                    sb.append("optional ");
+                                }
                                 switch (spinner.getSelectedItemPosition())
                                 {
                                     case 0:
                                         //tag
                                         sb.append("tag ");
-                                        if (mandatory.isChecked())
-                                        {
-                                            sb.append("mandatory ");
-                                        } else
-                                        {
-                                            sb.append("optional ");
-                                        }
                                         sb.append(((EditText) container.findViewById(R.id.editText)).getText().toString());
                                         break;
                                     case 1:
                                         //person
                                         sb.append("person ");
-                                        if (mandatory.isChecked())
-                                        {
-                                            sb.append("mandatory ");
-                                        } else
-                                        {
-                                            sb.append("optional ");
-                                        }
                                         sb.append(((EditText) container.findViewById(R.id.editText)).getText().toString());
                                         break;
                                     case 2:
                                         //date range
                                         sb.append("date_range ");
-                                        if (mandatory.isChecked())
-                                        {
-                                            sb.append("mandatory ");
-                                        } else
-                                        {
-                                            sb.append("optional ");
-                                        }
                                         sb.append( ((EditText) container.findViewById(R.id.editText1)).getText().toString() + " " + ((EditText) container.findViewById(R.id.editText2)).getText().toString());
                                         break;
                                     case 3:
                                         //time
                                         sb.append("time ");
-                                        if (mandatory.isChecked())
-                                        {
-                                            sb.append("mandatory ");
-                                        } else
-                                        {
-                                            sb.append("optional ");
-                                        }
                                         sb.append(((EditText) container.findViewById(R.id.editText)).getText().toString());
                                         break;
                                     case 4:
                                         //day
                                         sb.append("day ");
-                                        if (mandatory.isChecked())
-                                        {
-                                            sb.append("mandatory ");
-                                        } else
-                                        {
-                                            sb.append("optional ");
-                                        }
                                         sb.append(days[((Spinner) container.findViewById(R.id.spinner)).getSelectedItemPosition()]);
                                         break;
                                 }
