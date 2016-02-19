@@ -14,6 +14,8 @@ import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.R;
 
+import java.io.File;
+
 /**
  * Created by mail929 on 2/17/16.
  */
@@ -38,8 +40,11 @@ public class EditListNameDialog extends DialogFragment
                 {
                     public void onClick(DialogInterface dialog, int id)
                     {
+                        String old = new String(list.name);
                         list.name = name.getText().toString();
                         ((WLActivity) getActivity()).setupSpinner();
+                        File file = new File(IO.fileDir, old + ".json");
+                        file.delete();
                         IO.save(WLActivity.getLists());
                     }
                 })
