@@ -9,6 +9,8 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
@@ -23,6 +25,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -70,6 +73,11 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     static TextView autotv;
     static Spinner spin;
     public static FloatingActionButton fab;
+
+    private String[] drawerTitles = {"Home", "Tag Viewer", "People Viewer", "Date Viewer", "Settings"};
+    private DrawerLayout drawer;
+    private ListView drawerList;
+    private ActionBarDrawerToggle drawerToggle;
 
     //returns the list currently viewable on screen
     public static WishList getCurrentList()
@@ -324,6 +332,15 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         }
     }
 
+    /*@Override
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        // If the nav drawer is open, hide action items related to the content view
+        boolean drawerOpen = drawer.isDrawerOpen(drawerList);
+        menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
+        return super.onPrepareOptionsMenu(menu);
+    }*/
+
     //main method that is run when app is started
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -332,6 +349,66 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
         setContentView(R.layout.activity_wl);
         c = this;
 
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        /*drawerToggle = new ActionBarDrawerToggle(this, drawer,
+                R.drawable.ic_launcher, "Open", "Close") {
+
+            /** Called when a drawer has settled in a completely closed state.
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            /** Called when a drawer has settled in a completely open state.
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
+
+        // Set the drawer toggle as the DrawerListener
+        drawer.setDrawerListener(drawerToggle);*/
+        drawerList = (ListView) findViewById(R.id.left_drawer);
+
+        // Set the adapter for the list view
+        drawerList.setAdapter(new ArrayAdapter<String>(this,
+                R.layout.navdrawer_list_item, drawerTitles));
+        // Set the list's click listener
+        drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                switch (position)
+                {
+                    case 0:
+                        //Home
+                        break;
+                    case 1:
+                        //Tag Viewer
+                        Intent goTags = new Intent(c, TagsActivity.class);
+                        c.startActivity(goTags);
+                        break;
+                    case 2:
+                        //People Viewer
+                        Intent goPeople = new Intent(c, PeopleActivity.class);
+                        c.startActivity(goPeople);
+                        break;
+                    case 3:
+                        //Date Viewer
+                        Intent goDates = new Intent(c, DatesActivity.class);
+                        c.startActivity(goDates);
+                        break;
+                    case 4:
+                        //Settings
+                        Intent goSettings = new Intent(c, SettingsActivity.class);
+                        c.startActivity(goSettings);
+                        break;
+                }
+                drawerList.setItemChecked(position, true);
+                drawer.closeDrawer(drawerList);
+            }
+        });
         prefs = getSharedPreferences(IO.PREFS, 0);
         editor = prefs.edit();
 
@@ -657,30 +734,6 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
     {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings)
-        {
-            Intent goSettings = new Intent(this, SettingsActivity.class);
-            this.startActivity(goSettings);
-            return true;
-        }
-        else if (id == R.id.action_tags)
-        {
-            Intent goTags = new Intent(this, TagsActivity.class);
-            this.startActivity(goTags);
-            return true;
-        }
-        else if (id == R.id.action_people)
-        {
-            Intent goTags = new Intent(this, PeopleActivity.class);
-            this.startActivity(goTags);
-            return true;
-        }
-        else if (id == R.id.action_dates)
-        {
-            Intent goTags = new Intent(this, DatesActivity.class);
-            this.startActivity(goTags);
-            return true;
-        }
         return super.onOptionsItemSelected(item);
     }
 
