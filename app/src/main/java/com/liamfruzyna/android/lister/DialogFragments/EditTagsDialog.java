@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.liamfruzyna.android.lister.Activities.WLActivity;
+import com.liamfruzyna.android.lister.Activities.WLFragment;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.Item;
 import com.liamfruzyna.android.lister.Data.WishList;
@@ -33,7 +34,7 @@ public class EditTagsDialog extends DialogFragment
         tags = (EditText) v.findViewById(R.id.name);
         tags.setHint("Tags");
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        final WishList list = WLActivity.getCurrentList();
+        final WishList list = WLFragment.getCurrentList();
         StringBuilder sb = new StringBuilder();
         for(int i = 0; i < list.tags.size(); i++)
         {
@@ -49,7 +50,7 @@ public class EditTagsDialog extends DialogFragment
                     {
                         IO.log("EditTagDialog", "Settings " + list.name + "'s tags to " + tags.getText().toString());
                         list.tags = new ArrayList<>(Arrays.asList(tags.getText().toString().split(" ")));
-                        ((WLActivity) getActivity()).updateList();
+                        WLFragment.getFrag(getActivity()).updateList();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener()

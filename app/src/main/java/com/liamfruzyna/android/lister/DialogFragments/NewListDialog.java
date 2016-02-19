@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import com.liamfruzyna.android.lister.Activities.WLActivity;
+import com.liamfruzyna.android.lister.Activities.WLFragment;
 import com.liamfruzyna.android.lister.Data.AutoList;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.R;
@@ -76,7 +77,7 @@ public class NewListDialog extends DialogFragment
                         CheckBox done = (CheckBox) v.findViewById(R.id.checked);
 
                         IO.log("NewListDialog", "Creating list " + name.getText().toString());
-                        List<WishList> lists = WLActivity.getLists();
+                        List<WishList> lists = WLFragment.getLists();
                         WishList newList;
                         if (cb.isChecked())
                         {
@@ -130,9 +131,9 @@ public class NewListDialog extends DialogFragment
                             newList = new WishList(name.getText().toString(), new ArrayList<>(Arrays.asList(tags.getText().toString().split(" "))), done.isChecked());
                         }
                         lists.add(newList);
-                        List<WishList> unArchieved = WLActivity.getUnArchived();
+                        List<WishList> unArchieved = WLFragment.getUnArchived();
                         unArchieved.add(newList);
-                        WLActivity.openNewest();
+                        WLFragment.openNewest();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener()

@@ -3,6 +3,7 @@ package com.liamfruzyna.android.lister.Data;
 import android.widget.EditText;
 
 import com.liamfruzyna.android.lister.Activities.WLActivity;
+import com.liamfruzyna.android.lister.Activities.WLFragment;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -39,7 +40,7 @@ public class AutoList extends WishList
     public List<Item> findItems()
     {
         List<Item> found = new ArrayList<>();
-        for(WishList list : WLActivity.getUnArchived())
+        for(WishList list : WLFragment.getUnArchived())
         {
             if(!list.auto)
             {

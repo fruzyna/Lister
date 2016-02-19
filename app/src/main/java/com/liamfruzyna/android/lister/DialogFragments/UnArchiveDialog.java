@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.liamfruzyna.android.lister.Activities.WLActivity;
+import com.liamfruzyna.android.lister.Activities.WLFragment;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.R;
@@ -35,7 +36,7 @@ public class UnArchiveDialog extends DialogFragment
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         ListView list = (ListView) v.findViewById(R.id.listView);
         final List<WishList> archived = new ArrayList<>();
-        for(WishList wlist : WLActivity.getLists())
+        for(WishList wlist : WLFragment.getLists())
         {
             if(wlist.archived)
             {
@@ -63,13 +64,13 @@ public class UnArchiveDialog extends DialogFragment
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-                List<WishList> unArchived = WLActivity.getUnArchived();
+                List<WishList> unArchived = WLFragment.getUnArchived();
                 if(!unArchived.contains(archived.get(position)))
                 {
                     IO.log("UnArchiveDialog", "Unarchiving list " + archived.get(position));
                     unArchived.add(archived.get(position));
                     archived.get(position).archived = false;
-                    IO.save(WLActivity.getLists());
+                    IO.save(WLFragment.getLists());
                 }
             }
         });

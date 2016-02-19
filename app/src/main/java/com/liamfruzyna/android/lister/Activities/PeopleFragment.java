@@ -1,35 +1,20 @@
 package com.liamfruzyna.android.lister.Activities;
 
 import android.app.DialogFragment;
-import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
 
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.Item;
 import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.DialogFragments.SuggestionDialog;
-import com.liamfruzyna.android.lister.R;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
  * Created by mail929 on 5/23/15.
  */
-public class PeopleActivity extends TagActivity
+public class PeopleFragment extends TagFragment
 {
 
     //finds all the different people in unarchived lists
@@ -61,7 +46,7 @@ public class PeopleActivity extends TagActivity
                 }
                 for (String person : list.people)
                 {
-                    IO.log("PeopleActivity:getTags", "Looking for " + person);
+                    IO.log("PeopleFragment:getTags", "Looking for " + person);
                     boolean found = false;
                     for (String sPerson : people)
                     {
@@ -72,7 +57,7 @@ public class PeopleActivity extends TagActivity
                     }
                     if (!found)
                     {
-                        IO.log("PeopleActivity:getTags", "Adding " + person);
+                        IO.log("PeopleFragment:getTags", "Adding " + person);
                         people.add(person);
                     }
                 }

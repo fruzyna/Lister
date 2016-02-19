@@ -1,6 +1,7 @@
 package com.liamfruzyna.android.lister.Data;
 
 import com.liamfruzyna.android.lister.Activities.WLActivity;
+import com.liamfruzyna.android.lister.Activities.WLFragment;
 import com.liamfruzyna.android.lister.Data.Item;
 
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class WishList
         this.name = name;
         this.tags = tags;
         this.showDone = showDone;
-        order = WLActivity.getLists().size();
+        order = WLFragment.getLists().size();
         findPeople();
     }
 

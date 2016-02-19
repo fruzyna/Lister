@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by mail929 on 11/6/15.
  */
-public class DatesActivity extends TagActivity
+public class DatesFragment extends TagFragment
 {
 
     //finds all the different people in unarchived lists

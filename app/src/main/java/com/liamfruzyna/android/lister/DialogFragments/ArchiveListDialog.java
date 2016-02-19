@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.liamfruzyna.android.lister.Activities.WLActivity;
+import com.liamfruzyna.android.lister.Activities.WLFragment;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.R;
@@ -21,8 +22,8 @@ import java.util.List;
  */
 public class ArchiveListDialog extends DialogFragment
 {
-    List<WishList> lists = WLActivity.getUnArchived();
-    WishList current = WLActivity.getCurrentList();
+    List<WishList> lists = WLFragment.getUnArchived();
+    WishList current = WLFragment.getCurrentList();
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState)
@@ -38,8 +39,8 @@ public class ArchiveListDialog extends DialogFragment
                         IO.log("ArchiveListDialog", "Archiving list " + current.name);
                         current.archived = true;
                         lists.remove(current);
-                        ((WLActivity) getActivity()).setupSpinner();
-                        IO.save(WLActivity.getLists());
+                        WLFragment.getFrag(getActivity()).setupSpinner();
+                        IO.save(WLFragment.getLists());
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener()
