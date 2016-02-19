@@ -14,6 +14,7 @@ import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
+import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.AppCompatCheckedTextView;
@@ -38,7 +39,7 @@ import com.liamfruzyna.android.lister.R;
 /**
  * Activity for customizing app settings.
  */
-public class SettingsFragment extends Fragment
+public class SettingsFragment extends PreferenceFragment
 {
     SharedPreferences settings;
     View view;
@@ -50,28 +51,12 @@ public class SettingsFragment extends Fragment
 
         getActivity().setTitle("Settings");
 
-       /* PreferenceScreen ps = getPreferenceManager().createPreferenceScreen(this);
+        PreferenceScreen ps = getPreferenceManager().createPreferenceScreen(getActivity());
 
         PreferenceCategory gen = new PreferenceCategory(getActivity());
         gen.setTitle("Lists");
         ps.addPreference(gen);
-/*
-        //Button that clears all lists, it requires a restart for now
-        Preference clear = new Preference(this);
-        clear.setTitle("Clear Data");
-        clear.setSummary("This may require app restart");
-        clear.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                File file = new File(IO.fileDir, "data.json");
-                file.delete();
-                List<WishList> lists = WLActivity.getLists();
-                lists = new ArrayList<>();
-                return true;
-            }
-        });
-        gen.addPreference(clear);*/
-/*
+
         //Allows user to sort lists  to their choosing
         Preference sort = new Preference(getActivity());
         sort.setTitle("Sort Lists");
@@ -135,21 +120,7 @@ public class SettingsFragment extends Fragment
             }
         });
         gen.addPreference(unArchive);
-/*
-        //Prompts to set password for lists
-        Preference password = new Preference(this);
-        password.setTitle("Set Password");
-        password.setSummary("Password protects lists on app launch");
-        password.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                DialogFragment dialog = new NewPasswordDialog();
-                dialog.show(getFragmentManager(), "");
-                return true;
-            }
-        });
-        gen.addPreference(password);*/
-/*
+
         PreferenceCategory item = new PreferenceCategory(getActivity());
         item.setTitle("Items");
         ps.addPreference(item);
@@ -205,29 +176,8 @@ public class SettingsFragment extends Fragment
         });
         about.addPreference(me);
 
-        setPreferenceScreen(ps);*/
+        setPreferenceScreen(ps);
 
         return view;
     }
-/*
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState)
-    {
-        super.onPostCreate(savedInstanceState);
-
-        //sets up the view
-        LinearLayout root = (LinearLayout) view.findViewById(android.R.id.list).getParent().getParent().getParent();
-        Toolbar bar = (Toolbar) LayoutInflater.from(getActivity()).inflate(R.layout.settings_toolbar, root, false);
-        bar.setTitleTextColor(Color.parseColor("#FFFFFF"));
-        bar.setTranslationZ(8);
-        root.addView(bar, 0);
-        bar.setNavigationOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                getActivity().finish();
-            }
-        });
-    }*/
 }
