@@ -329,6 +329,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
     @Override
     public View onCreateView(LayoutInflater infl, ViewGroup parent, Bundle savedInstanceState) {
         view = infl.inflate(R.layout.fragment_wl, parent, false);
+
         c = getActivity();
 
         prefs = getActivity().getSharedPreferences(IO.PREFS, 0);
@@ -464,8 +465,8 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
         //setup button to create a new item
         LinearLayout container = (LinearLayout) view.findViewById(R.id.newitem);
         LayoutInflater inflater = LayoutInflater.from(getActivity());
-        View view = inflater.inflate(R.layout.add_item, container, false);
-        view.setOnClickListener(new View.OnClickListener()
+        View view2 = inflater.inflate(R.layout.add_item, container, false);
+        view2.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -477,12 +478,12 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
                 }
             }
         });
-        view.setOnLongClickListener(new View.OnLongClickListener()
+        view2.setOnLongClickListener(new View.OnLongClickListener()
         {
             @Override
             public boolean onLongClick(View v)
             {
-                if(unArchived.size() > 0)
+                if (unArchived.size() > 0)
                 {
                     DialogFragment dialog = new ClearListDialog();
                     dialog.show(getFragmentManager(), "");
@@ -490,7 +491,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
                 return false;
             }
         });
-        container.addView(view);
+        container.addView(view2);
 
         updateList();
         return view;
