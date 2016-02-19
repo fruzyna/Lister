@@ -2,7 +2,6 @@ package com.liamfruzyna.android.lister.Activities;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -22,6 +21,7 @@ public class WLActivity extends ActionBarActivity
     private DrawerLayout drawer;
     private ListView drawerList;
     private ActionBarDrawerToggle drawerToggle;
+    private boolean upEnabled = false;
 
     //main method that is run when app is started
     @Override
@@ -35,38 +35,11 @@ public class WLActivity extends ActionBarActivity
         setSupportActionBar(toolbar);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawerToggle = new ActionBarDrawerToggle(
-                this,                  /* host Activity */
-                drawer,         /* DrawerLayout object */
-                R.drawable.ic_launcher,  /* nav drawer icon to replace 'Up' caret */
-                R.string.drawer_open,  /* "open drawer" description */
-                R.string.drawer_close  /* "close drawer" description */
-        ) {
-
-            /** Called when a drawer has settled in a completely closed state. */
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-            }
-
-            /** Called when a drawer has settled in a completely open state. */
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-            }
-        };
-
-        // Set the drawer toggle as the DrawerListener
-        drawer.setDrawerListener(drawerToggle);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
         drawerList = (ListView) findViewById(R.id.left_drawer);
 
         // Set the adapter for the list view
-        drawerList.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.navdrawer_list_item, drawerTitles));
+        drawerList.setAdapter(new ArrayAdapter<>(this, R.layout.navdrawer_list_item, drawerTitles));
         // Set the list's click listener
-
-        final Context c = this;
         drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
             @Override
@@ -110,6 +83,24 @@ public class WLActivity extends ActionBarActivity
         });
 
         changeFragment(new WLFragment(), "WL");
+
+        drawerToggle = new ActionBarDrawerToggle(this, drawer, R.drawable.ic_launcher, R.string.open, R.string.closed) {
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                invalidateOptionsMenu();
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                invalidateOptionsMenu();
+            }
+        };
+
+        // Set the drawer toggle as the DrawerListener
+        drawer.setDrawerListener(drawerToggle);
     }
 
     public void setTitle(String title)
@@ -126,6 +117,14 @@ public class WLActivity extends ActionBarActivity
         transaction.commit();
     }
 
+    public void setUp(boolean displayUp)
+    {
+        upEnabled = displayUp;
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        drawerToggle.setDrawerIndicatorEnabled(!displayUp);
+        drawerToggle.syncState();
+    }
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -143,12 +142,16 @@ public class WLActivity extends ActionBarActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         // Pass the event to ActionBarDrawerToggle, if it returns
         // true, then it has handled the app icon touch event
-        if (drawerToggle.onOptionsItemSelected(item)) {
-            return true;
+        if(!upEnabled)
+        {
+            if (drawerToggle.onOptionsItemSelected(item))
+            {
+                return true;
+            }
         }
         else if(item.getItemId() == android.R.id.home)
         {
-            getFragmentManager().popBackStack();
+            getSupportFragmentManager().popBackStack();
         }
         // Handle your other action bar items...
 

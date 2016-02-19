@@ -1,13 +1,10 @@
 <resources>
 
-    <style name="ButtonTheme" parent="Base.Widget.AppCompat.ActionButton">
-        <item name="android:textColor">@android:color/white</item>
-    </style>
-
     <style name="MyTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/main</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:statusBarColor">@color/statusbar</item>
         <item name="colorPrimaryDark">@color/dark_main</item>
-        <item name="android:buttonStyle">@style/ButtonTheme</item>
         <item name="colorAccent">@color/fab</item>
     </style>
 

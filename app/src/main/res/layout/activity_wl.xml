@@ -1,64 +1,80 @@
-<android.support.v4.widget.DrawerLayout
+<com.liamfruzyna.android.lister.ScrimInsetsFrameLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/drawer_layout"
+    android:id="@+id/scrimInsetsFrameLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/background_gray"
-                android:orientation="vertical">
+    android:layout_height="match_parent"
+    android:layout_gravity="start"
+    android:background="@color/background_gray"
+    android:elevation="10dp"
+    android:fitsSystemWindows="true"
+    app:insetForeground="#4000">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        android:translationZ="4dp"/>
-
-    <LinearLayout
+    <android.support.v4.widget.DrawerLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/container"
-        android:layout_below="@+id/toolbar"
-        android:orientation="vertical"/>
+        android:fitsSystemWindows="true">
 
-</RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/drawer"
-        android:layout_width="300dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:orientation="vertical">
-
-        <RelativeLayout
-            android:id="@+id/image"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="178dp"
-            android:background="@android:color/black">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <android.support.v7.widget.Toolbar
+                android:paddingTop="24dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_margin="16dp"
-                android:text="Lister"
+                android:id="@+id/toolbar"
+                android:translationZ="4dp"
+                android:background="@color/main"
                 android:textColor="@android:color/white"
-                android:textSize="24sp" />
-        </RelativeLayout>
+                app:contentInsetStart="72dp"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-        <ListView android:id="@+id/left_drawer"
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:layout_gravity="start"
-                  android:choiceMode="singleChoice"
-                  android:divider="@android:color/transparent"
-                  android:dividerHeight="0dp"
-                  android:background="@android:color/white"/>
-    </LinearLayout>
+            <FrameLayout
+                android:id="@+id/container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
-</android.support.v4.widget.DrawerLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/drawer"
+            android:layout_width="300dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/image"
+                android:layout_width="match_parent"
+                android:layout_height="178dp"
+                android:background="@android:color/black">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_margin="16dp"
+                    android:text="Material Campus"
+                    android:textColor="@android:color/white"
+                    android:textSize="24sp" />
+            </RelativeLayout>
+
+            <ListView android:id="@+id/left_drawer"
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:layout_gravity="start"
+                      android:choiceMode="singleChoice"
+                      android:divider="@android:color/transparent"
+                      android:dividerHeight="0dp"
+                      android:background="@android:color/white"/>
+        </LinearLayout>
+
+    </android.support.v4.widget.DrawerLayout>
+
+</com.liamfruzyna.android.lister.ScrimInsetsFrameLayout>
