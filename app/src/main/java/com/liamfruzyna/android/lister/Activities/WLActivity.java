@@ -141,6 +141,7 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
 
         //init checkbox and set text, checked status, and color
         final CheckBox cb = (CheckBox) view.findViewById(R.id.checkbox);
+        TextView text = (TextView) view.findViewById(R.id.text);
         int color = Color.parseColor(items.get(i).color);
 
         //color item text based off date (late is red, day of is orange)
@@ -163,8 +164,8 @@ public class WLActivity extends ActionBarActivity implements AdapterView.OnItemS
 
         SpannableStringBuilder s = colorTags(items.get(i).item, color);
         //the returned string were being doubled so I cut it in half
-        cb.setText(s.subSequence(s.length()/2, s.length()));
-        cb.setTextColor(color);
+        text.setText(s.subSequence(s.length()/2, s.length()));
+        text.setTextColor(color);
         cb.setChecked(items.get(i).done);
 
         //if item is done cross it out
