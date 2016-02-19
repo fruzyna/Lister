@@ -1,5 +1,10 @@
 package com.liamfruzyna.android.lister.Activities;
 
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import com.liamfruzyna.android.lister.Data.Item;
 import com.liamfruzyna.android.lister.Data.WishList;
 
@@ -56,6 +61,14 @@ public class TagsFragment extends TagFragment
             }
         }
         return tags;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater infl, ViewGroup parent, Bundle savedInstanceState)
+    {
+        View v = super.onCreateView(infl, parent, savedInstanceState);
+        getActivity().setTitle("Tag Viewer");
+        return v;
     }
 
     @Override

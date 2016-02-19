@@ -2,6 +2,9 @@ package com.liamfruzyna.android.lister.Activities;
 
 import android.app.DialogFragment;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.Item;
@@ -100,6 +103,14 @@ public class PeopleFragment extends TagFragment
             }
         }
         return items;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater infl, ViewGroup parent, Bundle savedInstanceState)
+    {
+        View v = super.onCreateView(infl, parent, savedInstanceState);
+        getActivity().setTitle("People Viewer");
+        return v;
     }
 
     //updates the list on screen

@@ -48,6 +48,8 @@ public class SettingsFragment extends Fragment
     {
         view = infl.inflate(R.layout.settings, parent, false);
 
+        getActivity().setTitle("Settings");
+
        /* PreferenceScreen ps = getPreferenceManager().createPreferenceScreen(this);
 
         PreferenceCategory gen = new PreferenceCategory(getActivity());

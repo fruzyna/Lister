@@ -112,6 +112,11 @@ public class WLActivity extends ActionBarActivity
         changeFragment(new WLFragment(), "WL");
     }
 
+    public void setTitle(String title)
+    {
+        getSupportActionBar().setTitle(title);
+    }
+
     public void changeFragment(Fragment fragment, String tag)
     {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();

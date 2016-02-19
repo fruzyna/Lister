@@ -1,5 +1,10 @@
 package com.liamfruzyna.android.lister.Activities;
 
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import com.liamfruzyna.android.lister.Data.Item;
 import com.liamfruzyna.android.lister.Data.WishList;
 
@@ -39,6 +44,13 @@ public class DatesFragment extends TagFragment
         return dates;
     }
 
+    @Override
+    public View onCreateView(LayoutInflater infl, ViewGroup parent, Bundle savedInstanceState)
+    {
+        View v = super.onCreateView(infl, parent, savedInstanceState);
+        getActivity().setTitle("Date Viewer");
+        return v;
+    }
 
     //Gets all the items in unarchived lists containing a name
     @Override
