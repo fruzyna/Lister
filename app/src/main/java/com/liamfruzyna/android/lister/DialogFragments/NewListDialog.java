@@ -36,6 +36,7 @@ public class NewListDialog extends DialogFragment
     LinearLayout container;
     String[] types = {"Tag", "Person", "Date Range", "Time", "Day"};
     String[] days = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+    CheckBox cb;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState)
@@ -49,6 +50,24 @@ public class NewListDialog extends DialogFragment
         View view = linflater.inflate(R.layout.criteria_item, container, false);
         setupSpinner(view);
         views.add(view);
+
+        v.findViewById(R.id.scrollView2).setVisibility(View.GONE);
+        cb = (CheckBox) v.findViewById(R.id.auto);
+        cb.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v2)
+            {
+                if(cb.isChecked())
+                {
+                    v.findViewById(R.id.scrollView2).setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    v.findViewById(R.id.scrollView2).setVisibility(View.GONE);
+                }
+            }
+        });
 
         repopulate();
         Button add = (Button) v.findViewById(R.id.add);
@@ -73,7 +92,6 @@ public class NewListDialog extends DialogFragment
                     {
                         EditText name = (EditText) v.findViewById(R.id.name);
                         EditText tags = (EditText) v.findViewById(R.id.tags);
-                        CheckBox cb = (CheckBox) v.findViewById(R.id.auto);
                         CheckBox done = (CheckBox) v.findViewById(R.id.checked);
                         CheckBox exclude = (CheckBox) v.findViewById(R.id.exclude);
 
