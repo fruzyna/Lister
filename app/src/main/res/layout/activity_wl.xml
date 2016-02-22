@@ -60,7 +60,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_margin="16dp"
-                    android:text="Material Campus"
+                    android:text="Lister"
                     android:textColor="@android:color/white"
                     android:textSize="24sp" />
             </RelativeLayout>
