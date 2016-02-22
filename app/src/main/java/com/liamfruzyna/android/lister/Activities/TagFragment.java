@@ -154,7 +154,6 @@ public class TagFragment extends Fragment implements AdapterView.OnItemSelectedL
     @Override
     public View onCreateView(LayoutInflater infl, ViewGroup parent, Bundle savedInstanceState) {
         view = infl.inflate(R.layout.activity_tags, parent, false);
-        ((WLActivity) getActivity()).setUp(true);
         list = (LinearLayout) view.findViewById(R.id.list);
 
         lists = WLFragment.getLists();

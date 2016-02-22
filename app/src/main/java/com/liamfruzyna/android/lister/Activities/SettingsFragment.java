@@ -48,7 +48,6 @@ public class SettingsFragment extends PreferenceFragment
     public View onCreateView(LayoutInflater infl, ViewGroup parent, Bundle savedInstanceState)
     {
         view = infl.inflate(R.layout.settings, parent, false);
-        ((WLActivity) getActivity()).setUp(true);
 
         getActivity().setTitle("Settings");
 

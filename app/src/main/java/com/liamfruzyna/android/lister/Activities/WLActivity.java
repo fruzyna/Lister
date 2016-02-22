@@ -40,6 +40,9 @@ public class WLActivity extends ActionBarActivity
         // Set the adapter for the list view
         drawerList.setAdapter(new ArrayAdapter<>(this, R.layout.navdrawer_list_item, drawerTitles));
         // Set the list's click listener
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
         drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
             @Override
@@ -84,7 +87,7 @@ public class WLActivity extends ActionBarActivity
 
         changeFragment(new WLFragment(), "WL");
 
-        drawerToggle = new ActionBarDrawerToggle(this, drawer, R.drawable.ic_launcher, R.string.open, R.string.closed) {
+        drawerToggle = new ActionBarDrawerToggle(this, drawer, R.drawable.ic_menu_white_24dp, R.string.open, R.string.closed) {
 
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
@@ -117,41 +120,29 @@ public class WLActivity extends ActionBarActivity
         transaction.commit();
     }
 
-    public void setUp(boolean displayUp)
-    {
-        upEnabled = displayUp;
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        drawerToggle.setDrawerIndicatorEnabled(!displayUp);
-        drawerToggle.syncState();
-    }
     @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
+    protected void onPostCreate(Bundle savedInstanceState)
+    {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
         drawerToggle.syncState();
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
+    public void onConfigurationChanged(Configuration newConfig)
+    {
         super.onConfigurationChanged(newConfig);
         drawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         // Pass the event to ActionBarDrawerToggle, if it returns
         // true, then it has handled the app icon touch event
-        if(!upEnabled)
+        if (drawerToggle.onOptionsItemSelected(item))
         {
-            if (drawerToggle.onOptionsItemSelected(item))
-            {
-                return true;
-            }
-        }
-        else
-        {
-            getSupportFragmentManager().popBackStack();
+            return true;
         }
         // Handle your other action bar items...
 
