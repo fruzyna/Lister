@@ -5,6 +5,6 @@
     <color name="fab">#FF5722</color>
     <color name="background_gray">#E3E3E3</color>
     <color name="divider">#12000000</color>
-    <color name="navdrawertext">#000000</color>
+    <color name="navdrawertext">#87000000</color>
     <color name="statusbar">#20000000</color>
 </resources>
