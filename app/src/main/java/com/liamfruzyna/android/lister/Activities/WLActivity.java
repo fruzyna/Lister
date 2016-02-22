@@ -149,7 +149,7 @@ public class WLActivity extends ActionBarActivity
                 return true;
             }
         }
-        else if(item.getItemId() == android.R.id.home)
+        else
         {
             getSupportFragmentManager().popBackStack();
         }

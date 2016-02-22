@@ -75,6 +75,7 @@ public class NewListDialog extends DialogFragment
                         EditText tags = (EditText) v.findViewById(R.id.tags);
                         CheckBox cb = (CheckBox) v.findViewById(R.id.auto);
                         CheckBox done = (CheckBox) v.findViewById(R.id.checked);
+                        CheckBox exclude = (CheckBox) v.findViewById(R.id.exclude);
 
                         IO.log("NewListDialog", "Creating list " + name.getText().toString());
                         List<WishList> lists = WLFragment.getLists();
@@ -94,6 +95,13 @@ public class NewListDialog extends DialogFragment
                                 } else
                                 {
                                     sb.append("optional ");
+                                }
+                                if (exclude.isChecked())
+                                {
+                                    sb.append("exclude ");
+                                } else
+                                {
+                                    sb.append("include ");
                                 }
                                 switch (spinner.getSelectedItemPosition())
                                 {

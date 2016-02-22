@@ -334,6 +334,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
 
         getActivity().setTitle("Lister");
 
+        ((WLActivity) getActivity()).setUp(false);
         prefs = getActivity().getSharedPreferences(IO.PREFS, 0);
         editor = prefs.edit();
 

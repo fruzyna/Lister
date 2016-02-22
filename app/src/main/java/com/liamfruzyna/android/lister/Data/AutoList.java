@@ -50,29 +50,50 @@ public class AutoList extends WishList
                     for(String c : criteria)
                     {
                         String[] parts = c.split(" ");
-                        String type = parts[1];
+                        if(!c.contains("include") && !c.contains("exclude"))
+                        {
+                            StringBuilder sb = new StringBuilder();
+                            for(int i = 0; i < parts.length; i++)
+                            {
+                                sb.append(parts[i] + " ");
+                                if(i == 1)
+                                {
+                                    sb.append("include ");
+                                }
+                            }
+                            c = sb.toString();
+                            parts = c.split(" ");
+                            IO.save(WLFragment.getLists());
+                        }
+                        boolean make = true;
+                        String type = parts[2];
                         String required = parts[0];
+                        String exclude = parts[1];
                         System.out.println("Checking " + c);
-                        if(required.equals("mandatory"))
+                        if(exclude.equals("exclude"))
+                        {
+                            make = false;
+                        }
+                        if(required.equals("mandatory") && make)
                         {
                             add = false;
                         }
-                        if(!add)
+                        if(!add || (!make && add))
                         {
                             if(type.equals("tag"))
                             {
                                 for(String tag : list.tags)
                                 {
-                                    if(tag.equals(parts[2]))
+                                    if(tag.equals(parts[3]))
                                     {
-                                        add = true;
+                                        add = make;
                                     }
                                 }
                                 for(String tag : item.tags)
                                 {
-                                    if(tag.equals(parts[2]))
+                                    if(tag.equals(parts[3]))
                                     {
-                                        add = true;
+                                        add = make;
                                     }
                                 }
                             }
@@ -80,16 +101,16 @@ public class AutoList extends WishList
                             {
                                 for(String tag : list.people)
                                 {
-                                    if(tag.equals(parts[2]))
+                                    if(tag.equals(parts[3]))
                                     {
-                                        add = true;
+                                        add = make;
                                     }
                                 }
                                 for(String tag : item.people)
                                 {
-                                    if(tag.equals(parts[2]))
+                                    if(tag.equals(parts[3]))
                                     {
-                                        add = true;
+                                        add = make;
                                     }
                                 }
                             }
@@ -99,13 +120,13 @@ public class AutoList extends WishList
                                 try
                                 {
                                     Calendar toCal = Calendar.getInstance();
-                                    toCal.setTime(sdf.parse(parts[3]));
+                                    toCal.setTime(sdf.parse(parts[4]));
                                     toCal.add(Calendar.DAY_OF_YEAR, 1);
                                     Date to = toCal.getTime();
-                                    Date from = sdf.parse(parts[2]);
+                                    Date from = sdf.parse(parts[3]);
                                     if(item.date.after(from) && item.date.before(to))
                                     {
-                                        add = true;
+                                        add = make;
                                     }
                                 } catch (ParseException e)
                                 {
@@ -114,7 +135,7 @@ public class AutoList extends WishList
                             }
                             else if(type.equals("time"))
                             {
-                                int days = Integer.parseInt(parts[2]);
+                                int days = Integer.parseInt(parts[3]);
                                 Calendar byCal = Calendar.getInstance();
                                 byCal.add(Calendar.DAY_OF_YEAR, days);
                                 Calendar nowCal = Calendar.getInstance();
@@ -123,12 +144,12 @@ public class AutoList extends WishList
                                 Date now = nowCal.getTime();
                                 if(item.date.before(by) && item.date.after(now))
                                 {
-                                    add = true;
+                                    add = make;
                                 }
                             }
                             else if(type.equals("day"))
                             {
-                                String day = parts[2];
+                                String day = parts[3];
                                 Calendar nowCal = Calendar.getInstance();
                                 int dayNum = nowCal.get(Calendar.DAY_OF_WEEK);
                                 int goal = 0;
@@ -171,7 +192,7 @@ public class AutoList extends WishList
                                 Date now = nowCal.getTime();
                                 if(item.date.before(by) && item.date.after(now))
                                 {
-                                    add = true;
+                                    add = make;
                                 }
                             }
                             else
@@ -186,6 +207,7 @@ public class AutoList extends WishList
                     }
                     if(add)
                     {
+                        IO.log("AutoList:findItems", "Adding " + item.item);
                         found.add(item);
                     }
                 }
