@@ -84,14 +84,14 @@ public class AutoList extends WishList
                             {
                                 for(String tag : list.tags)
                                 {
-                                    if(tag.equals(parts[3]))
+                                    if(tag.toLowerCase().equals(parts[3].toLowerCase()))
                                     {
                                         add = make;
                                     }
                                 }
                                 for(String tag : item.tags)
                                 {
-                                    if(tag.equals(parts[3]))
+                                    if(tag.toLowerCase().equals(parts[3].toLowerCase()))
                                     {
                                         add = make;
                                     }
@@ -101,14 +101,14 @@ public class AutoList extends WishList
                             {
                                 for(String tag : list.people)
                                 {
-                                    if(tag.equals(parts[3]))
+                                    if(tag.toLowerCase().equals(parts[3].toLowerCase()))
                                     {
                                         add = make;
                                     }
                                 }
                                 for(String tag : item.people)
                                 {
-                                    if(tag.equals(parts[3]))
+                                    if(tag.toLowerCase().equals(parts[3].toLowerCase()))
                                     {
                                         add = make;
                                     }

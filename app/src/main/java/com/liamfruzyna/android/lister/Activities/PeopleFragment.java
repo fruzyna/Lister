@@ -34,9 +34,9 @@ public class PeopleFragment extends TagFragment
                     for (String person : item.people)
                     {
                         boolean found = false;
-                        for (int j = 0; j < people.size(); j++)
+                        for (String personn : people)
                         {
-                            if (person.equals(people.get(j)))
+                            if (person.toLowerCase().equals(personn.toLowerCase()))
                             {
                                 found = true;
                             }
@@ -53,7 +53,7 @@ public class PeopleFragment extends TagFragment
                     boolean found = false;
                     for (String sPerson : people)
                     {
-                        if (person.equals(sPerson))
+                        if (person.toLowerCase().equals(sPerson.toLowerCase()))
                         {
                             found = true;
                         }
@@ -93,7 +93,7 @@ public class PeopleFragment extends TagFragment
                     {
                         for (String personn : item.people)
                         {
-                            if (personn.equals(person))
+                            if (personn.toLowerCase().equals(person.toLowerCase()))
                             {
                                 items.add(item);
                             }

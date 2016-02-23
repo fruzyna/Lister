@@ -30,7 +30,7 @@ public class TagsFragment extends TagFragment
                     boolean found = false;
                     for(String tagg : tags)
                     {
-                        if(tagg.equals(tag))
+                        if(tagg.toLowerCase().equals(tag.toLowerCase()))
                         {
                             found = true;
                         }
@@ -47,7 +47,7 @@ public class TagsFragment extends TagFragment
                         boolean found = false;
                         for(String tagg : tags)
                         {
-                            if(tag.equals(tagg))
+                            if(tag.toLowerCase().equals(tagg.toLowerCase()))
                             {
                                 found = true;
                             }
@@ -82,7 +82,7 @@ public class TagsFragment extends TagFragment
                 boolean found = false;
                 for(String tagg : list.tags)
                 {
-                    if(tagg.equals(tag))
+                    if(tagg.toLowerCase().equals(tag.toLowerCase()))
                     {
                         found = true;
                         for(Item item : list.items)
@@ -97,7 +97,7 @@ public class TagsFragment extends TagFragment
                     {
                         for(String tagg : item.tags)
                         {
-                            if(tagg.equals(tag))
+                            if(tagg.toLowerCase().equals(tag.toLowerCase()))
                             {
                                 items.add(item);
                             }
