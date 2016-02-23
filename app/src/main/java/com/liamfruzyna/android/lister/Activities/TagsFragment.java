@@ -20,7 +20,7 @@ public class TagsFragment extends TagFragment
     @Override
     public List<String> getTags()
     {
-        List<String> tags = new ArrayList<String>();
+        List<String> tags = new ArrayList<>();
         for(WishList list : lists)
         {
             if(!list.archived && !list.auto)

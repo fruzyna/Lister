@@ -51,6 +51,7 @@ public class EditTagsDialog extends DialogFragment
                         IO.log("EditTagDialog", "Settings " + list.name + "'s tags to " + tags.getText().toString());
                         list.tags = new ArrayList<>(Arrays.asList(tags.getText().toString().split(" ")));
                         WLFragment.getFrag(getActivity()).updateList();
+                        IO.save(WLFragment.getLists());
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener()

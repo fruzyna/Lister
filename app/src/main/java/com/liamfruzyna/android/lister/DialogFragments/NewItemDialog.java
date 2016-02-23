@@ -42,6 +42,7 @@ public class NewItemDialog extends DialogFragment
                         IO.log("NewItemDialog", "Adding " + name.getText().toString() + " to " + list.name);
                         list.items.add(new Item(name.getText().toString(), false));
                         WLFragment.getFrag(getActivity()).updateList();
+                        IO.save(WLFragment.getLists());
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener()

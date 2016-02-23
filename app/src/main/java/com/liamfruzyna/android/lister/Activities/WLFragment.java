@@ -320,8 +320,6 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
             //populates the tags
             tagcv.removeAllViews();
             tagcv.addView(createTags());
-
-            IO.save(lists);
         }
     }
 

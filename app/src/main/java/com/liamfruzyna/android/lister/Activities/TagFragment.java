@@ -148,7 +148,6 @@ public class TagFragment extends Fragment implements AdapterView.OnItemSelectedL
                 });
                 list.addView(view);
             }
-            IO.save(lists);
     }
 
     @Override

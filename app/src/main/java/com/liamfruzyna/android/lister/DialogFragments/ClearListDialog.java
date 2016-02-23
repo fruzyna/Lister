@@ -37,6 +37,7 @@ public class ClearListDialog  extends DialogFragment
                         IO.log("ClearListDialog", "Clearing list " + list.name);
                         list.items = new ArrayList<>();
                         WLFragment.getFrag(getActivity()).updateList();
+                        IO.save(WLFragment.getLists());
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener()

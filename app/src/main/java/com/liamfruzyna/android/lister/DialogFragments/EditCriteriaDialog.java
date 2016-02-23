@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import com.liamfruzyna.android.lister.Activities.WLActivity;
 import com.liamfruzyna.android.lister.Activities.WLFragment;
 import com.liamfruzyna.android.lister.Data.AutoList;
+import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.R;
 
@@ -56,6 +57,7 @@ public class EditCriteriaDialog extends DialogFragment
                         }
                         list.setCriteria(criteria);
                         WLFragment.getFrag(getActivity()).updateList();
+                        IO.save(WLFragment.getLists());
                     }
 
                 })

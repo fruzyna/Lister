@@ -160,6 +160,7 @@ public class NewListDialog extends DialogFragment
                         List<WishList> unArchieved = WLFragment.getUnArchived();
                         unArchieved.add(newList);
                         WLFragment.openNewest();
+                        IO.save(WLFragment.getLists());
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener()
