@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.liamfruzyna.android.lister.Activities.WLActivity;
+import com.liamfruzyna.android.lister.Activities.WLFragment;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.Item;
 import com.liamfruzyna.android.lister.Data.WishList;
@@ -29,7 +30,7 @@ public class NewItemDialog extends DialogFragment
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
         final View v = inflater.inflate(R.layout.new_item_item, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        final WishList list = WLActivity.getCurrentList();
+        final WishList list = WLFragment.getCurrentList();
         builder.setMessage("Add a new item to " + list.name)
                 .setTitle("New Item")
                 .setView(v)
@@ -40,7 +41,8 @@ public class NewItemDialog extends DialogFragment
                         EditText name = (EditText) v.findViewById(R.id.name);
                         IO.log("NewItemDialog", "Adding " + name.getText().toString() + " to " + list.name);
                         list.items.add(new Item(name.getText().toString(), false));
-                        ((WLActivity) getActivity()).updateList();
+                        WLFragment.getFrag(getActivity()).updateList();
+                        IO.save(WLFragment.getLists());
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener()

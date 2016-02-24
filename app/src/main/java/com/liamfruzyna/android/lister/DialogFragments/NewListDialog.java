@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import com.liamfruzyna.android.lister.Activities.WLActivity;
+import com.liamfruzyna.android.lister.Activities.WLFragment;
 import com.liamfruzyna.android.lister.Data.AutoList;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.R;
@@ -35,6 +36,7 @@ public class NewListDialog extends DialogFragment
     LinearLayout container;
     String[] types = {"Tag", "Person", "Date Range", "Time", "Day"};
     String[] days = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+    CheckBox cb;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState)
@@ -48,6 +50,24 @@ public class NewListDialog extends DialogFragment
         View view = linflater.inflate(R.layout.criteria_item, container, false);
         setupSpinner(view);
         views.add(view);
+
+        v.findViewById(R.id.scrollView2).setVisibility(View.GONE);
+        cb = (CheckBox) v.findViewById(R.id.auto);
+        cb.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v2)
+            {
+                if(cb.isChecked())
+                {
+                    v.findViewById(R.id.scrollView2).setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    v.findViewById(R.id.scrollView2).setVisibility(View.GONE);
+                }
+            }
+        });
 
         repopulate();
         Button add = (Button) v.findViewById(R.id.add);
@@ -72,11 +92,11 @@ public class NewListDialog extends DialogFragment
                     {
                         EditText name = (EditText) v.findViewById(R.id.name);
                         EditText tags = (EditText) v.findViewById(R.id.tags);
-                        CheckBox cb = (CheckBox) v.findViewById(R.id.auto);
                         CheckBox done = (CheckBox) v.findViewById(R.id.checked);
+                        CheckBox exclude = (CheckBox) v.findViewById(R.id.exclude);
 
                         IO.log("NewListDialog", "Creating list " + name.getText().toString());
-                        List<WishList> lists = WLActivity.getLists();
+                        List<WishList> lists = WLFragment.getLists();
                         WishList newList;
                         if (cb.isChecked())
                         {
@@ -93,6 +113,13 @@ public class NewListDialog extends DialogFragment
                                 } else
                                 {
                                     sb.append("optional ");
+                                }
+                                if (exclude.isChecked())
+                                {
+                                    sb.append("exclude ");
+                                } else
+                                {
+                                    sb.append("include ");
                                 }
                                 switch (spinner.getSelectedItemPosition())
                                 {
@@ -130,9 +157,10 @@ public class NewListDialog extends DialogFragment
                             newList = new WishList(name.getText().toString(), new ArrayList<>(Arrays.asList(tags.getText().toString().split(" "))), done.isChecked());
                         }
                         lists.add(newList);
-                        List<WishList> unArchieved = WLActivity.getUnArchived();
+                        List<WishList> unArchieved = WLFragment.getUnArchived();
                         unArchieved.add(newList);
-                        WLActivity.openNewest();
+                        WLFragment.openNewest();
+                        IO.save(WLFragment.getLists());
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener()

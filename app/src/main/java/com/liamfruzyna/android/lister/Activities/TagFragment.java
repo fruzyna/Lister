@@ -1,17 +1,16 @@
 package com.liamfruzyna.android.lister.Activities;
 
-import android.app.DialogFragment;
+import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -32,8 +31,9 @@ import java.util.List;
 /**
  * Created by mail929 on 11/6/15.
  */
-public class TagActivity extends ActionBarActivity implements AdapterView.OnItemSelectedListener
+public class TagFragment extends Fragment implements AdapterView.OnItemSelectedListener
 {
+        View view;
         List<WishList> lists;
         LinearLayout list;
         List<Item> items;
@@ -91,7 +91,7 @@ public class TagActivity extends ActionBarActivity implements AdapterView.OnItem
     {
             items = Util.sortByDone(Util.sortByPriority(Util.sortByDate(getTagItems(getTags().get(current)))));
             list.removeAllViews();
-            LayoutInflater inflater = LayoutInflater.from(this);
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
             for (final Item item : items)
             {
                 View view = inflater.inflate(R.layout.item, list, false);
@@ -100,7 +100,7 @@ public class TagActivity extends ActionBarActivity implements AdapterView.OnItem
                 int color = Color.parseColor(item.color);
 
                 //color item text based off date (late is red, day of is orange)
-                SharedPreferences settings = getSharedPreferences(IO.PREFS, 0);
+                SharedPreferences settings = getActivity().getSharedPreferences(IO.PREFS, 0);
                 boolean highlight = settings.getBoolean(IO.HIGHLIGHT_DATE_PREF, true);
                 if(highlight)
                 {
@@ -143,36 +143,31 @@ public class TagActivity extends ActionBarActivity implements AdapterView.OnItem
                         {
                             cb.setPaintFlags(0);
                         }
-                        IO.save(WLActivity.getLists());
+                        IO.save(WLFragment.getLists());
                     }
                 });
                 list.addView(view);
             }
-            IO.save(lists);
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tags);
+    public View onCreateView(LayoutInflater infl, ViewGroup parent, Bundle savedInstanceState) {
+        view = infl.inflate(R.layout.activity_tags, parent, false);
+        list = (LinearLayout) view.findViewById(R.id.list);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        list = (LinearLayout) findViewById(R.id.list);
-
-        lists = WLActivity.getLists();
+        lists = WLFragment.getLists();
 
         System.out.println(lists.size());
 
-        spin = (Spinner) findViewById(R.id.spinner);
-        ArrayAdapter<String> sadapter = new ArrayAdapter<String>(this, R.layout.spinner_item, getTags());
+        spin = (Spinner) view.findViewById(R.id.spinner);
+        ArrayAdapter<String> sadapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item, getTags());
         sadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spin.setAdapter(sadapter);
         current = spin.getSelectedItemPosition();
         updateList();
 
         spin.setOnItemSelectedListener(this);
+        return view;
     }
 
     //update the screen when a new name is selected

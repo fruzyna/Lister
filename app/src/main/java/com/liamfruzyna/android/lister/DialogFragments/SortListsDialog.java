@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.liamfruzyna.android.lister.Activities.WLActivity;
+import com.liamfruzyna.android.lister.Activities.WLFragment;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.R;
@@ -39,7 +40,7 @@ public class SortListsDialog extends DialogFragment
         final View v = inflater.inflate(R.layout.share_list_item, null);
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         ListView list = (ListView) v.findViewById(R.id.listView);
-        lists = WLActivity.getUnArchived();
+        lists = WLFragment.getUnArchived();
 
         //setup list of lists to share
         list.setAdapter(new ArrayAdapter<WishList>(getActivity(), R.layout.sort_list_item, R.id.textView, lists) {
@@ -60,7 +61,7 @@ public class SortListsDialog extends DialogFragment
                         if (lists.get(position).order > 1) {
                             lists.get(position).order--;
                             tv.setText(lists.get(position).order + " - " + lists.get(position).name);
-                            IO.save(WLActivity.getLists());
+                            IO.save(WLFragment.getLists());
                         }
                     }
                 });
@@ -72,7 +73,7 @@ public class SortListsDialog extends DialogFragment
                             lists.get(position).order++;
                         }
                         tv.setText(lists.get(position).order + " - " + lists.get(position).name);
-                        IO.save(WLActivity.getLists());
+                        IO.save(WLFragment.getLists());
                     }
                 });
                 return view;

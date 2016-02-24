@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.liamfruzyna.android.lister.Activities.WLActivity;
+import com.liamfruzyna.android.lister.Activities.WLFragment;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.R;
@@ -23,8 +24,8 @@ import java.util.List;
 
 public class RemoveListDialog extends DialogFragment
 {
-    List<WishList> lists = WLActivity.getLists();
-    WishList current = WLActivity.getCurrentList();
+    List<WishList> lists = WLFragment.getLists();
+    WishList current = WLFragment.getCurrentList();
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -40,10 +41,11 @@ public class RemoveListDialog extends DialogFragment
                         File file = new File(IO.fileDir, current.name + ".json");
                         file.delete();
                         lists.remove(current);
-                        WLActivity.getUnArchived().remove(current);
+                        WLFragment.getUnArchived().remove(current);
                         IO.save(lists);
-                        ((WLActivity) getActivity()).removeListSnackbar(current);
-                        ((WLActivity) getActivity()).setupSpinner();
+                        WLFragment.getFrag(getActivity()).removeListSnackbar(current);
+                        WLFragment.getFrag(getActivity()).setupSpinner();
+                        IO.save(WLFragment.getLists());
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener()

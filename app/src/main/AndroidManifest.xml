@@ -11,32 +11,12 @@
         android:label="@string/app_name"
         android:theme="@style/MyTheme">
         <activity
-            android:name=".Activities.StartupActivity"
-            android:label="@string/app_name">
-        </activity>
-        <activity
             android:name=".Activities.WLActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".Activities.SettingsActivity"
-            android:label="Settings">
-        </activity>
-        <activity
-            android:name=".Activities.TagsActivity"
-            android:label="Tag Viewer">
-        </activity>
-        <activity
-            android:name=".Activities.PeopleActivity"
-            android:label="People Viewer">
-        </activity>
-        <activity
-            android:name=".Activities.DatesActivity"
-            android:label="Date Viewer">
         </activity>
     </application>
 
