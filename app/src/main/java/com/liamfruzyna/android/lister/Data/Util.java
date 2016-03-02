@@ -1,5 +1,10 @@
 package com.liamfruzyna.android.lister.Data;
 
+import android.graphics.Color;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,5 +100,31 @@ public class Util
             copy.add(item);
         }
         return copy;
+    }
+
+    //takes an item and colors its tags
+    public static SpannableStringBuilder colorTags(String item, int color)
+    {
+        final SpannableStringBuilder sb = new SpannableStringBuilder();
+        int alpha = Color.argb(128, Color.red(color), Color.green(color), Color.blue(color));
+        String[] words = item.split(" ");
+        for(int i = 0; i < words.length; i++)
+        {
+            if(words[i].charAt(0) == '#')
+            {
+                SpannableString s = new SpannableString(words[i]);
+                s.setSpan(new ForegroundColorSpan(alpha), 0, words[i].length(), 0);
+                sb.append(s);
+            }
+            else
+            {
+                sb.append(words[i]);
+            }
+            if(i < words.length - 1)
+            {
+                sb.append(" ");
+            }
+        }
+        return sb;
     }
 }

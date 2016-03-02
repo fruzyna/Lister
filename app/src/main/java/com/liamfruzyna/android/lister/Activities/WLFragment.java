@@ -104,38 +104,6 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
         return unArchived;
     }
 
-    //takes an item and colors its tags
-    public SpannableStringBuilder colorTags(String item, int color)
-    {
-        final SpannableStringBuilder sb = new SpannableStringBuilder(item);
-        int alpha = Color.argb(128, Color.red(color), Color.green(color), Color.blue(color));
-        String[] words = item.split(" ");
-        System.out.print("Building ");
-        for(int i = 0; i < words.length; i++)
-        {
-            if(words[i].charAt(0) == '#')
-            {
-                SpannableString s = new SpannableString(words[i]);
-                s.setSpan(new ForegroundColorSpan(alpha), 0, words[i].length(), 0);
-                sb.append(s);
-                System.out.print(s);
-            }
-            else
-            {
-                sb.append(words[i]);
-                System.out.print(words[i]);
-            }
-            if(i < words.length - 1)
-            {
-                sb.append(" ");
-                System.out.print(" ");
-            }
-        }
-        System.out.println();
-        System.out.println("Returning " + sb);
-        return sb;
-    }
-
     //creates the item view that is displayed on screen
     public View createItem(LayoutInflater inflater, final int i)
     {
@@ -163,9 +131,8 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
             }
         }
 
-        SpannableStringBuilder s = colorTags(items.get(i).item, color);
-        //the returned string were being doubled so I cut it in half
-        cb.setText(s.subSequence(s.length()/2, s.length()));
+        SpannableStringBuilder s = Util.colorTags(items.get(i).item, color);
+        cb.setText(s);
         cb.setTextColor(color);
         cb.setChecked(items.get(i).done);
 

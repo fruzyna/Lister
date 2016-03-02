@@ -47,38 +47,6 @@ public class TagFragment extends Fragment implements AdapterView.OnItemSelectedL
             return people;
         }
 
-    //takes an item string and colors the tags to be lighter
-    public SpannableStringBuilder colorTags(String item, int color)
-    {
-        final SpannableStringBuilder sb = new SpannableStringBuilder(item);
-        int alpha = Color.argb(128, Color.red(color), Color.green(color), Color.blue(color));
-        String[] words = item.split(" ");
-        System.out.print("Building ");
-        for(int i = 0; i < words.length; i++)
-        {
-            if(words[i].charAt(0) == '#')
-            {
-                SpannableString s = new SpannableString(words[i]);
-                s.setSpan(new ForegroundColorSpan(alpha), 0, words[i].length(), 0);
-                sb.append(s);
-                System.out.print(s);
-            }
-            else
-            {
-                sb.append(words[i]);
-                System.out.print(words[i]);
-            }
-            if(i < words.length - 1)
-            {
-                sb.append(" ");
-                System.out.print(" ");
-            }
-        }
-        System.out.println();
-        System.out.println("Returning " + sb);
-        return sb;
-    }
-
     //Gets all the items in unarchived lists containing a name
     public List<Item> getTagItems(String tag)
     {
@@ -117,9 +85,8 @@ public class TagFragment extends Fragment implements AdapterView.OnItemSelectedL
                     }
                 }
 
-                SpannableStringBuilder s = colorTags(item.item, color);
-                //the returned string were being doubled so I cut it in half
-                cb.setText(s.subSequence(s.length()/2, s.length()));
+                SpannableStringBuilder s = Util.colorTags(item.item, color);
+                cb.setText(s);
                 cb.setTextColor(Color.parseColor(item.color));
                 cb.setChecked(item.done);
                 if(item.done)
