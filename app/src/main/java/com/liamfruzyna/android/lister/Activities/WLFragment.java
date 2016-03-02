@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -368,6 +369,20 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
             }
         });
 
+        Button editTag = (Button) view.findViewById(R.id.editTag);
+        editTag.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (unArchived.size() > 0)
+                {
+                    DialogFragment dialog = new EditTagsDialog();
+                    dialog.show(getFragmentManager(), "");
+                }
+            }
+        });
+
         //sets listener for editing criteria
         criteria.setOnLongClickListener(new View.OnLongClickListener()
         {
@@ -380,6 +395,20 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
                     dialog.show(getFragmentManager(), "");
                 }
                 return false;
+            }
+        });
+
+        Button editCriteria = (Button) view.findViewById(R.id.editCriteria);
+        editCriteria.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (getListFromName(names.get(current)).auto && unArchived.size() > 0)
+                {
+                    DialogFragment dialog = new EditCriteriaDialog();
+                    dialog.show(getFragmentManager(), "");
+                }
             }
         });
 
