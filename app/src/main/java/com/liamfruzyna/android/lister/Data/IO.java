@@ -54,6 +54,7 @@ public class IO
         jlist.put("order", list.order);
         jlist.put("auto", list.auto);
         jlist.put("showDone", list.showDone);
+        jlist.put("daysToDelete", list.daysToDelete);
         if(list.auto)
         {
             AutoList alist = (AutoList) list;
@@ -114,6 +115,11 @@ public class IO
             {
                 order = jlist.getInt("order");
             }
+            int daysToDelete = 0;
+            if(jlist.has("daysToDelete"))
+            {
+                daysToDelete = jlist.getInt("daysToDelete");
+            }
             boolean showDone = true;
             if(jlist.has("showDone"))
             {
@@ -130,7 +136,7 @@ public class IO
                     {
                         criteria.add((String) jcriteria.get(j));
                     }
-                    lists.add(new AutoList(jlist.getString("name"), tags, archived, order, criteria, showDone));
+                    lists.add(new AutoList(jlist.getString("name"), tags, archived, order, criteria, showDone, daysToDelete));
                 }
                 else
                 {
@@ -140,7 +146,7 @@ public class IO
                         Item item = new Item(jitems.getJSONObject(j).getString("item"), jitems.getJSONObject(j).getBoolean("done"));
                         items.add(item);
                     }
-                    lists.add(new WishList(jlist.getString("name"), items, tags, archived, order, showDone));
+                    lists.add(new WishList(jlist.getString("name"), items, tags, archived, order, showDone, daysToDelete));
                 }
             }
             else
@@ -151,7 +157,7 @@ public class IO
                     Item item = new Item(jitems.getJSONObject(j).getString("item"), jitems.getJSONObject(j).getBoolean("done"));
                     items.add(item);
                 }
-                lists.add(new WishList(jlist.getString("name"), items, tags, archived, order, showDone));
+                lists.add(new WishList(jlist.getString("name"), items, tags, archived, order, showDone, daysToDelete));
             }
         }
         return lists;
@@ -180,6 +186,11 @@ public class IO
         {
             order = jlist.getInt("order");
         }
+        int daysToDelete = 0;
+        if(jlist.has("daysToDelete"))
+        {
+            daysToDelete = jlist.getInt("daysToDelete");
+        }
         boolean showDone = true;
         if(jlist.has("showDone"))
         {
@@ -192,7 +203,7 @@ public class IO
             {
                 criteria.add((String) jcriteria.get(j));
             }
-            return new AutoList(jlist.getString("name"), tags, archived, order, criteria, showDone);
+            return new AutoList(jlist.getString("name"), tags, archived, order, criteria, showDone, daysToDelete);
         }
         else
         {
@@ -202,7 +213,7 @@ public class IO
                 Item item = new Item(jitems.getJSONObject(j).getString("item"), jitems.getJSONObject(j).getBoolean("done"));
                 items.add(item);
             }
-            return new WishList(jlist.getString("name"), items, tags, archived, order, showDone);
+            return new WishList(jlist.getString("name"), items, tags, archived, order, showDone, daysToDelete);
         }
     }
 

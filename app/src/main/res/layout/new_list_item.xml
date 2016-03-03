@@ -30,9 +30,9 @@
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="AutoList?"
+        android:text="AutoList"
         android:id="@+id/auto"
-        android:layout_below="@+id/tags"
+        android:layout_below="@+id/daysContainer"
         android:layout_toRightOf="@+id/checked"
         android:layout_toEndOf="@+id/checked"/>
 
@@ -68,7 +68,32 @@
         android:text="Show Checked"
         android:id="@+id/checked"
         android:checked="true"
-        android:layout_below="@+id/tags"
+        android:layout_below="@+id/daysContainer"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:id="@+id/daysContainer"
+    android:layout_below="@+id/tags">
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete After"
+        android:id="@+id/delete"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="3"
+        android:id="@+id/days"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:text="days"/>
+    </LinearLayout>
 </RelativeLayout>

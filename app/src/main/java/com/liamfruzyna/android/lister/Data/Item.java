@@ -35,6 +35,24 @@ public class Item
         this.done = done;
     }
 
+    public boolean deleteItem(int daysToDelete)
+    {
+        if(done && daysToDelete != 0)
+        {
+            Calendar byCal = Calendar.getInstance();
+            byCal.add(Calendar.DAY_OF_YEAR, -daysToDelete);
+            byCal.add(Calendar.MINUTE, 5);
+            Date by = byCal.getTime();
+            if(date.before(by))
+            {
+                IO.log("Item:deleteItem", date + " is before " + by);
+                return true;
+            }
+            IO.log("Item:deleteItem", date + " is not before " + by);
+        }
+        return false;
+    }
+
     //looks for tags within a list item
     public void parseItem()
     {

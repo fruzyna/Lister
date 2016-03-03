@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.liamfruzyna.android.lister.Activities.WLActivity;
@@ -28,7 +29,7 @@ public class EditListNameDialog extends DialogFragment
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
-        final View v = inflater.inflate(R.layout.new_item_item, null);
+        final View v = inflater.inflate(R.layout.edit_list_item, null);
         name = (EditText) v.findViewById(R.id.name);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final WishList list = WLFragment.getCurrentList();
@@ -43,6 +44,22 @@ public class EditListNameDialog extends DialogFragment
                     {
                         String old = new String(list.name);
                         list.name = name.getText().toString();
+                        EditText day = (EditText) v.findViewById(R.id.days);
+                        CheckBox delete = (CheckBox) v.findViewById(R.id.delete);
+
+                        int daysToDelete = 0;
+                        if (delete.isChecked())
+                        {
+                            if (day.getText().toString().equals(""))
+                            {
+                                daysToDelete = 365;
+                            }
+                            else
+                            {
+                                daysToDelete = Integer.parseInt(day.getText().toString());
+                            }
+                        }
+                        list.daysToDelete = daysToDelete;
                         WLFragment.getFrag(getActivity()).setupSpinner();
                         File file = new File(IO.fileDir, old + ".json");
                         file.delete();

@@ -92,8 +92,23 @@ public class NewListDialog extends DialogFragment
                     {
                         EditText name = (EditText) v.findViewById(R.id.name);
                         EditText tags = (EditText) v.findViewById(R.id.tags);
+                        EditText day = (EditText) v.findViewById(R.id.days);
                         CheckBox done = (CheckBox) v.findViewById(R.id.checked);
                         CheckBox exclude = (CheckBox) v.findViewById(R.id.exclude);
+                        CheckBox delete = (CheckBox) v.findViewById(R.id.delete);
+
+                        int daysToDelete = 0;
+                        if (delete.isChecked())
+                        {
+                            if (day.getText().toString().equals(""))
+                            {
+                                daysToDelete = 365;
+                            }
+                            else
+                            {
+                                daysToDelete = Integer.parseInt(day.getText().toString());
+                            }
+                        }
 
                         IO.log("NewListDialog", "Creating list " + name.getText().toString());
                         List<WishList> lists = WLFragment.getLists();
@@ -136,7 +151,7 @@ public class NewListDialog extends DialogFragment
                                     case 2:
                                         //date range
                                         sb.append("date_range ");
-                                        sb.append( ((EditText) container.findViewById(R.id.editText1)).getText().toString() + " " + ((EditText) container.findViewById(R.id.editText2)).getText().toString());
+                                        sb.append(((EditText) container.findViewById(R.id.editText1)).getText().toString() + " " + ((EditText) container.findViewById(R.id.editText2)).getText().toString());
                                         break;
                                     case 3:
                                         //time
@@ -151,10 +166,10 @@ public class NewListDialog extends DialogFragment
                                 }
                                 criteria.add(sb.toString());
                             }
-                            newList = new AutoList(name.getText().toString(), new ArrayList<>(Arrays.asList(tags.getText().toString().split(" "))), criteria, done.isChecked());
+                            newList = new AutoList(name.getText().toString(), new ArrayList<>(Arrays.asList(tags.getText().toString().split(" "))), criteria, done.isChecked(), daysToDelete);
                         } else
                         {
-                            newList = new WishList(name.getText().toString(), new ArrayList<>(Arrays.asList(tags.getText().toString().split(" "))), done.isChecked());
+                            newList = new WishList(name.getText().toString(), new ArrayList<>(Arrays.asList(tags.getText().toString().split(" "))), done.isChecked(), daysToDelete);
                         }
                         lists.add(newList);
                         List<WishList> unArchieved = WLFragment.getUnArchived();

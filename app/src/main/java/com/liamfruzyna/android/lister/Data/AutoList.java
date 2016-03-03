@@ -19,18 +19,18 @@ public class AutoList extends WishList
 {
     List<String> criteria = new ArrayList<>();
 
-    public AutoList(String name, List<String> tags, boolean archived, int order, List<String> criteria, boolean showDone)
+    public AutoList(String name, List<String> tags, boolean archived, int order, List<String> criteria, boolean showDone, int daysToDelete)
     {
-        super(name, tags, archived, order, showDone);
+        super(name, tags, archived, order, showDone, daysToDelete);
         auto = true;
         this.criteria = criteria;
         this.showDone = showDone;
         items = findItems();
     }
 
-    public AutoList(String name, List<String> tags, List<String> criteria, boolean showDone)
+    public AutoList(String name, List<String> tags, List<String> criteria, boolean showDone, int daysToDelete)
     {
-        super(name, tags, showDone);
+        super(name, tags, showDone, daysToDelete);
         auto = true;
         this.criteria = criteria;
         this.showDone = showDone;
