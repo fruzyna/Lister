@@ -78,6 +78,7 @@ public class EditItemDialog extends DialogFragment
                         WLFragment.getCurrentList().items.remove(item);
                         WLFragment.getFrag(getActivity()).removeItemSnackbar(item);
                         IO.save(WLFragment.getLists());
+                        WLFragment.getFrag(getActivity()).updateList();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {

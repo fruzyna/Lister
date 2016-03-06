@@ -176,6 +176,7 @@ public class NewListDialog extends DialogFragment
                         unArchieved.add(newList);
                         WLFragment.openNewest();
                         IO.save(WLFragment.getLists());
+                        WLFragment.getFrag(getActivity()).updateList();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener()

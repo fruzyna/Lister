@@ -24,6 +24,8 @@ import java.io.File;
 public class EditListNameDialog extends DialogFragment
 {
     EditText name;
+    EditText day;
+    CheckBox delete;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -35,6 +37,15 @@ public class EditListNameDialog extends DialogFragment
         final WishList list = WLFragment.getCurrentList();
         name.setHint("name");
         name.setText(list.name);
+
+        day = (EditText) v.findViewById(R.id.days);
+        delete = (CheckBox) v.findViewById(R.id.delete);
+        day.setText(list.daysToDelete + "");
+        if(list.daysToDelete != 0)
+        {
+            delete.setChecked(true);
+        }
+
         builder.setMessage("Edit name of " + list.name)
                 .setTitle("Edit Name")
                 .setView(v)
@@ -44,8 +55,6 @@ public class EditListNameDialog extends DialogFragment
                     {
                         String old = new String(list.name);
                         list.name = name.getText().toString();
-                        EditText day = (EditText) v.findViewById(R.id.days);
-                        CheckBox delete = (CheckBox) v.findViewById(R.id.delete);
 
                         int daysToDelete = 0;
                         if (delete.isChecked())
