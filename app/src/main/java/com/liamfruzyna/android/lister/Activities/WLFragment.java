@@ -10,9 +10,7 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -638,7 +636,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
     //creates snackbar when list is removed
     public void removeListSnackbar(final WishList list)
     {
-        Snackbar.make(getActivity().findViewById(R.id.container), "\"" + list.name + "\" Deleted", Snackbar.LENGTH_LONG)
+        /*Snackbar.make(view.findViewById(R.id.frame), "\"" + list.name + "\" Deleted", Snackbar.LENGTH_LONG)
                 .setAction("UNDO", new View.OnClickListener()
                 {
                     @Override
@@ -651,13 +649,13 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
                         setupSpinner();
                     }
                 })
-                .show();
+                .show();*/
     }
 
     //creates snackbar when item is removed
     public void removeItemSnackbar(final Item item)
     {
-        Snackbar.make(getActivity().findViewById(R.id.container), "\"" + item.item + "\" Deleted", Snackbar.LENGTH_LONG)
+        /*Snackbar.make(view.findViewById(R.id.frame), "\"" + item.item + "\" Deleted", Snackbar.LENGTH_LONG)
                 .setAction("UNDO", new View.OnClickListener()
                 {
                     @Override
@@ -670,7 +668,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
                         updateList();
                     }
                 })
-                .show();
+                .show();*/
     }
 
     public static WLFragment getFrag(Activity c)
