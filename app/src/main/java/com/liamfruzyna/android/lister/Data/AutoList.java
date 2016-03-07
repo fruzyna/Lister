@@ -69,7 +69,7 @@ public class AutoList extends WishList
                         String type = parts[2];
                         String required = parts[0];
                         String exclude = parts[1];
-                        System.out.println("Checking " + c);
+
                         if(exclude.equals("exclude"))
                         {
                             make = false;

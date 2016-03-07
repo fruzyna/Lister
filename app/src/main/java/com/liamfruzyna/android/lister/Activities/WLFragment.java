@@ -638,9 +638,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
     //creates snackbar when list is removed
     public void removeListSnackbar(final WishList list)
     {
-        final Context c = getActivity();
-
-        Snackbar.make(getActivity().getWindow().getDecorView().findViewById(android.R.id.content), "\"" + list.name + "\" Deleted", Snackbar.LENGTH_LONG)
+        Snackbar.make(getActivity().findViewById(R.id.container), "\"" + list.name + "\" Deleted", Snackbar.LENGTH_LONG)
                 .setAction("UNDO", new View.OnClickListener()
                 {
                     @Override
@@ -659,9 +657,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
     //creates snackbar when item is removed
     public void removeItemSnackbar(final Item item)
     {
-        final Context c = getActivity();
-
-        Snackbar.make(getActivity().getWindow().getDecorView().findViewById(android.R.id.content), "\"" + item.item + "\" Deleted", Snackbar.LENGTH_LONG)
+        Snackbar.make(getActivity().findViewById(R.id.container), "\"" + item.item + "\" Deleted", Snackbar.LENGTH_LONG)
                 .setAction("UNDO", new View.OnClickListener()
                 {
                     @Override

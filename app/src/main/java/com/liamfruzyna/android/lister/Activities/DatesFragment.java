@@ -23,9 +23,12 @@ public class DatesFragment extends TagFragment
     public List<String> getTags()
     {
         List<String> dates = new ArrayList<>();
-        for(WishList list : lists) {
-            if (!list.archived && !list.auto) {
-                for (Item item : list.items) {
+        for(WishList list : lists)
+        {
+            if (!list.archived)
+            {
+                for (Item item : list.items)
+                {
                     boolean found = false;
                     for(String date : dates)
                     {
@@ -63,10 +66,10 @@ public class DatesFragment extends TagFragment
             {
                 for(Item item : list.items)
                 {
-                    if(getDate(item.date).equals(person))
-                        {
-                            items.add(item);
-                        }
+                    if(getDate(item.date).equals(person) && !items.contains(item))
+                    {
+                        items.add(item);
+                    }
                 }
             }
         }

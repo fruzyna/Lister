@@ -61,10 +61,12 @@ public class NewListDialog extends DialogFragment
                 if(cb.isChecked())
                 {
                     v.findViewById(R.id.scrollView2).setVisibility(View.VISIBLE);
+                    v.findViewById(R.id.daysContainer).setVisibility(View.GONE);
                 }
                 else
                 {
                     v.findViewById(R.id.scrollView2).setVisibility(View.GONE);
+                    v.findViewById(R.id.daysContainer).setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -98,7 +100,7 @@ public class NewListDialog extends DialogFragment
                         CheckBox delete = (CheckBox) v.findViewById(R.id.delete);
 
                         int daysToDelete = 0;
-                        if (delete.isChecked())
+                        if (delete.isChecked() && !cb.isChecked())
                         {
                             if (day.getText().toString().equals(""))
                             {

@@ -27,7 +27,7 @@ public class PeopleFragment extends TagFragment
         List<String> people = new ArrayList<>();
         for (WishList list : lists)
         {
-            if (!list.archived && !list.auto)
+            if (!list.archived)
             {
                 for (Item item : list.items)
                 {
@@ -78,13 +78,16 @@ public class PeopleFragment extends TagFragment
         List<Item> items = new ArrayList<>();
         for (WishList list : lists)
         {
-            if (!list.archived && !list.auto)
+            if (!list.archived)
             {
                 if(list.people.contains(person))
                 {
                     for(Item item : list.items)
                     {
-                        items.add(item);
+                        if(!items.contains(item))
+                        {
+                            items.add(item);
+                        }
                     }
                 }
                 else
@@ -93,7 +96,7 @@ public class PeopleFragment extends TagFragment
                     {
                         for (String personn : item.people)
                         {
-                            if (personn.toLowerCase().equals(person.toLowerCase()))
+                            if (personn.toLowerCase().equals(person.toLowerCase()) && !items.contains(item))
                             {
                                 items.add(item);
                             }
@@ -120,7 +123,8 @@ public class PeopleFragment extends TagFragment
         if (getTags().size() > 0)
         {
             super.updateList();
-        } else
+        }
+        else
         {
             DialogFragment dialog = new SuggestionDialog();
             Bundle args = new Bundle();

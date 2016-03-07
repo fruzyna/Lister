@@ -103,7 +103,7 @@ public class Item
                 {
                     year += 2000;
                 }
-                System.out.println("Found date: " + month + "/" + day + "/" + year);
+                IO.log("Item:parseItem", "Found date: " + month + "/" + day + "/" + year);
                 this.date = new Date(year, month, day);
             }
             else if(date.length == 2)
@@ -126,7 +126,7 @@ public class Item
                     day = Integer.parseInt(date[1]);
                 }
                 year = Calendar.getInstance().getTime().getYear();
-                System.out.println("Found date: " + month + "/" + day + "/" + year);
+                IO.log("Item:parseItem", "Found date: " + month + "/" + day + "/" + year);
                 this.date = new Date(year, month, day);
             }
         }
@@ -142,7 +142,7 @@ public class Item
             {
                 person = person.split(" ")[0];
             }
-            System.out.println("Found Person: " + person);
+            IO.log("Item:findPeople", "Found Person: " + person);
             people.add(person);
         }
     }
@@ -157,7 +157,7 @@ public class Item
             {
                 tag = tag.split(" ")[0];
             }
-            System.out.println("Found Tag: " + tag);
+            IO.log("Item:findTags", "Found Tag: " + tag);
             tags.add(tag);
 
             if(isColor(tag))
@@ -169,7 +169,7 @@ public class Item
                     color = color.split(" ")[0];
                 }
                 this.color = "#" + color;
-                System.out.println("Found Color: " + this.color);
+                IO.log("Item:findTags", "Found Color: " + this.color);
             }
         }
     }

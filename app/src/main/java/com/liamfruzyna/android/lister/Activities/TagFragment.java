@@ -124,8 +124,6 @@ public class TagFragment extends Fragment implements AdapterView.OnItemSelectedL
 
         lists = WLFragment.getLists();
 
-        System.out.println(lists.size());
-
         spin = (Spinner) view.findViewById(R.id.spinner);
         ArrayAdapter<String> sadapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item, getTags());
         sadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

@@ -23,7 +23,7 @@ public class TagsFragment extends TagFragment
         List<String> tags = new ArrayList<>();
         for(WishList list : lists)
         {
-            if(!list.archived && !list.auto)
+            if(!list.archived)
             {
                 for(String tag : list.tags)
                 {
@@ -77,7 +77,7 @@ public class TagsFragment extends TagFragment
         List<Item> items = new ArrayList<>();
         for(WishList list : lists)
         {
-            if(!list.archived && !list.auto)
+            if(!list.archived)
             {
                 boolean found = false;
                 for(String tagg : list.tags)
@@ -87,7 +87,10 @@ public class TagsFragment extends TagFragment
                         found = true;
                         for(Item item : list.items)
                         {
-                            items.add(item);
+                            if(!items.contains(item))
+                            {
+                                items.add(item);
+                            }
                         }
                     }
                 }
@@ -97,7 +100,7 @@ public class TagsFragment extends TagFragment
                     {
                         for(String tagg : item.tags)
                         {
-                            if(tagg.toLowerCase().equals(tag.toLowerCase()))
+                            if(tagg.toLowerCase().equals(tag.toLowerCase()) && !items.contains(item))
                             {
                                 items.add(item);
                             }
