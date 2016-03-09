@@ -5,17 +5,12 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 
-import com.liamfruzyna.android.lister.Activities.WLActivity;
-import com.liamfruzyna.android.lister.Activities.WLFragment;
+import com.liamfruzyna.android.lister.Fragments.WLFragment;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.WishList;
-import com.liamfruzyna.android.lister.R;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

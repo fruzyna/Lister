@@ -1,9 +1,6 @@
 package com.liamfruzyna.android.lister.Data;
 
-import android.widget.EditText;
-
-import com.liamfruzyna.android.lister.Activities.WLActivity;
-import com.liamfruzyna.android.lister.Activities.WLFragment;
+import com.liamfruzyna.android.lister.Fragments.WLFragment;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

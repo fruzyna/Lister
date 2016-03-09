@@ -2,8 +2,6 @@ package com.liamfruzyna.android.lister.Data;
 
 import android.os.Environment;
 
-import com.liamfruzyna.android.lister.Activities.WLActivity;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

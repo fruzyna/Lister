@@ -9,8 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
-import com.liamfruzyna.android.lister.Activities.WLActivity;
-import com.liamfruzyna.android.lister.Activities.WLFragment;
+import com.liamfruzyna.android.lister.Fragments.WLFragment;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.R;
 
@@ -29,7 +28,7 @@ public class ImportListDialog extends DialogFragment
     {
         // Use the Builder class for convenient dialog construction
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
-        final View v = inflater.inflate(R.layout.import_list_item, null);
+        final View v = inflater.inflate(R.layout.dialog_import_list, null);
         editText = (EditText) v.findViewById(R.id.name);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage("Paste list string here")

@@ -9,10 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
-import com.liamfruzyna.android.lister.Activities.WLActivity;
-import com.liamfruzyna.android.lister.Activities.WLFragment;
+import com.liamfruzyna.android.lister.Fragments.WLFragment;
 import com.liamfruzyna.android.lister.Data.IO;
-import com.liamfruzyna.android.lister.Data.Item;
 import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.R;
 
@@ -30,7 +28,7 @@ public class EditTagsDialog extends DialogFragment
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
-        final View v = inflater.inflate(R.layout.new_item_item, null);
+        final View v = inflater.inflate(R.layout.dialog_new_item, null);
         tags = (EditText) v.findViewById(R.id.name);
         tags.setHint("Tags");
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

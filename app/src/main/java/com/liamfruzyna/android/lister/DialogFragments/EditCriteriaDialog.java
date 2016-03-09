@@ -11,11 +11,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import com.liamfruzyna.android.lister.Activities.WLActivity;
-import com.liamfruzyna.android.lister.Activities.WLFragment;
+import com.liamfruzyna.android.lister.Fragments.WLFragment;
 import com.liamfruzyna.android.lister.Data.AutoList;
 import com.liamfruzyna.android.lister.Data.IO;
-import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.R;
 
 import java.util.ArrayList;
@@ -35,7 +33,7 @@ public class EditCriteriaDialog extends DialogFragment
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
         inflater = (LayoutInflater) getActivity().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
-        v = inflater.inflate(R.layout.edit_criteria_dialog, null);
+        v = inflater.inflate(R.layout.dialog_edit_criteria, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         updateList();
         builder.setMessage("Edit criteria of " + list.name)
@@ -78,7 +76,7 @@ public class EditCriteriaDialog extends DialogFragment
         views = new ArrayList<>();
         for(String c : list.getCriteria())
         {
-            View view = inflater.inflate(R.layout.string_item, null);
+            View view = inflater.inflate(R.layout.criteria_item_string, null);
             ((EditText) view.findViewById(R.id.editText)).setText(c);
             views.add(view);
             container.addView(view);
@@ -89,7 +87,7 @@ public class EditCriteriaDialog extends DialogFragment
             @Override
             public void onClick(View v)
             {
-                View view = inflater.inflate(R.layout.string_item, null);
+                View view = inflater.inflate(R.layout.criteria_item_string, null);
                 views.add(view);
                 container.addView(view);
             }

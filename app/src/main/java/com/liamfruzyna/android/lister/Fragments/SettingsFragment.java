@@ -1,35 +1,21 @@
-package com.liamfruzyna.android.lister.Activities;
+package com.liamfruzyna.android.lister.Fragments;
 
 import android.app.DialogFragment;
-import android.app.Fragment;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
-import android.support.v7.widget.AppCompatCheckBox;
-import android.support.v7.widget.AppCompatCheckedTextView;
-import android.support.v7.widget.AppCompatEditText;
-import android.support.v7.widget.AppCompatRadioButton;
-import android.support.v7.widget.AppCompatSpinner;
-import android.support.v7.widget.Toolbar;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.liamfruzyna.android.lister.Data.IO;
-import com.liamfruzyna.android.lister.DialogFragments.NewPasswordDialog;
 import com.liamfruzyna.android.lister.DialogFragments.ShareListDialog;
 import com.liamfruzyna.android.lister.DialogFragments.ImportListDialog;
 import com.liamfruzyna.android.lister.DialogFragments.SortListsDialog;
@@ -47,7 +33,7 @@ public class SettingsFragment extends PreferenceFragment
     @Override
     public View onCreateView(LayoutInflater infl, ViewGroup parent, Bundle savedInstanceState)
     {
-        view = infl.inflate(R.layout.settings, parent, false);
+        view = infl.inflate(R.layout.fragment_settings, parent, false);
 
         getActivity().setTitle("Settings");
 

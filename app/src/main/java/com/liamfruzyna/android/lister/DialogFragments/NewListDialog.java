@@ -15,8 +15,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
-import com.liamfruzyna.android.lister.Activities.WLActivity;
-import com.liamfruzyna.android.lister.Activities.WLFragment;
+import com.liamfruzyna.android.lister.Fragments.WLFragment;
 import com.liamfruzyna.android.lister.Data.AutoList;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.R;
@@ -43,7 +42,7 @@ public class NewListDialog extends DialogFragment
     {
         // Use the Builder class for convenient dialog construction
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
-        final View v = inflater.inflate(R.layout.new_list_item, null);
+        final View v = inflater.inflate(R.layout.dialog_new_list, null);
 
         container = (LinearLayout) v.findViewById(R.id.container);
         final LayoutInflater linflater = LayoutInflater.from(getActivity());
@@ -204,23 +203,23 @@ public class NewListDialog extends DialogFragment
         {
             case 0:
                 //Tag
-                sub = inflater.inflate(R.layout.string_item, container, false);
+                sub = inflater.inflate(R.layout.criteria_item_string, container, false);
                 break;
             case 1:
                 //Person
-                sub = inflater.inflate(R.layout.string_item, container, false);
+                sub = inflater.inflate(R.layout.criteria_item_string, container, false);
                 break;
             case 2:
                 //Date Range
-                sub = inflater.inflate(R.layout.dates_item, container, false);
+                sub = inflater.inflate(R.layout.criteria_item_dates, container, false);
                 break;
             case 3:
                 //Time
-                sub = inflater.inflate(R.layout.int_item, container, false);
+                sub = inflater.inflate(R.layout.criteria_item_int, container, false);
                 break;
             case 4:
                 //Day
-                sub = inflater.inflate(R.layout.day_item, container, false);
+                sub = inflater.inflate(R.layout.criterial_item_day, container, false);
                 Spinner day = (Spinner) sub.findViewById(R.id.spinner);
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item, days);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -239,23 +238,23 @@ public class NewListDialog extends DialogFragment
                 {
                     case 0:
                         //Tag
-                        sub = inflater.inflate(R.layout.string_item, container, false);
+                        sub = inflater.inflate(R.layout.criteria_item_string, container, false);
                         break;
                     case 1:
                         //Person
-                        sub = inflater.inflate(R.layout.string_item, container, false);
+                        sub = inflater.inflate(R.layout.criteria_item_string, container, false);
                         break;
                     case 2:
                         //Date Range
-                        sub = inflater.inflate(R.layout.dates_item, container, false);
+                        sub = inflater.inflate(R.layout.criteria_item_dates, container, false);
                         break;
                     case 3:
                         //Time
-                        sub = inflater.inflate(R.layout.int_item, container, false);
+                        sub = inflater.inflate(R.layout.criteria_item_int, container, false);
                         break;
                     case 4:
                         //Day
-                        sub = inflater.inflate(R.layout.day_item, container, false);
+                        sub = inflater.inflate(R.layout.criterial_item_day, container, false);
                         Spinner day = (Spinner) sub.findViewById(R.id.spinner);
                         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item, days);
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

@@ -10,8 +10,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
-import com.liamfruzyna.android.lister.Activities.WLActivity;
-import com.liamfruzyna.android.lister.Activities.WLFragment;
+import com.liamfruzyna.android.lister.Fragments.WLFragment;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.R;
@@ -31,12 +30,17 @@ public class EditListNameDialog extends DialogFragment
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
-        final View v = inflater.inflate(R.layout.edit_list_item, null);
+        final View v = inflater.inflate(R.layout.dialog_edit_list, null);
         name = (EditText) v.findViewById(R.id.name);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final WishList list = WLFragment.getCurrentList();
         name.setHint("name");
         name.setText(list.name);
+
+        if(list.auto)
+        {
+            v.findViewById(R.id.daysContainer).setVisibility(View.GONE);
+        }
 
         day = (EditText) v.findViewById(R.id.days);
         delete = (CheckBox) v.findViewById(R.id.delete);

@@ -13,8 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.liamfruzyna.android.lister.Activities.WLActivity;
-import com.liamfruzyna.android.lister.Activities.WLFragment;
+import com.liamfruzyna.android.lister.Fragments.WLFragment;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.R;
@@ -32,7 +31,7 @@ public class UnArchiveDialog extends DialogFragment
     {
         // Use the Builder class for convenient dialog construction
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
-        final View v = inflater.inflate(R.layout.share_list_item, null);
+        final View v = inflater.inflate(R.layout.dialog_share_list, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         ListView list = (ListView) v.findViewById(R.id.listView);
         final List<WishList> archived = new ArrayList<>();

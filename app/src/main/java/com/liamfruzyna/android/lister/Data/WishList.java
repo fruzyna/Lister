@@ -1,8 +1,6 @@
 package com.liamfruzyna.android.lister.Data;
 
-import com.liamfruzyna.android.lister.Activities.WLActivity;
-import com.liamfruzyna.android.lister.Activities.WLFragment;
-import com.liamfruzyna.android.lister.Data.Item;
+import com.liamfruzyna.android.lister.Fragments.WLFragment;
 
 import java.util.ArrayList;
 import java.util.List;

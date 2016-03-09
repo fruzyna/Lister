@@ -1,13 +1,11 @@
-package com.liamfruzyna.android.lister.Activities;
+package com.liamfruzyna.android.lister.Fragments;
 
 import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -119,7 +117,7 @@ public class TagFragment extends Fragment implements AdapterView.OnItemSelectedL
 
     @Override
     public View onCreateView(LayoutInflater infl, ViewGroup parent, Bundle savedInstanceState) {
-        view = infl.inflate(R.layout.activity_tags, parent, false);
+        view = infl.inflate(R.layout.fragment_tags, parent, false);
         list = (LinearLayout) view.findViewById(R.id.list);
 
         lists = WLFragment.getLists();

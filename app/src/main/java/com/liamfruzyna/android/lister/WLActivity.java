@@ -1,4 +1,4 @@
-package com.liamfruzyna.android.lister.Activities;
+package com.liamfruzyna.android.lister;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -13,7 +13,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import com.liamfruzyna.android.lister.R;
+
+import com.liamfruzyna.android.lister.Fragments.DatesFragment;
+import com.liamfruzyna.android.lister.Fragments.PeopleFragment;
+import com.liamfruzyna.android.lister.Fragments.SettingsFragment;
+import com.liamfruzyna.android.lister.Fragments.TagsFragment;
+import com.liamfruzyna.android.lister.Fragments.WLFragment;
 
 public class WLActivity extends ActionBarActivity
 {
@@ -21,7 +26,6 @@ public class WLActivity extends ActionBarActivity
     private DrawerLayout drawer;
     private ListView drawerList;
     private ActionBarDrawerToggle drawerToggle;
-    private boolean upEnabled = false;
 
     //main method that is run when app is started
     @Override

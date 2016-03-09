@@ -1,4 +1,4 @@
-package com.liamfruzyna.android.lister.Activities;
+package com.liamfruzyna.android.lister.Fragments;
 
 import android.app.Activity;
 import android.app.DialogFragment;
@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +39,7 @@ import com.liamfruzyna.android.lister.DialogFragments.NewItemDialog;
 import com.liamfruzyna.android.lister.DialogFragments.NewListDialog;
 import com.liamfruzyna.android.lister.DialogFragments.RemoveListDialog;
 import com.liamfruzyna.android.lister.R;
+import com.liamfruzyna.android.lister.WLActivity;
 
 import org.json.JSONException;
 
@@ -459,7 +459,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
         //setup button to create a new item
         LinearLayout container = (LinearLayout) view.findViewById(R.id.newitem);
         LayoutInflater inflater = LayoutInflater.from(getActivity());
-        View view2 = inflater.inflate(R.layout.add_item, container, false);
+        View view2 = inflater.inflate(R.layout.button_add_item, container, false);
         view2.setOnClickListener(new View.OnClickListener()
         {
             @Override

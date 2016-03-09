@@ -4,24 +4,19 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.liamfruzyna.android.lister.Activities.WLActivity;
-import com.liamfruzyna.android.lister.Activities.WLFragment;
+import com.liamfruzyna.android.lister.Fragments.WLFragment;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.R;
-
-import org.json.JSONException;
 
 import java.util.List;
 
@@ -37,18 +32,18 @@ public class SortListsDialog extends DialogFragment
     {
         // Use the Builder class for convenient dialog construction
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
-        final View v = inflater.inflate(R.layout.share_list_item, null);
+        final View v = inflater.inflate(R.layout.dialog_share_list, null);
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         ListView list = (ListView) v.findViewById(R.id.listView);
         lists = WLFragment.getUnArchived();
 
         //setup list of lists to share
-        list.setAdapter(new ArrayAdapter<WishList>(getActivity(), R.layout.sort_list_item, R.id.textView, lists) {
+        list.setAdapter(new ArrayAdapter<WishList>(getActivity(), R.layout.dialog_sort_lists, R.id.textView, lists) {
             public View getView(final int position, View convertView, ViewGroup parent) {
                 View view;
                 if (convertView == null) {
                     LayoutInflater infl = (LayoutInflater) getActivity().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
-                    convertView = infl.inflate(R.layout.sort_list_item, parent, false);
+                    convertView = infl.inflate(R.layout.dialog_sort_lists, parent, false);
                 }
                 view = super.getView(position, convertView, parent);
 

@@ -1,4 +1,4 @@
-package com.liamfruzyna.android.lister.Activities;
+package com.liamfruzyna.android.lister.Fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

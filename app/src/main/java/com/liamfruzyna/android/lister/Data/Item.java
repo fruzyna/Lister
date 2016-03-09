@@ -1,9 +1,5 @@
 package com.liamfruzyna.android.lister.Data;
 
-import android.provider.ContactsContract;
-
-import com.liamfruzyna.android.lister.Activities.WLActivity;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
