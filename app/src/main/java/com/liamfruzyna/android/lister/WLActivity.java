@@ -1,10 +1,14 @@
 package com.liamfruzyna.android.lister;
 
+import android.Manifest;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,7 +17,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Fragments.DatesFragment;
 import com.liamfruzyna.android.lister.Fragments.PeopleFragment;
 import com.liamfruzyna.android.lister.Fragments.SettingsFragment;
@@ -89,7 +95,15 @@ public class WLActivity extends ActionBarActivity
             }
         });
 
-        changeFragment(new WLFragment(), "WL");
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+        }
+        else
+        {
+            changeFragment(new WLFragment(), "WL");
+        }
+
 
         drawerToggle = new ActionBarDrawerToggle(this, drawer, R.drawable.ic_menu_white_24dp, R.string.open, R.string.closed) {
 
@@ -110,6 +124,25 @@ public class WLActivity extends ActionBarActivity
         drawer.setDrawerListener(drawerToggle);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults)
+    {
+        switch (requestCode)
+        {
+            case 0:
+            {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                {
+                    changeFragment(new WLFragment(), "WL");
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(), "Fuck you, Lister needs that!", Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+        }
+    }
     public void setTitle(String title)
     {
         getSupportActionBar().setTitle(title);
