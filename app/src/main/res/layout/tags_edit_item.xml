@@ -24,6 +24,7 @@
         android:layout_height="wrap_content"
         android:text="APPEND"
         android:id="@+id/append"
+        android:textColor="@color/main"
         android:layout_below="@+id/tags"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"/>
@@ -34,6 +35,7 @@
         android:layout_height="wrap_content"
         android:text="CANCEL"
         android:id="@+id/cancel"
+        android:textColor="@color/main"
         android:layout_below="@+id/tags"
         android:layout_toLeftOf="@+id/append"
         android:layout_toStartOf="@+id/append"/>
