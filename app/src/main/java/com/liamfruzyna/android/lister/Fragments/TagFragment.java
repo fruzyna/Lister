@@ -60,7 +60,7 @@ public class TagFragment extends Fragment implements AdapterView.OnItemSelectedL
             LayoutInflater inflater = LayoutInflater.from(getActivity());
             for (final Item item : items)
             {
-                View view = inflater.inflate(R.layout.item, list, false);
+                View view = inflater.inflate(R.layout.checkbox_list_item, list, false);
                 //init checkbox and set text
                 final CheckBox cb = (CheckBox) view.findViewById(R.id.checkbox);
                 int color = Color.parseColor(item.color);

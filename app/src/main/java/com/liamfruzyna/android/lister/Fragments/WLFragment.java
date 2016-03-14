@@ -17,8 +17,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -32,7 +34,6 @@ import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.DialogFragments.ArchiveListDialog;
 import com.liamfruzyna.android.lister.DialogFragments.ClearListDialog;
 import com.liamfruzyna.android.lister.DialogFragments.EditCriteriaDialog;
-import com.liamfruzyna.android.lister.DialogFragments.EditItemDialog;
 import com.liamfruzyna.android.lister.DialogFragments.EditListNameDialog;
 import com.liamfruzyna.android.lister.DialogFragments.EditTagsDialog;
 import com.liamfruzyna.android.lister.DialogFragments.NewItemDialog;
@@ -45,6 +46,7 @@ import org.json.JSONException;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -65,11 +67,14 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
 
     static LinearLayout list;
     public static Context c;
-    static RelativeLayout tagcv;
+    static LinearLayout tagcv;
     static RelativeLayout criteria;
     static TextView autotv;
     static Spinner spin;
     public static FloatingActionButton fab;
+
+    int edit = -1;
+    boolean editTags = false;
 
     //returns the list currently viewable on screen
     public static WishList getCurrentList()
@@ -105,7 +110,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
     //creates the item view that is displayed on screen
     public View createItem(LayoutInflater inflater, final int i)
     {
-        View view = inflater.inflate(R.layout.item, list, false);
+        View view = inflater.inflate(R.layout.checkbox_list_item, list, false);
 
         //init checkbox and set text, checked status, and color
         final CheckBox cb = (CheckBox) view.findViewById(R.id.checkbox);
@@ -118,7 +123,6 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
         {
             Date date = items.get(i).date;
             Date today = Calendar.getInstance().getTime();
-            int compare = date.compareTo(today);
             if(date.getYear() == today.getYear() && date.getMonth() == today.getMonth() && date.getDate() == today.getDate() && !items.get(i).done)
             {
                 color = Color.parseColor("#FFA500");
@@ -165,13 +169,85 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
             @Override
             public boolean onLongClick(View v)
             {
-                //when it is open up the dialog to edit it
-                DialogFragment dialog = new EditItemDialog();
-                Bundle args = new Bundle();
-                args.putInt("position", i);
-                dialog.setArguments(args);
-                dialog.show(getFragmentManager(), "");
+                //transition to edit checkbox
+                edit = i;
+                WLFragment.getFrag(getActivity()).updateList();
                 return true;
+            }
+        });
+        return view;
+    }
+
+    public View createEditItem(LayoutInflater inflater, final int i)
+    {
+        View view = inflater.inflate(R.layout.checkbox_edit_item, list, false);
+
+        final CheckBox cb = (CheckBox) view.findViewById(R.id.checkBox);
+        final EditText name = (EditText) view.findViewById(R.id.itemName);
+        Button remove = (Button) view.findViewById(R.id.remove);
+        Button cancel = (Button) view.findViewById(R.id.cancel);
+        Button append = (Button) view.findViewById(R.id.append);
+
+        final Item item = items.get(i);
+        cb.setChecked(item.done);
+        name.setText(item.item);
+
+        //listen for checkbox to be checked
+        cb.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                item.done = cb.isChecked();
+                IO.save(WLFragment.lists);
+            }
+        });
+
+        remove.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                //remove the item
+                edit = -1;
+                IO.log("EditItemDialog", "Removing " + item);
+                items.remove(item);
+                getCurrentList().items.remove(item);
+                getFrag(getActivity()).removeItemSnackbar(item);
+                IO.save(getLists());
+                getFrag(getActivity()).updateList();
+            }
+        });
+        cancel.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                //transition back to just checkbox
+                edit = -1;
+                getFrag(getActivity()).updateList();
+            }
+        });
+        append.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                edit = -1;
+                if (name.getText().toString().equals(""))
+                {
+                    //remove the item
+                    IO.log("EditItemDialog", "EditText is blank removing " + item);
+                    getItems().remove(item);
+                    getCurrentList().items.remove(item);
+                    getFrag(getActivity()).removeItemSnackbar(item);
+                } else
+                {
+                    IO.log("EditItemDialog", "Updating " + item.item + " to " + name.getText().toString());
+                    item.item = name.getText().toString();
+                }
+                IO.save(getLists());
+                getFrag(getActivity()).updateList();
             }
         });
         return view;
@@ -189,6 +265,17 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
         TextView tv = new TextView(c);
         tv.setText(sb.toString());
         return tv;
+    }
+
+    //creates the textview with a lists tags
+    public String createEditTags()
+    {
+        StringBuilder sb = new StringBuilder();
+        for(String list : getListFromName(names.get(current)).tags)
+        {
+            sb.append(list + " ");
+        }
+        return sb.toString();
     }
 
     //creates the textview with a lists criteria
@@ -279,13 +366,72 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
                 }
                 else if(!items.get(i).done || wl.showDone)
                 {
-                    list.addView(createItem(inflater, i));
+                    if(edit == i)
+                    {
+                        list.addView(createEditItem(inflater, i));
+                    }
+                    else
+                    {
+                        list.addView(createItem(inflater, i));
+                    }
                 }
             }
 
             //populates the tags
             tagcv.removeAllViews();
-            tagcv.addView(createTags());
+            inflater = LayoutInflater.from(c);
+            View view;
+            if(editTags)
+            {
+                view = inflater.inflate(R.layout.tags_edit_item, tagcv, false);
+
+                final EditText editText = (EditText) view.findViewById(R.id.tags);
+                Button append = (Button) view.findViewById(R.id.append);
+                Button cancel = (Button) view.findViewById(R.id.cancel);
+
+                editText.setText(createEditTags());
+                append.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        IO.log("EditTagDialog", "Settings " + getCurrentList().name + "'s tags to " + editText.getText().toString());
+                        getCurrentList().tags = new ArrayList<>(Arrays.asList(editText.getText().toString().split(" ")));
+                        getFrag(getActivity()).updateList();
+                        IO.save(getLists());
+                        editTags = false;
+                        getFrag(getActivity()).updateList();
+                    }
+                });
+                cancel.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        editTags = false;
+                        getFrag(getActivity()).updateList();
+                    }
+                });
+            }
+            else
+            {
+                view = inflater.inflate(R.layout.tags_list_item, tagcv, false);
+                ((RelativeLayout) view.findViewById(R.id.tag)).removeAllViews();
+                ((RelativeLayout) view.findViewById(R.id.tag)).addView(createTags());
+                view.findViewById(R.id.editTag).setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        if (unArchived.size() > 0)
+                        {
+                            editTags = true;
+                            getFrag(getActivity()).updateList();
+                        }
+                    }
+                });
+            }
+            tagcv.addView(view);
         }
     }
 
@@ -314,7 +460,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
 
         //init view widgets
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
-        tagcv = (RelativeLayout) view.findViewById(R.id.tag);
+        tagcv = (LinearLayout) view.findViewById(R.id.tagsContainer);
         criteria = (RelativeLayout) view.findViewById(R.id.criterion);
         list = (LinearLayout) view.findViewById(R.id.list);
         autotv = (TextView) view.findViewById(R.id.auto);
@@ -327,24 +473,10 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
             {
                 if (unArchived.size() > 0)
                 {
-                    DialogFragment dialog = new EditTagsDialog();
-                    dialog.show(getFragmentManager(), "");
+                    editTags = true;
+                    getFrag(getActivity()).updateList();
                 }
                 return false;
-            }
-        });
-
-        Button editTag = (Button) view.findViewById(R.id.editTag);
-        editTag.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (unArchived.size() > 0)
-                {
-                    DialogFragment dialog = new EditTagsDialog();
-                    dialog.show(getFragmentManager(), "");
-                }
             }
         });
 
@@ -622,6 +754,8 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
     @Override
     public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id)
     {
+        edit = -1;
+        editTags = false;
         current = spin.getSelectedItemPosition();
         editor.putInt(IO.CURRENT_LIST_PREF, current);
         IO.log("WLActivity:onItemSelected", "Saved position of " + current);
