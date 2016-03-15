@@ -110,15 +110,18 @@ public class Util
         String[] words = item.split(" ");
         for(int i = 0; i < words.length; i++)
         {
-            if(words[i].charAt(0) == '#')
+            if(words[i].length() > 0)
             {
-                SpannableString s = new SpannableString(words[i]);
-                s.setSpan(new ForegroundColorSpan(alpha), 0, words[i].length(), 0);
-                sb.append(s);
-            }
-            else
-            {
-                sb.append(words[i]);
+                if(words[i].charAt(0) == '#')
+                {
+                    SpannableString s = new SpannableString(words[i]);
+                    s.setSpan(new ForegroundColorSpan(alpha), 0, words[i].length(), 0);
+                    sb.append(s);
+                }
+                else
+                {
+                    sb.append(words[i]);
+                }
             }
             if(i < words.length - 1)
             {

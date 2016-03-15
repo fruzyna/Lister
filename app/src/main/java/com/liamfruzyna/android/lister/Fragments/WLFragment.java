@@ -171,7 +171,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
             {
                 //transition to edit checkbox
                 edit = i;
-                WLFragment.getFrag(getActivity()).updateList();
+                updateList();
                 return true;
             }
         });
@@ -203,21 +203,29 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
             }
         });
 
-        remove.setOnClickListener(new View.OnClickListener()
+        if(getCurrentList().auto)
         {
-            @Override
-            public void onClick(View v)
+            remove.setVisibility(View.GONE);
+        }
+        else
+        {
+            remove.setVisibility(View.VISIBLE);
+            remove.setOnClickListener(new View.OnClickListener()
             {
-                //remove the item
-                edit = -1;
-                IO.log("EditItemDialog", "Removing " + item);
-                items.remove(item);
-                getCurrentList().items.remove(item);
-                getFrag(getActivity()).removeItemSnackbar(item);
-                IO.save(getLists());
-                getFrag(getActivity()).updateList();
-            }
-        });
+                @Override
+                public void onClick(View v)
+                {
+                    //remove the item
+                    edit = -1;
+                    IO.log("EditItemDialog", "Removing " + item);
+                    items.remove(item);
+                    getCurrentList().items.remove(item);
+                    removeItemSnackbar(item);
+                    IO.save(getLists());
+                    updateList();
+                }
+            });
+        }
         cancel.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -225,7 +233,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
             {
                 //transition back to just checkbox
                 edit = -1;
-                getFrag(getActivity()).updateList();
+                updateList();
             }
         });
         append.setOnClickListener(new View.OnClickListener()
@@ -234,20 +242,10 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
             public void onClick(View v)
             {
                 edit = -1;
-                if (name.getText().toString().equals(""))
-                {
-                    //remove the item
-                    IO.log("EditItemDialog", "EditText is blank removing " + item);
-                    getItems().remove(item);
-                    getCurrentList().items.remove(item);
-                    getFrag(getActivity()).removeItemSnackbar(item);
-                } else
-                {
-                    IO.log("EditItemDialog", "Updating " + item.item + " to " + name.getText().toString());
-                    item.item = name.getText().toString();
-                }
+                IO.log("EditItemDialog", "Updating " + item.item + " to " + name.getText().toString());
+                item.item = name.getText().toString();
                 IO.save(getLists());
-                getFrag(getActivity()).updateList();
+                updateList();
             }
         });
         return view;
@@ -360,11 +358,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
             LayoutInflater inflater = LayoutInflater.from(c);
             for (int i = 0; i < items.size(); i++)
             {
-                if(items.get(i).item.equals(("")))
-                {
-                    items.remove(i);
-                }
-                else if(!items.get(i).done || wl.showDone)
+                if(!items.get(i).done || wl.showDone)
                 {
                     if(edit == i)
                     {
@@ -397,10 +391,10 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
                     {
                         IO.log("EditTagDialog", "Settings " + getCurrentList().name + "'s tags to " + editText.getText().toString());
                         getCurrentList().tags = new ArrayList<>(Arrays.asList(editText.getText().toString().split(" ")));
-                        getFrag(getActivity()).updateList();
+                        updateList();
                         IO.save(getLists());
                         editTags = false;
-                        getFrag(getActivity()).updateList();
+                        updateList();
                     }
                 });
                 cancel.setOnClickListener(new View.OnClickListener()
@@ -409,7 +403,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
                     public void onClick(View v)
                     {
                         editTags = false;
-                        getFrag(getActivity()).updateList();
+                        updateList();
                     }
                 });
             }
@@ -426,7 +420,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
                         if (unArchived.size() > 0)
                         {
                             editTags = true;
-                            getFrag(getActivity()).updateList();
+                            updateList();
                         }
                     }
                 });
@@ -437,7 +431,8 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
 
 
     @Override
-    public View onCreateView(LayoutInflater infl, ViewGroup parent, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater infl, ViewGroup parent, Bundle savedInstanceState)
+    {
         view = infl.inflate(R.layout.fragment_wl, parent, false);
 
         c = getActivity();
@@ -474,7 +469,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
                 if (unArchived.size() > 0)
                 {
                     editTags = true;
-                    getFrag(getActivity()).updateList();
+                    updateList();
                 }
                 return false;
             }
@@ -599,8 +594,11 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
             {
                 if (unArchived.size() > 0)
                 {
-                    DialogFragment dialog = new NewItemDialog();
-                    dialog.show(getFragmentManager(), "");
+                    Item newItem = new Item("", false);
+                    getCurrentList().items.add(newItem);
+                    updateList();
+                    edit = items.indexOf(newItem);
+                    updateList();
                 }
             }
         });
@@ -687,7 +685,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
             }
         });
 
-        getFrag((WLActivity) c).updateList();
+        updateList();
     }
 
     //sets the current list to the last open list
