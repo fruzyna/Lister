@@ -39,11 +39,9 @@ import com.liamfruzyna.android.lister.DialogFragments.EditListNameDialog;
 import com.liamfruzyna.android.lister.DialogFragments.NewListDialog;
 import com.liamfruzyna.android.lister.DialogFragments.RemoveListDialog;
 import com.liamfruzyna.android.lister.R;
+import com.liamfruzyna.android.lister.Views;
 import com.liamfruzyna.android.lister.WLActivity;
 
-import org.json.JSONException;
-
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -67,7 +65,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
     static Spinner spin;
     public static FloatingActionButton fab;
 
-    int edit = -1;
+    public int edit = -1;
     boolean editTags = false;
 
     boolean firstRun = true;
@@ -146,130 +144,6 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
         return view;
     }
 
-    public View createEditItem(LayoutInflater inflater, final int i)
-    {
-        View view = inflater.inflate(R.layout.checkbox_edit_item, list, false);
-
-        final CheckBox cb = (CheckBox) view.findViewById(R.id.checkBox);
-        final EditText name = (EditText) view.findViewById(R.id.itemName);
-        Button remove = (Button) view.findViewById(R.id.remove);
-        Button cancel = (Button) view.findViewById(R.id.cancel);
-        Button append = (Button) view.findViewById(R.id.append);
-
-        final Item item = Data.getItems().get(i);
-        cb.setChecked(item.done);
-        name.setText(item.item);
-
-        //listen for checkbox to be checked
-        cb.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                item.done = cb.isChecked();
-                IO.save();
-            }
-        });
-
-        if (Data.getCurrentList().auto)
-        {
-            remove.setVisibility(View.GONE);
-        } else
-        {
-            remove.setVisibility(View.VISIBLE);
-            remove.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    //remove the item
-                    edit = -1;
-                    IO.log("EditItemDialog", "Removing " + item);
-                    Data.getItems().remove(item);
-                    Data.getCurrentList().items.remove(item);
-                    removeItemSnackbar(item);
-                    IO.save();
-                    updateList();
-                }
-            });
-        }
-        cancel.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                //transition back to just checkbox
-                edit = -1;
-                updateList();
-            }
-        });
-        append.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                edit = -1;
-                IO.log("EditItemDialog", "Updating " + item.item + " to " + name.getText().toString());
-                item.item = name.getText().toString();
-                IO.save();
-                updateList();
-            }
-        });
-        return view;
-    }
-
-    //creates the textview with a lists tags
-    public TextView createTags()
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Tags: ");
-        for (String list : getListFromName(Data.getCurrentName()).tags)
-        {
-            sb.append(list + " ");
-        }
-        TextView tv = new TextView(c);
-        tv.setText(sb.toString());
-        return tv;
-    }
-
-    //creates the textview with a lists tags
-    public String createEditTags()
-    {
-        StringBuilder sb = new StringBuilder();
-        for (String list : getListFromName(Data.getCurrentName()).tags)
-        {
-            sb.append(list + " ");
-        }
-        return sb.toString();
-    }
-
-    //creates the textview with a lists criteria
-    public TextView createCriteria()
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Criteria:");
-        for (String c : ((AutoList) getListFromName(Data.getCurrentName())).getCriteria())
-        {
-            sb.append("\n" + c);
-        }
-        TextView tv = new TextView(c);
-        tv.setText(sb.toString());
-        return tv;
-    }
-
-    //takes the name of a list and returns the list object
-    public WishList getListFromName(String name)
-    {
-        for (WishList list : Data.getUnArchived())
-        {
-            if (list.name.equals(name))
-            {
-                return list;
-            }
-        }
-        IO.log("WLActivity:getListFromName", "Returning null list");
-        return null;
-    }
 
     //rebuilds the list of items
     public void updateList()
@@ -288,7 +162,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
                 spin.setSelection(Data.getCurrent());
             }
 
-            final WishList wl = getListFromName(Data.getCurrentName());
+            final WishList wl = Data.getListFromName(Data.getCurrentName());
 
             CheckBox showDone = (CheckBox) view.findViewById(R.id.showDone);
             showDone.setChecked(wl.showDone);
@@ -306,7 +180,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
             if (wl.auto)
             {
                 wl.items = ((AutoList) wl).findItems();
-                criteria.addView(createCriteria());
+                criteria.addView(Views.createCriteria(c));
                 autotv.setText("Auto");
                 view.findViewById(R.id.newitem).setVisibility(View.GONE);
                 view.findViewById(R.id.criteria).setVisibility(View.VISIBLE);
@@ -328,7 +202,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
                 {
                     if (edit == i)
                     {
-                        list.addView(createEditItem(inflater, i));
+                        list.addView(Views.createEditItem(inflater, i, list, this));
                     } else
                     {
                         list.addView(createItem(inflater, i));
@@ -348,7 +222,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
                 Button append = (Button) view.findViewById(R.id.append);
                 Button cancel = (Button) view.findViewById(R.id.cancel);
 
-                editText.setText(createEditTags());
+                editText.setText(Views.createEditTags());
                 append.setOnClickListener(new View.OnClickListener()
                 {
                     @Override
@@ -375,7 +249,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
             {
                 view = inflater.inflate(R.layout.tags_list_item, tagcv, false);
                 ((RelativeLayout) view.findViewById(R.id.tag)).removeAllViews();
-                ((RelativeLayout) view.findViewById(R.id.tag)).addView(createTags());
+                ((RelativeLayout) view.findViewById(R.id.tag)).addView(Views.createTags(c));
                 view.findViewById(R.id.editTag).setOnClickListener(new View.OnClickListener()
                 {
                     @Override
@@ -482,7 +356,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
                     @Override
                     public boolean onLongClick(View v)
                     {
-                        if (getListFromName(Data.getNames().get(Data.getCurrent())).auto && Data.getUnArchived().size() > 0)
+                        if (Data.getListFromName(Data.getNames().get(Data.getCurrent())).auto && Data.getUnArchived().size() > 0)
                         {
                             DialogFragment dialog = new EditCriteriaDialog();
                             dialog.show(getFragmentManager(), "");
@@ -497,7 +371,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
                     @Override
                     public void onClick(View v)
                     {
-                        if (getListFromName(Data.getNames().get(Data.getCurrent())).auto && Data.getUnArchived().size() > 0)
+                        if (Data.getListFromName(Data.getNames().get(Data.getCurrent())).auto && Data.getUnArchived().size() > 0)
                         {
                             DialogFragment dialog = new EditCriteriaDialog();
                             dialog.show(getFragmentManager(), "");

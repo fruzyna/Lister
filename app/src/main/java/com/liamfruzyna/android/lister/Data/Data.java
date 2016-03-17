@@ -86,4 +86,17 @@ public class Data
         Data.items = items;
     }
 
+    //takes the name of a list and returns the list object
+    public static WishList getListFromName(String name)
+    {
+        for (WishList list : unArchived)
+        {
+            if (list.name.equals(name))
+            {
+                return list;
+            }
+        }
+        return null;
+    }
+
 }
