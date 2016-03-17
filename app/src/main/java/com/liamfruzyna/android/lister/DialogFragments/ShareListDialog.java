@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.liamfruzyna.android.lister.Data.Data;
 import com.liamfruzyna.android.lister.Fragments.WLFragment;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.WishList;
@@ -37,7 +38,7 @@ public class ShareListDialog extends DialogFragment
         ListView list = (ListView) v.findViewById(R.id.listView);
 
         //setup list of lists to share
-        list.setAdapter(new ArrayAdapter<WishList>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, WLFragment.getLists()) {
+        list.setAdapter(new ArrayAdapter<WishList>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, Data.getLists()) {
             public View getView(final int position, View convertView, ViewGroup parent) {
                 View view;
                 if (convertView == null) {
@@ -46,10 +47,10 @@ public class ShareListDialog extends DialogFragment
                 }
                 view = super.getView(position, convertView, parent);
 
-                WishList list = WLFragment.getLists().get(position);
+                WishList list = Data.getLists().get(position);
                 TextView tv = (TextView) view.findViewById(android.R.id.text1);
                 tv.setText(list.name);
-                if(!WLFragment.getUnArchived().contains(list))
+                if(!Data.getUnArchived().contains(list))
                 {
                     tv.setTextColor(Color.rgb(128, 128, 128));
                 }
@@ -62,12 +63,12 @@ public class ShareListDialog extends DialogFragment
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-                IO.log("ShareListDialog", "Sharing list " + WLFragment.getLists().get(position).name);
+                IO.log("ShareListDialog", "Sharing list " + Data.getLists().get(position).name);
                 Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
                 String shareBody = null;
                 try {
-                    shareBody = IO.getListString(WLFragment.getLists().get(position));
+                    shareBody = IO.getListString(Data.getLists().get(position));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

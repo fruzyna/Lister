@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import com.liamfruzyna.android.lister.Data.Data;
 import com.liamfruzyna.android.lister.Fragments.WLFragment;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.WishList;
@@ -33,7 +34,7 @@ public class EditListNameDialog extends DialogFragment
         final View v = inflater.inflate(R.layout.dialog_edit_list, null);
         name = (EditText) v.findViewById(R.id.name);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        final WishList list = WLFragment.getCurrentList();
+        final WishList list = Data.getCurrentList();
         name.setHint("name");
         name.setText(list.name);
 
@@ -76,7 +77,7 @@ public class EditListNameDialog extends DialogFragment
                         WLFragment.getFrag(getActivity()).setupSpinner();
                         File file = new File(IO.fileDir, old + ".json");
                         file.delete();
-                        IO.save(WLFragment.getLists());
+                        IO.save();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener()

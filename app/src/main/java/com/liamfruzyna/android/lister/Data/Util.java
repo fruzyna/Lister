@@ -130,4 +130,19 @@ public class Util
         }
         return sb;
     }
+
+    //finds all the unAchived lists and groups them
+    public static List<WishList> populateUnArchived()
+    {
+        List<WishList> unArchived = new ArrayList<>();
+        for (WishList list : Data.getLists())
+        {
+            if (!list.archived)
+            {
+                unArchived.add(list);
+            }
+        }
+        System.out.println("Unarchived Lists: " + Data.getUnArchived().size());
+        return unArchived;
+    }
 }

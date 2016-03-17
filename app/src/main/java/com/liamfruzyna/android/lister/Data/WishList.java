@@ -51,7 +51,7 @@ public class WishList
         this.tags = tags;
         this.showDone = showDone;
         this.daysToDelete = daysToDelete;
-        order = WLFragment.getLists().size();
+        order = Data.getLists().size();
         findPeople();
         deleteItems();
     }

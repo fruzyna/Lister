@@ -6,6 +6,7 @@ import android.app.FragmentTransaction;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -19,12 +20,20 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.liamfruzyna.android.lister.Data.Data;
 import com.liamfruzyna.android.lister.Data.IO;
+import com.liamfruzyna.android.lister.Data.Util;
+import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.Fragments.DatesFragment;
 import com.liamfruzyna.android.lister.Fragments.PeopleFragment;
 import com.liamfruzyna.android.lister.Fragments.SettingsFragment;
 import com.liamfruzyna.android.lister.Fragments.TagsFragment;
 import com.liamfruzyna.android.lister.Fragments.WLFragment;
+
+import org.json.JSONException;
+
+import java.net.MalformedURLException;
+import java.util.ArrayList;
 
 public class WLActivity extends ActionBarActivity
 {
@@ -39,6 +48,32 @@ public class WLActivity extends ActionBarActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wl);
+
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                try
+                {
+                    Data.setLists(IO.load());
+                } catch (JSONException e)
+                {
+                    e.printStackTrace();
+                } catch (MalformedURLException e)
+                {
+                    e.printStackTrace();
+                }
+
+                //makes sure that lists isn't null
+                if (Data.getLists() == null)
+                {
+                    Data.setLists(new ArrayList<WishList>());
+                }
+
+                Data.setUnArchived(Util.populateUnArchived());
+            }
+        }).start();
 
         //setup the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -56,39 +91,40 @@ public class WLActivity extends ActionBarActivity
         drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id)
             {
                 Fragment frag = new Fragment();
-                String tag = "";
-                switch (position)
-                {
-                    case 0:
-                        //Home
-                        frag = new WLFragment();
-                        tag = "WL";
-                        break;
-                    case 1:
-                        //Tag Viewer
-                        frag = new TagsFragment();
-                        tag = "Tags";
-                        break;
-                    case 2:
-                        //People Viewer
-                        frag = new PeopleFragment();
-                        tag = "People";
-                        break;
-                    case 3:
-                        //Date Viewer
-                        frag = new DatesFragment();
-                        tag = "Dates";
-                        break;
-                    case 4:
-                        //Settings
-                        frag = new SettingsFragment();
-                        tag = "Settings";
-                        break;
-                }
-                changeFragment(frag, tag);
+                        String tag = "";
+                        switch (position)
+                        {
+                            case 0:
+                                //Home
+                                frag = new WLFragment();
+                                tag = "WL";
+                                break;
+                            case 1:
+                                //Tag Viewer
+                                frag = new TagsFragment();
+                                tag = "Tags";
+                                break;
+                            case 2:
+                                //People Viewer
+                                frag = new PeopleFragment();
+                                tag = "People";
+                                break;
+                            case 3:
+                                //Date Viewer
+                                frag = new DatesFragment();
+                                tag = "Dates";
+                                break;
+                            case 4:
+                                //Settings
+                                frag = new SettingsFragment();
+                                tag = "Settings";
+                                break;
+                        }
+                        changeFragment(frag, tag);
+
 
                 drawerList.setItemChecked(position, true);
                 drawer.closeDrawer(findViewById(R.id.drawer));

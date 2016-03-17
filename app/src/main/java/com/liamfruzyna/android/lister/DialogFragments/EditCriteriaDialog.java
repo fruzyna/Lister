@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.liamfruzyna.android.lister.Data.Data;
 import com.liamfruzyna.android.lister.Fragments.WLFragment;
 import com.liamfruzyna.android.lister.Data.AutoList;
 import com.liamfruzyna.android.lister.Data.IO;
@@ -55,7 +56,7 @@ public class EditCriteriaDialog extends DialogFragment
                         }
                         list.setCriteria(criteria);
                         WLFragment.getFrag(getActivity()).updateList();
-                        IO.save(WLFragment.getLists());
+                        IO.save();
                     }
 
                 })
@@ -72,7 +73,7 @@ public class EditCriteriaDialog extends DialogFragment
     {
         final LinearLayout container = (LinearLayout) v.findViewById(R.id.container);
         container.removeAllViews();
-        list = (AutoList) WLFragment.getCurrentList();
+        list = (AutoList) Data.getCurrentList();
         views = new ArrayList<>();
         for(String c : list.getCriteria())
         {

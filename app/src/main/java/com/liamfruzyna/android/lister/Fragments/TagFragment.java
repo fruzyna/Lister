@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
+import com.liamfruzyna.android.lister.Data.Data;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.Item;
 import com.liamfruzyna.android.lister.Data.Util;
@@ -108,7 +110,7 @@ public class TagFragment extends Fragment implements AdapterView.OnItemSelectedL
                         {
                             cb.setPaintFlags(0);
                         }
-                        IO.save(WLFragment.getLists());
+                        IO.save();
                     }
                 });
                 list.addView(view);
@@ -118,17 +120,24 @@ public class TagFragment extends Fragment implements AdapterView.OnItemSelectedL
     @Override
     public View onCreateView(LayoutInflater infl, ViewGroup parent, Bundle savedInstanceState) {
         view = infl.inflate(R.layout.fragment_tags, parent, false);
+
         list = (LinearLayout) view.findViewById(R.id.list);
-
-        lists = WLFragment.getLists();
-
         spin = (Spinner) view.findViewById(R.id.spinner);
-        ArrayAdapter<String> sadapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item, getTags());
-        sadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spin.setAdapter(sadapter);
-        current = spin.getSelectedItemPosition();
-        updateList();
 
+        (new Handler()).postDelayed(new Runnable()
+                                    {
+                                        @Override
+                                        public void run()
+                                        {
+                                            lists = Data.getLists();
+
+                                            ArrayAdapter<String> sadapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item, getTags());
+                                            sadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                            spin.setAdapter(sadapter);
+                                            current = spin.getSelectedItemPosition();
+                                            updateList();
+                                        }
+                                    }, 500);
         spin.setOnItemSelectedListener(this);
         return view;
     }

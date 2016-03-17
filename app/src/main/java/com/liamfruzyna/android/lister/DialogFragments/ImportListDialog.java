@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
+import com.liamfruzyna.android.lister.Data.Data;
 import com.liamfruzyna.android.lister.Fragments.WLFragment;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.R;
@@ -40,12 +41,12 @@ public class ImportListDialog extends DialogFragment
                     {
                         try {
                             IO.log("ImportListDialog", "Importing list from " + editText.getText().toString());
-                            WLFragment.getLists().add(IO.readString(editText.getText().toString()));
+                            Data.getLists().add(IO.readString(editText.getText().toString()));
                         } catch (JSONException e) {
                             e.printStackTrace();
                             IO.log("ImportListDialog", "Error reading list json");
                         }
-                        IO.save(WLFragment.getLists());
+                        IO.save();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {

@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
+import com.liamfruzyna.android.lister.Data.Data;
 import com.liamfruzyna.android.lister.Fragments.WLFragment;
 import com.liamfruzyna.android.lister.Data.AutoList;
 import com.liamfruzyna.android.lister.Data.IO;
@@ -112,7 +113,7 @@ public class NewListDialog extends DialogFragment
                         }
 
                         IO.log("NewListDialog", "Creating list " + name.getText().toString());
-                        List<WishList> lists = WLFragment.getLists();
+                        List<WishList> lists = Data.getLists();
                         WishList newList;
                         if (cb.isChecked())
                         {
@@ -173,10 +174,10 @@ public class NewListDialog extends DialogFragment
                             newList = new WishList(name.getText().toString(), new ArrayList<>(Arrays.asList(tags.getText().toString().split(" "))), done.isChecked(), daysToDelete);
                         }
                         lists.add(newList);
-                        List<WishList> unArchieved = WLFragment.getUnArchived();
+                        List<WishList> unArchieved = Data.getUnArchived();
                         unArchieved.add(newList);
                         WLFragment.openNewest();
-                        IO.save(WLFragment.getLists());
+                        IO.save();
                         WLFragment.getFrag(getActivity()).updateList();
                     }
                 })

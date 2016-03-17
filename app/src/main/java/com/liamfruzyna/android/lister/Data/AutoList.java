@@ -37,7 +37,7 @@ public class AutoList extends WishList
     public List<Item> findItems()
     {
         List<Item> found = new ArrayList<>();
-        for(WishList list : WLFragment.getUnArchived())
+        for(WishList list : Data.getUnArchived())
         {
             if(!list.auto)
             {
@@ -60,7 +60,7 @@ public class AutoList extends WishList
                             }
                             c = sb.toString();
                             parts = c.split(" ");
-                            IO.save(WLFragment.getLists());
+                            IO.save();
                         }
                         boolean make = true;
                         String type = parts[2];

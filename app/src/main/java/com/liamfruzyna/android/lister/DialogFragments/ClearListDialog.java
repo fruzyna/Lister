@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
+import com.liamfruzyna.android.lister.Data.Data;
 import com.liamfruzyna.android.lister.Fragments.WLFragment;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.WishList;
@@ -21,7 +22,7 @@ public class ClearListDialog  extends DialogFragment
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        final WishList list = WLFragment.getCurrentList();
+        final WishList list = Data.getCurrentList();
         builder.setMessage("Remove all items from " + list.name)
                 .setTitle("Clear List")
                 .setPositiveButton("CLEAR", new DialogInterface.OnClickListener()
@@ -31,7 +32,7 @@ public class ClearListDialog  extends DialogFragment
                         IO.log("ClearListDialog", "Clearing list " + list.name);
                         list.items = new ArrayList<>();
                         WLFragment.getFrag(getActivity()).updateList();
-                        IO.save(WLFragment.getLists());
+                        IO.save();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener()

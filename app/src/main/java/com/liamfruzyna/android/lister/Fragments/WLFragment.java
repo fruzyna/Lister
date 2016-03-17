@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
@@ -20,13 +21,13 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.liamfruzyna.android.lister.Data.AutoList;
+import com.liamfruzyna.android.lister.Data.Data;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.Item;
 import com.liamfruzyna.android.lister.Data.Util;
@@ -35,8 +36,6 @@ import com.liamfruzyna.android.lister.DialogFragments.ArchiveListDialog;
 import com.liamfruzyna.android.lister.DialogFragments.ClearListDialog;
 import com.liamfruzyna.android.lister.DialogFragments.EditCriteriaDialog;
 import com.liamfruzyna.android.lister.DialogFragments.EditListNameDialog;
-import com.liamfruzyna.android.lister.DialogFragments.EditTagsDialog;
-import com.liamfruzyna.android.lister.DialogFragments.NewItemDialog;
 import com.liamfruzyna.android.lister.DialogFragments.NewListDialog;
 import com.liamfruzyna.android.lister.DialogFragments.RemoveListDialog;
 import com.liamfruzyna.android.lister.R;
@@ -57,13 +56,8 @@ import java.util.List;
 public class WLFragment extends Fragment implements AdapterView.OnItemSelectedListener
 {
     private View view;
-    private static List<WishList> lists = new ArrayList<>();
-    private static List<Item> items = new ArrayList<>();
-    private static List<WishList> unArchived = new ArrayList<>();
-    private static int current = 0;
     private static SharedPreferences prefs;
     private static SharedPreferences.Editor editor;
-    private static List<String> names;
 
     static LinearLayout list;
     public static Context c;
@@ -76,36 +70,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
     int edit = -1;
     boolean editTags = false;
 
-    //returns the list currently viewable on screen
-    public static WishList getCurrentList()
-    {
-        for(int i = 0; i < unArchived.size(); i++)
-        {
-            if(unArchived.get(i).name.equals(names.get(current)))
-            {
-                return unArchived.get(i);
-            }
-        }
-        return null;
-    }
-
-    //returns the items currently displayed on screen
-    public static List<Item> getItems()
-    {
-        return items;
-    }
-
-    //returns all the lists
-    public static List<WishList> getLists()
-    {
-        return lists;
-    }
-
-    //returns all the unarchived lists
-    public static List<WishList> getUnArchived()
-    {
-        return unArchived;
-    }
+    boolean firstRun = true;
 
     //creates the item view that is displayed on screen
     public View createItem(LayoutInflater inflater, final int i)
@@ -114,32 +79,31 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
 
         //init checkbox and set text, checked status, and color
         final CheckBox cb = (CheckBox) view.findViewById(R.id.checkbox);
-        int color = Color.parseColor(items.get(i).color);
+        int color = Color.parseColor(Data.getItems().get(i).color);
 
         //color item text based off date (late is red, day of is orange)
         SharedPreferences settings = getActivity().getSharedPreferences(IO.PREFS, 0);
         boolean highlight = settings.getBoolean(IO.HIGHLIGHT_DATE_PREF, true);
-        if(highlight)
+        if (highlight)
         {
-            Date date = items.get(i).date;
+            Date date = Data.getItems().get(i).date;
             Date today = Calendar.getInstance().getTime();
-            if(date.getYear() == today.getYear() && date.getMonth() == today.getMonth() && date.getDate() == today.getDate() && !items.get(i).done)
+            if (date.getYear() == today.getYear() && date.getMonth() == today.getMonth() && date.getDate() == today.getDate() && !Data.getItems().get(i).done)
             {
                 color = Color.parseColor("#FFA500");
-            }
-            else if(date.compareTo(today) < 0 && !items.get(i).done)
+            } else if (date.compareTo(today) < 0 && !Data.getItems().get(i).done)
             {
                 color = Color.RED;
             }
         }
 
-        SpannableStringBuilder s = Util.colorTags(items.get(i).item, color);
+        SpannableStringBuilder s = Util.colorTags(Data.getItems().get(i).item, color);
         cb.setText(s);
         cb.setTextColor(color);
-        cb.setChecked(items.get(i).done);
+        cb.setChecked(Data.getItems().get(i).done);
 
         //if item is done cross it out
-        if(items.get(i).done)
+        if (Data.getItems().get(i).done)
         {
             cb.setPaintFlags(cb.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         } else
@@ -148,17 +112,21 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
         }
 
         //listen for checkbox to be checked
-        cb.setOnClickListener(new View.OnClickListener() {
+        cb.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                items.get(i).done = cb.isChecked();
+            public void onClick(View v)
+            {
+                Data.getItems().get(i).done = cb.isChecked();
                 //if it is checked cross it out
-                if (cb.isChecked()) {
+                if (cb.isChecked())
+                {
                     cb.setPaintFlags(cb.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                } else {
+                } else
+                {
                     cb.setPaintFlags(0);
                 }
-                IO.save(WLFragment.lists);
+                IO.save();
 
             }
         });
@@ -188,7 +156,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
         Button cancel = (Button) view.findViewById(R.id.cancel);
         Button append = (Button) view.findViewById(R.id.append);
 
-        final Item item = items.get(i);
+        final Item item = Data.getItems().get(i);
         cb.setChecked(item.done);
         name.setText(item.item);
 
@@ -199,15 +167,14 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
             public void onClick(View v)
             {
                 item.done = cb.isChecked();
-                IO.save(WLFragment.lists);
+                IO.save();
             }
         });
 
-        if(getCurrentList().auto)
+        if (Data.getCurrentList().auto)
         {
             remove.setVisibility(View.GONE);
-        }
-        else
+        } else
         {
             remove.setVisibility(View.VISIBLE);
             remove.setOnClickListener(new View.OnClickListener()
@@ -218,10 +185,10 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
                     //remove the item
                     edit = -1;
                     IO.log("EditItemDialog", "Removing " + item);
-                    items.remove(item);
-                    getCurrentList().items.remove(item);
+                    Data.getItems().remove(item);
+                    Data.getCurrentList().items.remove(item);
                     removeItemSnackbar(item);
-                    IO.save(getLists());
+                    IO.save();
                     updateList();
                 }
             });
@@ -244,7 +211,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
                 edit = -1;
                 IO.log("EditItemDialog", "Updating " + item.item + " to " + name.getText().toString());
                 item.item = name.getText().toString();
-                IO.save(getLists());
+                IO.save();
                 updateList();
             }
         });
@@ -256,7 +223,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
     {
         StringBuilder sb = new StringBuilder();
         sb.append("Tags: ");
-        for(String list : getListFromName(names.get(current)).tags)
+        for (String list : getListFromName(Data.getCurrentName()).tags)
         {
             sb.append(list + " ");
         }
@@ -269,7 +236,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
     public String createEditTags()
     {
         StringBuilder sb = new StringBuilder();
-        for(String list : getListFromName(names.get(current)).tags)
+        for (String list : getListFromName(Data.getCurrentName()).tags)
         {
             sb.append(list + " ");
         }
@@ -281,7 +248,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
     {
         StringBuilder sb = new StringBuilder();
         sb.append("Criteria:");
-        for(String c : ((AutoList) getListFromName(names.get(current))).getCriteria())
+        for (String c : ((AutoList) getListFromName(Data.getCurrentName())).getCriteria())
         {
             sb.append("\n" + c);
         }
@@ -293,9 +260,9 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
     //takes the name of a list and returns the list object
     public WishList getListFromName(String name)
     {
-        for(WishList list : getUnArchived())
+        for (WishList list : Data.getUnArchived())
         {
-            if(list.name.equals(name))
+            if (list.name.equals(name))
             {
                 return list;
             }
@@ -307,21 +274,21 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
     //rebuilds the list of items
     public void updateList()
     {
-        if(unArchived.size() > 0)
+        if (Data.getUnArchived().size() > 0)
         {
             spin.setSelection(prefs.getInt(IO.CURRENT_LIST_PREF, 0));
-            current = spin.getSelectedItemPosition();
+            Data.setCurrent(spin.getSelectedItemPosition());
 
             IO.log("WLActivity:updateList", "Spinner is at " + spin.getSelectedItemPosition());
             IO.log("WLActivity:updateList", "Set spinner to " + prefs.getInt(IO.CURRENT_LIST_PREF, 0));
 
-            if(current >= names.size())
+            if (Data.getCurrent() >= Data.getNames().size())
             {
-                current = names.size() - 1;
-                spin.setSelection(current);
+                Data.setCurrent(Data.getNames().size() - 1);
+                spin.setSelection(Data.getCurrent());
             }
 
-            final WishList wl = getListFromName(names.get(current));
+            final WishList wl = getListFromName(Data.getCurrentName());
 
             CheckBox showDone = (CheckBox) view.findViewById(R.id.showDone);
             showDone.setChecked(wl.showDone);
@@ -332,39 +299,37 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
                 {
                     wl.showDone = ((CheckBox) v).isChecked();
                     updateList();
-                    IO.save(lists);
+                    IO.save();
                 }
             });
             criteria.removeAllViews();
-            if(wl.auto)
+            if (wl.auto)
             {
                 wl.items = ((AutoList) wl).findItems();
                 criteria.addView(createCriteria());
                 autotv.setText("Auto");
                 view.findViewById(R.id.newitem).setVisibility(View.GONE);
                 view.findViewById(R.id.criteria).setVisibility(View.VISIBLE);
-            }
-            else
+            } else
             {
                 autotv.setText("");
                 view.findViewById(R.id.newitem).setVisibility(View.VISIBLE);
                 view.findViewById(R.id.criteria).setVisibility(View.GONE);
             }
             //reorganizes all the items by date then doneness
-            items = Util.sortByDone(Util.sortByPriority(Util.sortByDate(Util.newList(wl.items))));
+            Data.setItems(Util.sortByDone(Util.sortByPriority(Util.sortByDate(Util.newList(wl.items)))));
 
             //populates the list with the items
             list.removeAllViews();
             LayoutInflater inflater = LayoutInflater.from(c);
-            for (int i = 0; i < items.size(); i++)
+            for (int i = 0; i < Data.getItems().size(); i++)
             {
-                if(!items.get(i).done || wl.showDone)
+                if (!Data.getItems().get(i).done || wl.showDone)
                 {
-                    if(edit == i)
+                    if (edit == i)
                     {
                         list.addView(createEditItem(inflater, i));
-                    }
-                    else
+                    } else
                     {
                         list.addView(createItem(inflater, i));
                     }
@@ -375,7 +340,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
             tagcv.removeAllViews();
             inflater = LayoutInflater.from(c);
             View view;
-            if(editTags)
+            if (editTags)
             {
                 view = inflater.inflate(R.layout.tags_edit_item, tagcv, false);
 
@@ -389,10 +354,10 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
                     @Override
                     public void onClick(View v)
                     {
-                        IO.log("EditTagDialog", "Settings " + getCurrentList().name + "'s tags to " + editText.getText().toString());
-                        getCurrentList().tags = new ArrayList<>(Arrays.asList(editText.getText().toString().split(" ")));
+                        IO.log("EditTagDialog", "Settings " + Data.getCurrentList().name + "'s tags to " + editText.getText().toString());
+                        Data.getCurrentList().tags = new ArrayList<>(Arrays.asList(editText.getText().toString().split(" ")));
                         updateList();
-                        IO.save(getLists());
+                        IO.save();
                         editTags = false;
                         updateList();
                     }
@@ -406,8 +371,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
                         updateList();
                     }
                 });
-            }
-            else
+            } else
             {
                 view = inflater.inflate(R.layout.tags_list_item, tagcv, false);
                 ((RelativeLayout) view.findViewById(R.id.tag)).removeAllViews();
@@ -417,7 +381,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
                     @Override
                     public void onClick(View v)
                     {
-                        if (unArchived.size() > 0)
+                        if (Data.getUnArchived().size() > 0)
                         {
                             editTags = true;
                             updateList();
@@ -439,185 +403,174 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
 
         getActivity().setTitle("Lister");
 
-        prefs = getActivity().getSharedPreferences(IO.PREFS, 0);
-        editor = prefs.edit();
-
-        try
-        {
-            lists = IO.load();
-        } catch (JSONException e)
-        {
-            e.printStackTrace();
-        } catch (MalformedURLException e)
-        {
-            e.printStackTrace();
-        }
-
         //init view widgets
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
-        tagcv = (LinearLayout) view.findViewById(R.id.tagsContainer);
-        criteria = (RelativeLayout) view.findViewById(R.id.criterion);
-        list = (LinearLayout) view.findViewById(R.id.list);
-        autotv = (TextView) view.findViewById(R.id.auto);
-
-        //sets listener for editing tags
-        tagcv.setOnLongClickListener(new View.OnLongClickListener()
-        {
-            @Override
-            public boolean onLongClick(View v)
-            {
-                if (unArchived.size() > 0)
-                {
-                    editTags = true;
-                    updateList();
-                }
-                return false;
-            }
-        });
-
-        //sets listener for editing criteria
-        criteria.setOnLongClickListener(new View.OnLongClickListener()
-        {
-            @Override
-            public boolean onLongClick(View v)
-            {
-                if (getListFromName(names.get(current)).auto && unArchived.size() > 0)
-                {
-                    DialogFragment dialog = new EditCriteriaDialog();
-                    dialog.show(getFragmentManager(), "");
-                }
-                return false;
-            }
-        });
-
-        Button editCriteria = (Button) view.findViewById(R.id.editCriteria);
-        editCriteria.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (getListFromName(names.get(current)).auto && unArchived.size() > 0)
-                {
-                    DialogFragment dialog = new EditCriteriaDialog();
-                    dialog.show(getFragmentManager(), "");
-                }
-            }
-        });
+        spin = (Spinner) view.findViewById(R.id.spinner);
+        spin.setOnItemSelectedListener(this);
 
         //set up fab (Floating Action Button)
         fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_add_white));
         fab.setRippleColor(getResources().getColor(R.color.fab));
-        fab.setOnClickListener(new View.OnClickListener()
+
+        (new Handler()).postDelayed(new Runnable()
         {
             @Override
-            public void onClick(View view)
+            public void run()
             {
-                if(unArchived.size() > 0)
+                firstRun = false;
+                prefs = getActivity().getSharedPreferences(IO.PREFS, 0);
+                editor = prefs.edit();
+                tagcv = (LinearLayout) view.findViewById(R.id.tagsContainer);
+                criteria = (RelativeLayout) view.findViewById(R.id.criterion);
+                list = (LinearLayout) view.findViewById(R.id.list);
+                autotv = (TextView) view.findViewById(R.id.auto);
+
+                //sets up spinner
+                if (Data.getUnArchived().size() > 0)
                 {
+                    setupSpinner();
+                } else
+                {
+                    //if there are no lists prompt to make a new one
                     DialogFragment dialog = new NewListDialog();
                     dialog.show(getFragmentManager(), "");
                 }
-            }
-        });
-        fab.setOnLongClickListener(new View.OnLongClickListener()
-        {
-            public boolean onLongClick(View v)
-            {
-                Toast.makeText(v.getContext(), "New Item", Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
+                spin.setSelection(prefs.getInt(IO.CURRENT_LIST_PREF, 0));
+                Data.setCurrent(spin.getSelectedItemPosition());
+                IO.log("WLActivity:updateList", "Spinner is at " + spin.getSelectedItemPosition());
+                IO.log("WLActivity:updateList", "Set spinner to " + prefs.getInt(IO.CURRENT_LIST_PREF, 0));
 
-        //makes sure that lists isn't null
-        if (lists == null)
-        {
-            lists = new ArrayList<>();
-        }
-
-        unArchived = populateUnArchived();
-
-        //sets up spinner
-        spin = (Spinner) view.findViewById(R.id.spinner);
-        if (unArchived.size() > 0)
-        {
-            setupSpinner();
-        }
-        else
-        {
-            //if there are no lists prompt to make a new one
-            DialogFragment dialog = new NewListDialog();
-            dialog.show(getFragmentManager(), "");
-        }
-        spin.setOnItemSelectedListener(this);
-        spin.setSelection(prefs.getInt(IO.CURRENT_LIST_PREF, 0));
-        current = spin.getSelectedItemPosition();
-        IO.log("WLActivity:updateList", "Spinner is at " + spin.getSelectedItemPosition());
-        IO.log("WLActivity:updateList", "Set spinner to " + prefs.getInt(IO.CURRENT_LIST_PREF, 0));
-
-
-        //setup button to delete current list
-        ImageButton removelist = (ImageButton) view.findViewById(R.id.remove);
-        removelist.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
-                if (unArchived.size() > 0)
+                fab.setOnClickListener(new View.OnClickListener()
                 {
-                    DialogFragment dialog = new RemoveListDialog();
-                    dialog.show(getFragmentManager(), "");
-                }
-            }
-        });
-
-        //setup button to archive list
-        ImageButton archiveList = (ImageButton) view.findViewById(R.id.archive);
-        archiveList.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
-                if(unArchived.size() > 0)
+                    @Override
+                    public void onClick(View view)
+                    {
+                        if (Data.getUnArchived().size() > 0)
+                        {
+                            DialogFragment dialog = new NewListDialog();
+                            dialog.show(getFragmentManager(), "");
+                        }
+                    }
+                });
+                fab.setOnLongClickListener(new View.OnLongClickListener()
                 {
-                    DialogFragment dialog = new ArchiveListDialog();
-                    dialog.show(getFragmentManager(), "");
-                }
-            }
-        });
+                    public boolean onLongClick(View v)
+                    {
+                        Toast.makeText(v.getContext(), "New Item", Toast.LENGTH_SHORT).show();
+                        return true;
+                    }
+                });
 
-        //setup button to create a new item
-        LinearLayout container = (LinearLayout) view.findViewById(R.id.newitem);
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        View view2 = inflater.inflate(R.layout.button_add_item, container, false);
-        view2.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (unArchived.size() > 0)
+                //sets listener for editing tags
+                tagcv.setOnLongClickListener(new View.OnLongClickListener()
                 {
-                    Item newItem = new Item("", false);
-                    getCurrentList().items.add(newItem);
-                    updateList();
-                    edit = items.indexOf(newItem);
-                    updateList();
-                }
-            }
-        });
-        view2.setOnLongClickListener(new View.OnLongClickListener()
-        {
-            @Override
-            public boolean onLongClick(View v)
-            {
-                if (unArchived.size() > 0)
-                {
-                    DialogFragment dialog = new ClearListDialog();
-                    dialog.show(getFragmentManager(), "");
-                }
-                return false;
-            }
-        });
-        container.addView(view2);
+                    @Override
+                    public boolean onLongClick(View v)
+                    {
+                        if (Data.getUnArchived().size() > 0)
+                        {
+                            editTags = true;
+                            updateList();
+                        }
+                        return false;
+                    }
+                });
 
-        updateList();
+                //sets listener for editing criteria
+                criteria.setOnLongClickListener(new View.OnLongClickListener()
+                {
+                    @Override
+                    public boolean onLongClick(View v)
+                    {
+                        if (getListFromName(Data.getNames().get(Data.getCurrent())).auto && Data.getUnArchived().size() > 0)
+                        {
+                            DialogFragment dialog = new EditCriteriaDialog();
+                            dialog.show(getFragmentManager(), "");
+                        }
+                        return false;
+                    }
+                });
+
+                Button editCriteria = (Button) view.findViewById(R.id.editCriteria);
+                editCriteria.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        if (getListFromName(Data.getNames().get(Data.getCurrent())).auto && Data.getUnArchived().size() > 0)
+                        {
+                            DialogFragment dialog = new EditCriteriaDialog();
+                            dialog.show(getFragmentManager(), "");
+                        }
+                    }
+                });
+
+
+                //setup button to delete Data.getCurrent() list
+                ImageButton removelist = (ImageButton) view.findViewById(R.id.remove);
+                removelist.setOnClickListener(new View.OnClickListener()
+                {
+                    public void onClick(View v)
+                    {
+                        if (Data.getUnArchived().size() > 0)
+                        {
+                            DialogFragment dialog = new RemoveListDialog();
+                            dialog.show(getFragmentManager(), "");
+                        }
+                    }
+                });
+
+                //setup button to archive list
+                ImageButton archiveList = (ImageButton) view.findViewById(R.id.archive);
+                archiveList.setOnClickListener(new View.OnClickListener()
+                {
+                    public void onClick(View v)
+                    {
+                        if (Data.getUnArchived().size() > 0)
+                        {
+                            DialogFragment dialog = new ArchiveListDialog();
+                            dialog.show(getFragmentManager(), "");
+                        }
+                    }
+                });
+
+                //setup button to create a new item
+                LinearLayout container = (LinearLayout) view.findViewById(R.id.newitem);
+                LayoutInflater inflater = LayoutInflater.from(getActivity());
+                View view2 = inflater.inflate(R.layout.button_add_item, container, false);
+                view2.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        if (Data.getUnArchived().size() > 0)
+                        {
+                            Item newItem = new Item("", false);
+                            Data.getCurrentList().items.add(newItem);
+                            updateList();
+                            edit = Data.getItems().indexOf(newItem);
+                            updateList();
+                        }
+                    }
+                });
+                view2.setOnLongClickListener(new View.OnLongClickListener()
+                {
+                    @Override
+                    public boolean onLongClick(View v)
+                    {
+                        if (Data.getUnArchived().size() > 0)
+                        {
+                            DialogFragment dialog = new ClearListDialog();
+                            dialog.show(getFragmentManager(), "");
+                        }
+                        return false;
+                    }
+                });
+                container.addView(view2);
+
+                updateList();
+            }
+        }, 500);
         return view;
     }
 
@@ -627,22 +580,21 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
         List<WishList> copy = new ArrayList<>(lists);
         List<String> names = new ArrayList<>();
         List<String> extra = new ArrayList<>();
-        while(copy.size() > 0)
+        while (copy.size() > 0)
         {
-            int lowest = 9999;
+            int lowest = Integer.MAX_VALUE;
             int count = 0;
-            for(int j = 0; j < copy.size(); j++)
+            for (int j = 0; j < copy.size(); j++)
             {
-                if(copy.get(j).order != 0)
+                if (copy.get(j).order != 0)
                 {
-                    if(copy.get(j).order < lowest)
+                    if (copy.get(j).order < lowest)
                     {
                         IO.log("WLActivity:sortLists", "New Lowest " + copy.get(j).name + " with order of " + copy.get(j).order);
                         lowest = copy.get(j).order;
                         count = j;
                     }
-                }
-                else
+                } else
                 {
                     extra.add(copy.get(j).name);
                 }
@@ -651,9 +603,9 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
             names.add(copy.get(count).name);
             copy.remove(count);
         }
-        for(String xtra : extra)
+        for (String xtra : extra)
         {
-            if(!names.contains(xtra))
+            if (!names.contains(xtra))
             {
                 names.add(xtra);
             }
@@ -666,13 +618,14 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
     public void setupSpinner()
     {
         //creates a list of events level and distance to fill out the spinner
-        names = sortLists(unArchived);
+        Data.setNames(sortLists(Data.getUnArchived()));
+        System.out.println("Names: " + Data.getNames());
 
         //sets up adapter
-        ArrayAdapter<String> sadapter = new ArrayAdapter<>(c, R.layout.spinner_item, names);
+        ArrayAdapter<String> sadapter = new ArrayAdapter<>(c, R.layout.spinner_item, Data.getNames());
         sadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spin.setAdapter(sadapter);
-        current = spin.getSelectedItemPosition();
+        Data.setCurrent(spin.getSelectedItemPosition());
 
         spin.setOnLongClickListener(new View.OnLongClickListener()
         {
@@ -688,39 +641,25 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
         updateList();
     }
 
-    //sets the current list to the last open list
+    //sets the Data.getCurrent() list to the last open list
     public static void openNewest()
     {
         //creates a list of events level and distance to fill out the spinner
-        names = sortLists(unArchived);
+        Data.setNames(sortLists(Data.getUnArchived()));
 
         //sets up adapter
-        ArrayAdapter<String> sadapter = new ArrayAdapter<>(c, R.layout.spinner_item, names);
+        ArrayAdapter<String> sadapter = new ArrayAdapter<>(c, R.layout.spinner_item, Data.getNames());
         sadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spin.setAdapter(sadapter);
-        spin.setSelection(names.size() - 1);
-        current = spin.getSelectedItemPosition();
+        spin.setSelection(Data.getNames().size() - 1);
+        Data.setCurrent(spin.getSelectedItemPosition());
 
-        editor.putInt(IO.CURRENT_LIST_PREF, current);
-        IO.log("WLActivity:openNewest", "Saved position of " + current);
+        editor.putInt(IO.CURRENT_LIST_PREF, Data.getCurrent());
+        IO.log("WLActivity:openNewest", "Saved position of " + Data.getCurrent());
         IO.log("WLActivity:openNewest", "Position is saved as " + prefs.getInt(IO.CURRENT_LIST_PREF, 0));
         editor.commit();
 
-        getFrag((WLActivity)c).updateList();
-    }
-
-    //finds all the unAchived lists and groups them
-    public List<WishList> populateUnArchived()
-    {
-        List<WishList> unArchived = new ArrayList<>();
-        for(WishList list : lists)
-        {
-            if(!list.archived)
-            {
-                unArchived.add(list);
-            }
-        }
-        return unArchived;
+        getFrag((WLActivity) c).updateList();
     }
 
     //method that is run when app is resumed
@@ -730,17 +669,17 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
         super.onResume();
 
         //repopulate the list if there are lists to populate it with
-        if(unArchived.size() > 0 && unArchived != null)
+        if (Data.getUnArchived().size() > 0 && Data.getUnArchived() != null)
         {
             updateList();
         }
 
         //re-sets up spinner
         spin = (Spinner) view.findViewById(R.id.spinner);
-        if (unArchived.size() > 0)
+        if (Data.getUnArchived().size() > 0)
         {
             setupSpinner();
-        } else
+        } else if(!firstRun)
         {
             DialogFragment dialog = new NewListDialog();
             dialog.show(getFragmentManager(), "");
@@ -754,16 +693,19 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
     {
         edit = -1;
         editTags = false;
-        current = spin.getSelectedItemPosition();
-        editor.putInt(IO.CURRENT_LIST_PREF, current);
-        IO.log("WLActivity:onItemSelected", "Saved position of " + current);
+        Data.setCurrent(spin.getSelectedItemPosition());
+        editor.putInt(IO.CURRENT_LIST_PREF, Data.getCurrent());
+        IO.log("WLActivity:onItemSelected", "Saved position of " + Data.getCurrent());
         IO.log("WLActivity:onItemSelected", "Position is saved as " + prefs.getInt(IO.CURRENT_LIST_PREF, 0));
         editor.commit();
         updateList();
     }
 
     //when nothing is selected in the spinner
-    @Override public void onNothingSelected(AdapterView<?> parent){}
+    @Override
+    public void onNothingSelected(AdapterView<?> parent)
+    {
+    }
 
     //creates snackbar when list is removed
     public void removeListSnackbar(final WishList list)
@@ -775,7 +717,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
                     public void onClick(View v)
                     {
                         //undoes the removal when undo is chosen
-                        unArchived.add(list);
+                        Data.getUnArchived().add(list);
                         lists.add(list);
                         IO.save(lists);
                         setupSpinner();
@@ -794,8 +736,8 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
                     public void onClick(View v)
                     {
                         //undoes the removal when undo is chosen
-                        lists.get(current).items.add(item);
-                        unArchived.get(current).items.add(item);
+                        lists.get(Data.getCurrent()).items.add(item);
+                        Data.getUnArchived().get(Data.getCurrent()).items.add(item);
                         IO.save(lists);
                         updateList();
                     }

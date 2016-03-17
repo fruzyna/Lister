@@ -116,6 +116,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/list"
+                        android:paddingTop="4dp"
                         android:paddingBottom="8dp"
                         android:paddingLeft="8dp"
                         android:paddingRight="8dp"
