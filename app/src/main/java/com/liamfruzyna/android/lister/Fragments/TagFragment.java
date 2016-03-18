@@ -118,26 +118,19 @@ public class TagFragment extends Fragment implements AdapterView.OnItemSelectedL
     }
 
     @Override
-    public View onCreateView(LayoutInflater infl, ViewGroup parent, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater infl, ViewGroup parent, Bundle savedInstanceState)
+    {
         view = infl.inflate(R.layout.fragment_tags, parent, false);
 
         list = (LinearLayout) view.findViewById(R.id.list);
         spin = (Spinner) view.findViewById(R.id.spinner);
 
-        (new Handler()).postDelayed(new Runnable()
-                                    {
-                                        @Override
-                                        public void run()
-                                        {
-                                            lists = Data.getLists();
-
-                                            ArrayAdapter<String> sadapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item, getTags());
-                                            sadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                            spin.setAdapter(sadapter);
-                                            current = spin.getSelectedItemPosition();
-                                            updateList();
-                                        }
-                                    }, 500);
+        lists = Data.getLists();
+        ArrayAdapter<String> sadapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item, getTags());
+        sadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spin.setAdapter(sadapter);
+        current = spin.getSelectedItemPosition();
+        updateList();
         spin.setOnItemSelectedListener(this);
         return view;
     }

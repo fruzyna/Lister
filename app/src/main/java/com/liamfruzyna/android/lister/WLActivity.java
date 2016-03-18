@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -41,6 +42,61 @@ public class WLActivity extends ActionBarActivity
     private DrawerLayout drawer;
     private ListView drawerList;
     private ActionBarDrawerToggle drawerToggle;
+
+
+    private class Open extends AsyncTask<String, Void, String>
+    {
+
+        @Override
+        protected String doInBackground(String... params)
+        {
+            Fragment frag = new Fragment();
+            String tag = "";
+            switch (Integer.parseInt(params[0]))
+            {
+                case 0:
+                    //Home
+                    frag = new WLFragment();
+                    tag = "WL";
+                    break;
+                case 1:
+                    //Tag Viewer
+                    frag = new TagsFragment();
+                    tag = "Tags";
+                    break;
+                case 2:
+                    //People Viewer
+                    frag = new PeopleFragment();
+                    tag = "People";
+                    break;
+                case 3:
+                    //Date Viewer
+                    frag = new DatesFragment();
+                    tag = "Dates";
+                    break;
+                case 4:
+                    //Settings
+                    frag = new SettingsFragment();
+                    tag = "Settings";
+                    break;
+            }
+            changeFragment(frag, tag);
+            return params[0];
+        }
+
+        @Override
+        protected void onPostExecute(String result)
+        {
+            drawerList.setItemChecked(Integer.parseInt(result), true);
+            drawer.closeDrawer(findViewById(R.id.drawer));
+        }
+
+        @Override
+        protected void onPreExecute() {}
+
+        @Override
+        protected void onProgressUpdate(Void... values) {}
+    }
 
     //main method that is run when app is started
     @Override
@@ -93,41 +149,7 @@ public class WLActivity extends ActionBarActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id)
             {
-                Fragment frag = new Fragment();
-                        String tag = "";
-                        switch (position)
-                        {
-                            case 0:
-                                //Home
-                                frag = new WLFragment();
-                                tag = "WL";
-                                break;
-                            case 1:
-                                //Tag Viewer
-                                frag = new TagsFragment();
-                                tag = "Tags";
-                                break;
-                            case 2:
-                                //People Viewer
-                                frag = new PeopleFragment();
-                                tag = "People";
-                                break;
-                            case 3:
-                                //Date Viewer
-                                frag = new DatesFragment();
-                                tag = "Dates";
-                                break;
-                            case 4:
-                                //Settings
-                                frag = new SettingsFragment();
-                                tag = "Settings";
-                                break;
-                        }
-                        changeFragment(frag, tag);
-
-
-                drawerList.setItemChecked(position, true);
-                drawer.closeDrawer(findViewById(R.id.drawer));
+                new Open().execute(Integer.toString(position));
             }
         });
 

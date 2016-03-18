@@ -9,7 +9,7 @@ import java.util.List;
 public class Data
 {
     private static int current = 0;
-    private static List<String> names;
+    private static List<String> names = new ArrayList<>();
     private static List<Item> items = new ArrayList<>();
     private static List<WishList> lists = new ArrayList<>();
     private static List<WishList> unArchived = new ArrayList<>();
