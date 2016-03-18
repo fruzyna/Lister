@@ -44,8 +44,6 @@ import com.liamfruzyna.android.lister.WLActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -76,6 +74,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
     boolean editTags = false;
 
     boolean firstRun = true;
+    boolean firstSelect = true;
 
     //rebuilds the list of items
     public void updateList()
@@ -332,14 +331,21 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
     @Override
     public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id)
     {
-        edit = -1;
-        editTags = false;
-        Data.setCurrent(spin.getSelectedItemPosition());
-        editor.putInt(IO.CURRENT_LIST_PREF, Data.getCurrent());
-        IO.log("WLActivity:onItemSelected", "Saved position of " + Data.getCurrent());
-        IO.log("WLActivity:onItemSelected", "Position is saved as " + prefs.getInt(IO.CURRENT_LIST_PREF, 0));
-        editor.commit();
-        updateList();
+        if(firstSelect)
+        {
+            firstSelect = false;
+        }
+        else
+        {
+            edit = -1;
+            editTags = false;
+            Data.setCurrent(spin.getSelectedItemPosition());
+            editor.putInt(IO.CURRENT_LIST_PREF, Data.getCurrent());
+            IO.log("WLActivity:onItemSelected", "Saved position of " + Data.getCurrent());
+            IO.log("WLActivity:onItemSelected", "Position is saved as " + prefs.getInt(IO.CURRENT_LIST_PREF, 0));
+            editor.commit();
+            updateList();
+        }
     }
 
     //when nothing is selected in the spinner

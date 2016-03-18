@@ -105,11 +105,6 @@ public class WLActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wl);
 
-        new Thread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
                 try
                 {
                     Data.setLists(IO.load());
@@ -128,8 +123,6 @@ public class WLActivity extends ActionBarActivity
                 }
 
                 Data.setUnArchived(Util.populateUnArchived());
-            }
-        }).start();
 
         //setup the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

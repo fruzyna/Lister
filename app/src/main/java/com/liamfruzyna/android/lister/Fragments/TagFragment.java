@@ -33,19 +33,20 @@ import java.util.List;
  */
 public class TagFragment extends Fragment implements AdapterView.OnItemSelectedListener
 {
-        View view;
-        List<WishList> lists;
-        LinearLayout list;
-        List<Item> items;
-        Spinner spin;
-        int current;
+    View view;
+    List<WishList> lists;
+    LinearLayout list;
+    List<Item> items;
+    Spinner spin;
+    int current;
+    boolean firstSelect = true;
 
-        //finds all the different people in unarchived lists
-        public List<String> getTags()
-        {
-            List<String> people = new ArrayList<>();
-            return people;
-        }
+    //finds all the different people in unarchived lists
+    public List<String> getTags()
+    {
+        List<String> people = new ArrayList<>();
+        return people;
+    }
 
     //Gets all the items in unarchived lists containing a name
     public List<Item> getTagItems(String tag)
@@ -57,64 +58,62 @@ public class TagFragment extends Fragment implements AdapterView.OnItemSelectedL
     //updates the list on screen
     public void updateList()
     {
-            items = Util.sortByDone(Util.sortByPriority(Util.sortByDate(getTagItems(getTags().get(current)))));
-            list.removeAllViews();
-            LayoutInflater inflater = LayoutInflater.from(getActivity());
-            for (final Item item : items)
+        items = Util.sortByDone(Util.sortByPriority(Util.sortByDate(getTagItems(getTags().get(current)))));
+        list.removeAllViews();
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        for (final Item item : items)
+        {
+            View view = inflater.inflate(R.layout.checkbox_list_item, list, false);
+            //init checkbox and set text
+            final CheckBox cb = (CheckBox) view.findViewById(R.id.checkbox);
+            int color = Color.parseColor(item.color);
+
+            //color item text based off date (late is red, day of is orange)
+            SharedPreferences settings = getActivity().getSharedPreferences(IO.PREFS, 0);
+            boolean highlight = settings.getBoolean(IO.HIGHLIGHT_DATE_PREF, true);
+            if (highlight)
             {
-                View view = inflater.inflate(R.layout.checkbox_list_item, list, false);
-                //init checkbox and set text
-                final CheckBox cb = (CheckBox) view.findViewById(R.id.checkbox);
-                int color = Color.parseColor(item.color);
-
-                //color item text based off date (late is red, day of is orange)
-                SharedPreferences settings = getActivity().getSharedPreferences(IO.PREFS, 0);
-                boolean highlight = settings.getBoolean(IO.HIGHLIGHT_DATE_PREF, true);
-                if(highlight)
+                Date date = item.date;
+                Date today = Calendar.getInstance().getTime();
+                if (date.getYear() == today.getYear() && date.getMonth() == today.getMonth() && date.getDate() == today.getDate() && !item.done)
                 {
-                    Date date = item.date;
-                    Date today = Calendar.getInstance().getTime();
-                    int compare = date.compareTo(today);
-                    if(date.getYear() == today.getYear() && date.getMonth() == today.getMonth() && date.getDate() == today.getDate() && !item.done)
-                    {
-                        color = Color.parseColor("#FFA500");
-                    }
-                    else if(date.compareTo(today) < 0 && !item.done)
-                    {
-                        color = Color.RED;
-                    }
+                    color = Color.parseColor("#FFA500");
+                } else if (date.compareTo(today) < 0 && !item.done)
+                {
+                    color = Color.RED;
                 }
-
-                SpannableStringBuilder s = Util.colorTags(item.item, color);
-                cb.setText(s);
-                cb.setTextColor(Color.parseColor(item.color));
-                cb.setChecked(item.done);
-                if(item.done)
-                {
-                    cb.setPaintFlags(cb.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                } else
-                {
-                    cb.setPaintFlags(0);
-                }
-
-                cb.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        item.done = cb.isChecked();
-                        if (cb.isChecked())
-                        {
-                            cb.setPaintFlags(cb.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                        } else
-                        {
-                            cb.setPaintFlags(0);
-                        }
-                        IO.save();
-                    }
-                });
-                list.addView(view);
             }
+
+            SpannableStringBuilder s = Util.colorTags(item.item, color);
+            cb.setText(s);
+            cb.setTextColor(Color.parseColor(item.color));
+            cb.setChecked(item.done);
+            if (item.done)
+            {
+                cb.setPaintFlags(cb.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            } else
+            {
+                cb.setPaintFlags(0);
+            }
+
+            cb.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    item.done = cb.isChecked();
+                    if (cb.isChecked())
+                    {
+                        cb.setPaintFlags(cb.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                    } else
+                    {
+                        cb.setPaintFlags(0);
+                    }
+                    IO.save();
+                }
+            });
+            list.addView(view);
+        }
     }
 
     @Override
@@ -139,10 +138,18 @@ public class TagFragment extends Fragment implements AdapterView.OnItemSelectedL
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
     {
-        current = spin.getSelectedItemPosition();
-        updateList();
+        if (firstSelect)
+        {
+            firstSelect = false;
+        } else
+        {
+            current = spin.getSelectedItemPosition();
+            updateList();
+        }
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> parent){}
+    public void onNothingSelected(AdapterView<?> parent)
+    {
+    }
 }
