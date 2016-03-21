@@ -46,7 +46,6 @@ public class WLActivity extends ActionBarActivity
 
     private class Open extends AsyncTask<String, Void, String>
     {
-
         @Override
         protected String doInBackground(String... params)
         {
@@ -73,11 +72,6 @@ public class WLActivity extends ActionBarActivity
                     //Date Viewer
                     frag = new DatesFragment();
                     tag = "Dates";
-                    break;
-                case 4:
-                    //Settings
-                    frag = new SettingsFragment();
-                    tag = "Settings";
                     break;
             }
             changeFragment(frag, tag);
@@ -142,7 +136,16 @@ public class WLActivity extends ActionBarActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id)
             {
-                new Open().execute(Integer.toString(position));
+                if(position != 4)
+                {
+                    new Open().execute(Integer.toString(position));
+                }
+                else
+                {
+                    changeFragment(new SettingsFragment(), "Settings");
+                    drawerList.setItemChecked(position, true);
+                    drawer.closeDrawer(findViewById(R.id.drawer));
+                }
             }
         });
 
