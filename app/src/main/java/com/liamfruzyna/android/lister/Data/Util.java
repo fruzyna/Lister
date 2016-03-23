@@ -145,4 +145,44 @@ public class Util
         System.out.println("Unarchived Lists: " + Data.getUnArchived().size());
         return unArchived;
     }
+
+    //Takes a list of lists and reorganizes it based off the order variable
+    public static List<String> sortLists(List<WishList> lists)
+    {
+        List<WishList> copy = new ArrayList<>(lists);
+        List<String> names = new ArrayList<>();
+        List<String> extra = new ArrayList<>();
+        while (copy.size() > 0)
+        {
+            int lowest = Integer.MAX_VALUE;
+            int count = 0;
+            for (int j = 0; j < copy.size(); j++)
+            {
+                if (copy.get(j).order != 0)
+                {
+                    if (copy.get(j).order < lowest)
+                    {
+                        IO.log("WLActivity:sortLists", "New Lowest " + copy.get(j).name + " with order of " + copy.get(j).order);
+                        lowest = copy.get(j).order;
+                        count = j;
+                    }
+                } else
+                {
+                    extra.add(copy.get(j).name);
+                }
+            }
+            IO.log("WLActivity:sortLists", "Adding " + copy.get(count).name + " with order of " + copy.get(count).order);
+            names.add(copy.get(count).name);
+            copy.remove(count);
+        }
+        for (String xtra : extra)
+        {
+            if (!names.contains(xtra))
+            {
+                names.add(xtra);
+            }
+        }
+
+        return names;
+    }
 }

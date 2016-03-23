@@ -99,24 +99,24 @@ public class WLActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wl);
 
-                try
-                {
-                    Data.setLists(IO.load());
-                } catch (JSONException e)
-                {
-                    e.printStackTrace();
-                } catch (MalformedURLException e)
-                {
-                    e.printStackTrace();
-                }
+        try
+        {
+            Data.setLists(IO.load());
+        } catch (JSONException e)
+        {
+            e.printStackTrace();
+        } catch (MalformedURLException e)
+        {
+            e.printStackTrace();
+        }
 
-                //makes sure that lists isn't null
-                if (Data.getLists() == null)
-                {
-                    Data.setLists(new ArrayList<WishList>());
-                }
+        //makes sure that lists isn't null
+        if (Data.getLists() == null)
+        {
+            Data.setLists(new ArrayList<WishList>());
+        }
 
-                Data.setUnArchived(Util.populateUnArchived());
+        Data.setUnArchived(Util.populateUnArchived());
 
         //setup the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -136,11 +136,10 @@ public class WLActivity extends ActionBarActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id)
             {
-                if(position != 4)
+                if (position != 4)
                 {
                     new Open().execute(Integer.toString(position));
-                }
-                else
+                } else
                 {
                     changeFragment(new SettingsFragment(), "Settings");
                     drawerList.setItemChecked(position, true);
@@ -152,23 +151,24 @@ public class WLActivity extends ActionBarActivity
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
         {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
-        }
-        else
+        } else
         {
             changeFragment(new WLFragment(), "WL");
         }
 
-
-        drawerToggle = new ActionBarDrawerToggle(this, drawer, R.drawable.ic_menu_white_24dp, R.string.open, R.string.closed) {
+        drawerToggle = new ActionBarDrawerToggle(this, drawer, R.drawable.ic_menu_white_24dp, R.string.open, R.string.closed)
+        {
 
             /** Called when a drawer has settled in a completely closed state. */
-            public void onDrawerClosed(View view) {
+            public void onDrawerClosed(View view)
+            {
                 super.onDrawerClosed(view);
                 invalidateOptionsMenu();
             }
 
             /** Called when a drawer has settled in a completely open state. */
-            public void onDrawerOpened(View drawerView) {
+            public void onDrawerOpened(View drawerView)
+            {
                 super.onDrawerOpened(drawerView);
                 invalidateOptionsMenu();
             }
@@ -188,8 +188,7 @@ public class WLActivity extends ActionBarActivity
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 {
                     changeFragment(new WLFragment(), "WL");
-                }
-                else
+                } else
                 {
                     Toast.makeText(getApplicationContext(), "Fuck you, Lister needs that!", Toast.LENGTH_LONG).show();
                 }
@@ -197,6 +196,7 @@ public class WLActivity extends ActionBarActivity
             }
         }
     }
+
     public void setTitle(String title)
     {
         getSupportActionBar().setTitle(title);

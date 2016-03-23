@@ -74,13 +74,13 @@ public class WishList
 
     public void findPeople()
     {
-        for(int i = 0; i < tags.size(); i++)
+        for(String tag : tags)
         {
-            if(tags.get(i).length() > 0)
+            if(tag.length() > 0)
             {
-                if(tags.get(i).charAt(0) == '@')
+                if(tag.charAt(0) == '@')
                 {
-                    people.add(tags.get(i).replace("@", ""));
+                    people.add(tag.replace("@", ""));
 
                 }
             }

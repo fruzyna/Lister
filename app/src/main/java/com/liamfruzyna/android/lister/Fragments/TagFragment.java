@@ -149,7 +149,5 @@ public class TagFragment extends Fragment implements AdapterView.OnItemSelectedL
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> parent)
-    {
-    }
+    public void onNothingSelected(AdapterView<?> parent) {}
 }
