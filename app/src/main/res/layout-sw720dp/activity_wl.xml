@@ -1,167 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
+<com.liamfruzyna.android.lister.ScrimInsetsFrameLayout
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:id="@+id/scrimInsetsFrameLayout"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:layout_gravity="start"
+android:background="@color/background_gray"
+android:elevation="10dp"
+android:fitsSystemWindows="true"
+app:insetForeground="#4000">
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/background_gray"
-                android:orientation="vertical">
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="192dp"
-        android:background="?attr/colorPrimary"
-        android:gravity="top"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <LinearLayout
-        android:id="@+id/popup"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="512dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="8dp"
-        android:background="#323232"
-        android:elevation="8dp"
-        android:orientation="vertical"/>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:cropToPadding="true"
-        app:borderWidth="0dp"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="8dp"
-        android:layout_alignBottom="@+id/toolbar" />
-
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="64dp">
-
-        <LinearLayout
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
+            android:layout_height="192dp"
+            android:background="?attr/colorPrimary"
+            android:gravity="top"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+        <FrameLayout
+            android:id="@+id/container"
+            android:layout_width="512dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"/>
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/cardView"
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:layout_width="512dp"
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/drawer"
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="178dp"
+            android:background="@drawable/bgblue">
+
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                card_view:cardCornerRadius="4dp">
+                android:layout_alignParentBottom="true"
+                android:layout_margin="16dp"
+                android:text="Lister"
+                android:textColor="@android:color/white"
+                android:textSize="24sp" />
+        </RelativeLayout>
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+        <ListView android:id="@+id/left_drawer"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:layout_gravity="start"
+                  android:choiceMode="singleChoice"
+                  android:divider="@android:color/transparent"
+                  android:dividerHeight="0dp"
+                  android:background="@android:color/white"/>
+    </LinearLayout>
 
-                    <RelativeLayout
-                        android:id="@+id/top"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingBottom="8dp"
-                        android:paddingLeft="8dp"
-                        android:paddingRight="8dp"
-                        android:paddingTop="8dp">
+</android.support.v4.widget.DrawerLayout>
 
-
-                        <Spinner
-                            android:id="@+id/spinner"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true"
-                            android:layout_alignParentTop="true"
-                            android:layout_centerVertical="true"/>
-
-                        <ImageButton
-                            android:id="@+id/remove"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_alignParentEnd="true"
-                            android:layout_alignParentRight="true"
-                            android:background="@drawable/ic_close_indigo_100_24dp"/>
-
-                        <ImageButton
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/archive"
-                            android:layout_centerVertical="true"
-                            android:layout_toLeftOf="@+id/remove"
-                            android:layout_toStartOf="@+id/remove"
-                            android:background="@drawable/ic_check_indigo_100_24dp" />
-
-                    </RelativeLayout>
-
-                    <View
-                        android:id="@+id/divider"
-                        android:layout_width="fill_parent"
-                        android:layout_height="1dp"
-                        android:layout_below="@id/top"
-                        android:background="@android:color/darker_gray"/>
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/divider"
-                        android:paddingBottom="8dp"
-                        android:paddingLeft="8dp"
-                        android:paddingRight="8dp"
-                        android:paddingTop="8dp"
-                        android:id="@+id/list"
-                        android:orientation="vertical"/>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/list"
-                        android:paddingBottom="8dp"
-                        android:paddingLeft="8dp"
-                        android:paddingRight="8dp"
-                        android:id="@+id/newitem"
-                        android:orientation="vertical"/>
-
-                </RelativeLayout>
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:id="@+id/tags"
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:layout_width="512dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/cardView"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                card_view:cardCornerRadius="4dp">
-
-                <RelativeLayout
-                    android:id="@+id/tag"
-                    xmlns:android="http://schemas.android.com/apk/res/android"
-                    xmlns:tools="http://schemas.android.com/tools"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="16dp"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:paddingTop="16dp"
-                    tools:context=".WLActivity"/>
-
-            </android.support.v7.widget.CardView>
-        </LinearLayout>
-    </ScrollView>
-
-</RelativeLayout>
+</com.liamfruzyna.android.lister.ScrimInsetsFrameLayout>

@@ -37,7 +37,7 @@ public class EditServerDialog extends DialogFragment
         password = (EditText) v.findViewById(R.id.password);
         password.setText(settings.getString(IO.SERVER_PASSWORD_PREF, "none"));
         dir = (EditText) v.findViewById(R.id.dir);
-        dir.setText(settings.getString(IO.SERVER_DIR_PREF, "none/Lists"));
+        dir.setText(settings.getString(IO.SERVER_DIR_PREF, "Lists"));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage("Edit server address, username, and password")
