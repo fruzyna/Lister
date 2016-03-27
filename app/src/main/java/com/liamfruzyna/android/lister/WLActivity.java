@@ -1,8 +1,11 @@
 package com.liamfruzyna.android.lister;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
@@ -33,8 +36,10 @@ import com.liamfruzyna.android.lister.Fragments.WLFragment;
 
 import org.json.JSONException;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class WLActivity extends ActionBarActivity
 {
@@ -43,6 +48,9 @@ public class WLActivity extends ActionBarActivity
     private ListView drawerList;
     private ActionBarDrawerToggle drawerToggle;
 
+    private Activity c = this;
+
+    public static SharedPreferences settings;
 
     private class Open extends AsyncTask<String, Void, String>
     {
@@ -99,24 +107,9 @@ public class WLActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wl);
 
-        try
-        {
-            Data.setLists(IO.load());
-        } catch (JSONException e)
-        {
-            e.printStackTrace();
-        } catch (MalformedURLException e)
-        {
-            e.printStackTrace();
-        }
+        settings = getSharedPreferences(IO.PREFS, 0);
 
-        //makes sure that lists isn't null
-        if (Data.getLists() == null)
-        {
-            Data.setLists(new ArrayList<WishList>());
-        }
-
-        Data.setUnArchived(Util.populateUnArchived());
+        new RemoteReadTask().execute("");
 
         //setup the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -148,13 +141,6 @@ public class WLActivity extends ActionBarActivity
             }
         });
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
-        } else
-        {
-            changeFragment(new WLFragment(), "WL");
-        }
 
         drawerToggle = new ActionBarDrawerToggle(this, drawer, R.drawable.ic_menu_white_24dp, R.string.open, R.string.closed)
         {
@@ -208,7 +194,7 @@ public class WLActivity extends ActionBarActivity
         //transaction.setCustomAnimations(R.anim.abc_slide_in_top, R.anim.abc_fade_out, R.anim.abc_slide_in_bottom, R.anim.abc_fade_out);
         transaction.replace(R.id.container, fragment, tag);
         transaction.addToBackStack(null);
-        transaction.commit();
+        transaction.commitAllowingStateLoss();
     }
 
     @Override
@@ -235,5 +221,45 @@ public class WLActivity extends ActionBarActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    class RemoteReadTask extends AsyncTask<String, Void, List<String>>
+    {
+
+        protected List<String> doInBackground(String... data)
+        {
+            List<String> jlists = new ArrayList<>();
+            try
+            {
+                jlists = IO.readFromRemoteFile();
+            } catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+            return jlists;
+        }
+
+        protected void onPostExecute(List<String> jlists)
+        {
+            IO.finishLoad(jlists);
+
+            //makes sure that lists isn't null
+            if (Data.getLists() == null)
+            {
+                Data.setLists(new ArrayList<WishList>());
+            }
+
+            Data.setUnArchived(Util.populateUnArchived());
+
+            if (ContextCompat.checkSelfPermission(c, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+            {
+                ActivityCompat.requestPermissions(c, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+            } else
+            {
+                changeFragment(new WLFragment(), "WL");
+            }
+
+        }
     }
 }
