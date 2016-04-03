@@ -198,6 +198,17 @@ public class WLActivity extends ActionBarActivity
     }
 
     @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        if(Data.getLists() == null)
+        {
+            new RemoteReadTask().execute("");
+        }
+    }
+
+    @Override
     protected void onPostCreate(Bundle savedInstanceState)
     {
         super.onPostCreate(savedInstanceState);
@@ -232,7 +243,7 @@ public class WLActivity extends ActionBarActivity
             List<String> jlists = new ArrayList<>();
             try
             {
-                jlists = IO.readFromRemoteFile();
+                jlists = IO.readFromRemoteFile(c);
             } catch (IOException e)
             {
                 e.printStackTrace();
@@ -252,7 +263,8 @@ public class WLActivity extends ActionBarActivity
 
             Data.setUnArchived(Util.populateUnArchived());
 
-            if (ContextCompat.checkSelfPermission(c, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+            if (ContextCompat.checkSelfPermission(c, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+                    Util.hasActiveInternetConnection(c))
             {
                 ActivityCompat.requestPermissions(c, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
             } else

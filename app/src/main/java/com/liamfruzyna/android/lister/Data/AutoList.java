@@ -22,7 +22,7 @@ public class AutoList extends WishList
         auto = true;
         this.criteria = criteria;
         this.showDone = showDone;
-        items = findItems();
+        findItems();
     }
 
     public AutoList(String name, List<String> tags, List<String> criteria, boolean showDone, int daysToDelete)
@@ -31,10 +31,10 @@ public class AutoList extends WishList
         auto = true;
         this.criteria = criteria;
         this.showDone = showDone;
-        items = findItems();
+        findItems();
     }
 
-    public List<Item> findItems()
+    public void findItems()
     {
         List<Item> found = new ArrayList<>();
         for(WishList list : Data.getUnArchived())
@@ -210,7 +210,7 @@ public class AutoList extends WishList
                 }
             }
         }
-        return found;
+        items = found;
     }
 
     public List<String> getCriteria()

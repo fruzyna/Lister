@@ -88,7 +88,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
             criteria.removeAllViews();
             if (wl.auto)
             {
-                wl.items = ((AutoList) wl).findItems();
+                ((AutoList) wl).findItems();
                 criteria.addView(Views.createCriteria(c));
                 autotv.setText("Auto");
                 view.findViewById(R.id.newitem).setVisibility(View.GONE);
@@ -296,6 +296,10 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
             IO.log("WLActivity:onItemSelected", "Saved position of " + Data.getCurrent());
             IO.log("WLActivity:onItemSelected", "Position is saved as " + prefs.getInt(IO.CURRENT_LIST_PREF, 0));
             editor.commit();
+            if(Data.getCurrentList().auto)
+            {
+                ((AutoList) Data.getCurrentList()).findItems();
+            }
             updateList();
         }
     }
