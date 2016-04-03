@@ -83,6 +83,14 @@ public class Views
             public void onClick(View v)
             {
                 //transition back to just checkbox
+                if(name.getText().toString().equals(""))
+                {
+                    IO.log("EditItemDialog", "Removing " + item);
+                    Data.getItems().remove(item);
+                    Data.getCurrentList().items.remove(item);
+                    f.removeItemSnackbar(item);
+                    IO.save();
+                }
                 f.edit = -1;
                 f.updateList();
             }
