@@ -141,7 +141,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
                         IO.log("EditTagDialog", "Settings " + Data.getCurrentList().name + "'s tags to " + editText.getText().toString());
                         Data.getCurrentList().tags = new ArrayList<>(Arrays.asList(editText.getText().toString().split(" ")));
                         updateList();
-                        IO.save();
+                        IO.saveList();
                         editTags = false;
                         updateList();
                     }
@@ -399,7 +399,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
         {
             Data.getCurrentList().showDone = ((CheckBox) v).isChecked();
             updateList();
-            IO.save();
+            IO.saveList();
         } else if (v.equals(tagEdit))
         {
             if (Data.getUnArchived().size() > 0)

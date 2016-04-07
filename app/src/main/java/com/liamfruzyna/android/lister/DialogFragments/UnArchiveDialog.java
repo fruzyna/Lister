@@ -70,7 +70,7 @@ public class UnArchiveDialog extends DialogFragment
                     IO.log("UnArchiveDialog", "Unarchiving list " + archived.get(position));
                     unArchived.add(archived.get(position));
                     archived.get(position).archived = false;
-                    IO.save();
+                    IO.saveList();
                 }
             }
         });

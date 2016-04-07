@@ -51,7 +51,7 @@ public class Views
             public void onClick(View v)
             {
                 item.done = cb.isChecked();
-                IO.save();
+                IO.saveList();
             }
         });
 
@@ -72,7 +72,7 @@ public class Views
                     Data.getItems().remove(item);
                     Data.getCurrentList().items.remove(item);
                     f.removeItemSnackbar(item);
-                    IO.save();
+                    IO.saveList();
                     f.updateList();
                 }
             });
@@ -89,7 +89,7 @@ public class Views
                     Data.getItems().remove(item);
                     Data.getCurrentList().items.remove(item);
                     f.removeItemSnackbar(item);
-                    IO.save();
+                    IO.saveList();
                 }
                 f.edit = -1;
                 f.updateList();
@@ -103,7 +103,7 @@ public class Views
                 f.edit = -1;
                 IO.log("EditItemDialog", "Updating " + item.item + " to " + name.getText().toString());
                 item.item = name.getText().toString();
-                IO.save();
+                IO.saveList();
                 f.updateList();
             }
         });
@@ -204,7 +204,7 @@ public class Views
                 {
                     cb.setPaintFlags(0);
                 }
-                IO.save();
+                IO.saveList();
 
             }
         });

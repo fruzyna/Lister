@@ -46,7 +46,7 @@ public class ImportListDialog extends DialogFragment
                             e.printStackTrace();
                             IO.log("ImportListDialog", "Error reading list json");
                         }
-                        IO.save();
+                        IO.saveList();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {

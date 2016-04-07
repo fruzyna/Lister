@@ -46,10 +46,8 @@ public class RemoveListDialog extends DialogFragment
                         }
                         lists.remove(current);
                         Data.getUnArchived().remove(current);
-                        IO.save();
                         WLFragment.getFrag(getActivity()).removeListSnackbar(current);
                         WLFragment.getFrag(getActivity()).setupSpinner();
-                        IO.save();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener()

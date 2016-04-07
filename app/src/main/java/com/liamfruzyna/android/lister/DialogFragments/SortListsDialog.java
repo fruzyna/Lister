@@ -57,7 +57,7 @@ public class SortListsDialog extends DialogFragment
                         if (lists.get(position).order > 1) {
                             lists.get(position).order--;
                             tv.setText(lists.get(position).order + " - " + lists.get(position).name);
-                            IO.save();
+                            IO.saveList();
                         }
                     }
                 });
@@ -69,7 +69,7 @@ public class SortListsDialog extends DialogFragment
                             lists.get(position).order++;
                         }
                         tv.setText(lists.get(position).order + " - " + lists.get(position).name);
-                        IO.save();
+                        IO.saveList();
                     }
                 });
                 return view;
