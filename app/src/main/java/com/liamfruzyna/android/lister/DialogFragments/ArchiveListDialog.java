@@ -36,7 +36,7 @@ public class ArchiveListDialog extends DialogFragment
                         current.archived = true;
                         lists.remove(current);
                         WLFragment.getFrag(getActivity()).setupSpinner();
-                        IO.save();
+                        IO.saveList();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener()
