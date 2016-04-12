@@ -73,12 +73,19 @@ public class IO
         System.out.println("Saving: " + list.name);
         try
         {
-            if (WLActivity.settings.getBoolean(SAVE_REMOTE_PREF, false))
+            if(list.auto)
             {
-                new RemoteWriteListTask().execute(list.name);
-            } else
+                save();
+            }
+            else
             {
-                writeToFile(list.name, getListString(list));
+                if (WLActivity.settings.getBoolean(SAVE_REMOTE_PREF, false))
+                {
+                    new RemoteWriteListTask().execute(list.name);
+                } else
+                {
+                    writeToFile(list.name, getListString(list));
+                }
             }
         } catch (JSONException e)
         {
