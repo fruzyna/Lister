@@ -109,7 +109,23 @@ public class WLActivity extends ActionBarActivity
 
         settings = getSharedPreferences(IO.PREFS, 0);
 
-        new RemoteReadTask().execute("");
+        IO.finishLoad(IO.readFromFile());
+
+        //makes sure that lists isn't null
+        if (Data.getLists() == null)
+        {
+            Data.setLists(new ArrayList<WishList>());
+        }
+
+        Data.setUnArchived(Util.populateUnArchived());
+
+        if (ContextCompat.checkSelfPermission(c, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(c, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+        } else
+        {
+            changeFragment(new WLFragment(), "WL");
+        }
 
         //setup the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -201,11 +217,11 @@ public class WLActivity extends ActionBarActivity
     public void onResume()
     {
         super.onResume();
-
+/*
         if(Data.getLists() == null)
         {
             new RemoteReadTask().execute("");
-        }
+        }*/
     }
 
     @Override
@@ -232,46 +248,5 @@ public class WLActivity extends ActionBarActivity
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-
-    class RemoteReadTask extends AsyncTask<String, Void, List<String>>
-    {
-
-        protected List<String> doInBackground(String... data)
-        {
-            List<String> jlists = new ArrayList<>();
-            try
-            {
-                jlists = IO.readFromRemoteFile(c);
-            } catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-            return jlists;
-        }
-
-        protected void onPostExecute(List<String> jlists)
-        {
-            IO.finishLoad(jlists);
-
-            //makes sure that lists isn't null
-            if (Data.getLists() == null)
-            {
-                Data.setLists(new ArrayList<WishList>());
-            }
-
-            Data.setUnArchived(Util.populateUnArchived());
-
-            if (ContextCompat.checkSelfPermission(c, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
-                    Util.hasActiveInternetConnection(c))
-            {
-                ActivityCompat.requestPermissions(c, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
-            } else
-            {
-                changeFragment(new WLFragment(), "WL");
-            }
-
-        }
     }
 }

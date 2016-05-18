@@ -1,5 +1,15 @@
 package com.liamfruzyna.android.lister.Data;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
+
+import com.liamfruzyna.android.lister.R;
+import com.liamfruzyna.android.lister.WLActivity;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -76,6 +86,7 @@ public class Item
         {
             //date
             String[] date = item.split("/");
+
             if(date.length == 3)
             {
                 //if the date has month day and year

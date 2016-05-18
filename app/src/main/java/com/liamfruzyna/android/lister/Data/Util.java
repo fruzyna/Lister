@@ -193,6 +193,7 @@ public class Util
         return names;
     }
 
+    /*
     public static boolean hasActiveInternetConnection(Context context) {
         if (isNetworkAvailable(context)) {
             try {
@@ -216,5 +217,5 @@ public class Util
                 = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null;
-    }
+     }*/
 }

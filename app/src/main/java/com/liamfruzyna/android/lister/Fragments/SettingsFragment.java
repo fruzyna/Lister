@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
-import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
@@ -17,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.liamfruzyna.android.lister.Data.IO;
-import com.liamfruzyna.android.lister.DialogFragments.EditServerDialog;
 import com.liamfruzyna.android.lister.DialogFragments.ShareListDialog;
 import com.liamfruzyna.android.lister.DialogFragments.ImportListDialog;
 import com.liamfruzyna.android.lister.DialogFragments.SortListsDialog;
@@ -131,7 +129,7 @@ public class SettingsFragment extends PreferenceFragment
             }
         });
         item.addPreference(highlight);
-
+/*
         PreferenceCategory remote = new PreferenceCategory(getActivity());
         remote.setTitle("Remote");
         ps.addPreference(remote);
@@ -168,7 +166,7 @@ public class SettingsFragment extends PreferenceFragment
             }
         });
         remote.addPreference(server);
-
+*/
         PreferenceCategory about = new PreferenceCategory(getActivity());
         about.setTitle("About");
         ps.addPreference(about);

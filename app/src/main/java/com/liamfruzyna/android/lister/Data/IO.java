@@ -51,15 +51,9 @@ public class IO
     {
         try
         {
-            if (WLActivity.settings.getBoolean(SAVE_REMOTE_PREF, false))
+            for (WishList list : Data.getLists())
             {
-                new RemoteWriteTask().execute("");
-            } else
-            {
-                for (WishList list : Data.getLists())
-                {
-                    writeToFile(list.name, getListString(list));
-                }
+                writeToFile(list.name, getListString(list));
             }
         } catch (JSONException e)
         {
@@ -79,13 +73,7 @@ public class IO
             }
             else
             {
-                if (WLActivity.settings.getBoolean(SAVE_REMOTE_PREF, false))
-                {
-                    new RemoteWriteListTask().execute(list.name);
-                } else
-                {
-                    writeToFile(list.name, getListString(list));
-                }
+                writeToFile(list.name, getListString(list));
             }
         } catch (JSONException e)
         {
@@ -326,192 +314,8 @@ public class IO
         return data;
     }
 
-    public static List<String> readFromRemoteFile(Context c) throws IOException
-    {
-        if (WLActivity.settings.getBoolean(SAVE_REMOTE_PREF, false) && Util.hasActiveInternetConnection(c))
-        {
-            FTPClient client = new FTPClient();
-            client.connect(InetAddress.getByName(WLActivity.settings.getString(SERVER_ADDRESS_PREF, "none")));
-            client.enterLocalPassiveMode();
-            client.login(WLActivity.settings.getString(SERVER_USER_PREF, "none"), WLActivity.settings.getString(SERVER_PASSWORD_PREF, "none"));
-            client.changeWorkingDirectory(WLActivity.settings.getString(SERVER_DIR_PREF, "Liam/Lists"));
-            client.setFileType(FTP.ASCII_FILE_TYPE);
-            FTPFile[] files = client.listFiles();
-            if (files == null)
-            {
-                files = new FTPFile[0];
-            }
-            for (int i = 0; i < files.length; i++)
-            {
-                if (!files[i].getName().equals(".") && !files[i].getName().equals(".."))
-                {
-                    File newFile = new File(fileDir, files[i].getName());
-                    if (newFile.exists())
-                    {
-                        Calendar cal = client.mlistFile(files[i].getName()).getTimestamp();
-                        System.out.println("Local: " + newFile.lastModified());
-                        System.out.println("Remot: " + cal.getTimeInMillis());
-                        if (newFile.lastModified() <= cal.getTimeInMillis() - 5000)
-                        {
-                            //server file is newer use that
-                            System.out.println("Reading from server");
-                            BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(newFile));
-                            client.retrieveFile(files[i].getName(), out);
-                            out.close();
-                        }
-                    } else
-                    {
-                        newFile.createNewFile();
-                        System.out.println("Reading from server");
-                        BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(newFile));
-                        client.retrieveFile(files[i].getName(), out);
-                        out.close();
-                    }
-                    log("IO", "Reading from " + newFile.toString());
-                }
-            }
-            client.logout();
-            client.disconnect();
-        }
-        return readFromFile();
-    }
-
-    public static void removeRemoteFile(Context c, String file) throws IOException
-    {
-        IO.c = c;
-        new RemoveTask().execute(file);
-    }
-
-    public static void writeToRemoteFile(String name, String data, FTPClient client) throws IOException
-    {
-    }
-
     public static void log(String title, String message)
     {
         System.out.println("[" + title + "] " + message);
-    }
-
-    static class RemoteWriteTask extends AsyncTask<String, Void, String>
-    {
-
-        protected String doInBackground(String... data)
-        {
-            try
-            {
-                FTPClient client = new FTPClient();
-                client.setConnectTimeout(1500);
-                client.connect(InetAddress.getByName(WLActivity.settings.getString(SERVER_ADDRESS_PREF, "none")));
-                client.enterLocalPassiveMode();
-                client.login(WLActivity.settings.getString(SERVER_USER_PREF, "none"), WLActivity.settings.getString(SERVER_PASSWORD_PREF, "none"));
-                client.changeWorkingDirectory(WLActivity.settings.getString(SERVER_DIR_PREF, "Liam/Lists"));
-                client.setFileType(FTP.ASCII_FILE_TYPE);
-                for (WishList list : Data.getLists())
-                {
-                    try
-                    {
-                        BufferedInputStream in = new BufferedInputStream(new FileInputStream(writeToFile(list.name, getListString(list))));
-                        client.storeFile(list.name + ".json", in);
-                        System.out.println("Remo TS: " + client.mlistFile(list.name + ".json").getTimestamp().getTimeInMillis());
-                        in.close();
-                    } catch (JSONException e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-                client.logout();
-                client.disconnect();
-            } catch (IOException e)
-            {
-                e.printStackTrace();
-                try
-                {
-                    for (WishList list : Data.getLists())
-                    {
-                        writeToFile(list.name, getListString(list));
-                    }
-                } catch (JSONException ex)
-                {
-                    ex.printStackTrace();
-                }
-            }
-            return "";
-        }
-    }
-
-    static class RemoteWriteListTask extends AsyncTask<String, Void, String>
-    {
-
-        protected String doInBackground(String... data)
-        {
-            try
-            {
-                WishList list = Data.getListFromName(data[0]);
-                FTPClient client = new FTPClient();
-                client.setConnectTimeout(1500);
-                client.connect(InetAddress.getByName(WLActivity.settings.getString(SERVER_ADDRESS_PREF, "none")));
-                client.enterLocalPassiveMode();
-                client.login(WLActivity.settings.getString(SERVER_USER_PREF, "none"), WLActivity.settings.getString(SERVER_PASSWORD_PREF, "none"));
-                client.changeWorkingDirectory(WLActivity.settings.getString(SERVER_DIR_PREF, "Liam/Lists"));
-                client.setFileType(FTP.ASCII_FILE_TYPE);
-                BufferedInputStream in = new BufferedInputStream(new FileInputStream(writeToFile(list.name, getListString(list))));
-                client.storeFile(list.name + ".json", in);
-                System.out.println("Remo TS: " + client.mlistFile(list.name + ".json").getTimestamp().getTimeInMillis());
-                in.close();
-                client.logout();
-                client.disconnect();
-            } catch (IOException e)
-            {
-                e.printStackTrace();
-                try
-                {
-                    for (WishList list : Data.getLists())
-                    {
-                        writeToFile(list.name, getListString(list));
-                    }
-                } catch (JSONException ex)
-                {
-                    ex.printStackTrace();
-                }
-            } catch (JSONException e)
-            {
-                e.printStackTrace();
-            }
-            return "";
-        }
-
-        protected void onPostExecute()
-        {
-        }
-    }
-
-    static class RemoveTask extends AsyncTask<String, Void, String>
-    {
-
-        protected String doInBackground(String... data)
-        {
-            try
-            {
-                if (WLActivity.settings.getBoolean(SAVE_REMOTE_PREF, false) && Util.hasActiveInternetConnection(c))
-                {
-                    FTPClient client = new FTPClient();
-                    client.connect(InetAddress.getByName(WLActivity.settings.getString(SERVER_ADDRESS_PREF, "none")));
-                    client.enterLocalPassiveMode();
-                    client.login(WLActivity.settings.getString(SERVER_USER_PREF, "none"), WLActivity.settings.getString(SERVER_PASSWORD_PREF, "none"));
-                    client.changeWorkingDirectory(WLActivity.settings.getString(SERVER_DIR_PREF, "Liam/Lists"));
-                    client.setFileType(FTP.ASCII_FILE_TYPE);
-                    client.deleteFile(data[0]);
-                    client.logout();
-                    client.disconnect();
-                }
-            } catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-            return "";
-        }
-
-        protected void onPostExecute()
-        {
-        }
     }
 }
