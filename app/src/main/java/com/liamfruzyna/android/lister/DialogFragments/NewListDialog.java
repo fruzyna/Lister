@@ -272,6 +272,7 @@ public class NewListDialog extends DialogFragment
             }
         });
     }
+
     public void repopulate()
     {
         //populates the list with the items
