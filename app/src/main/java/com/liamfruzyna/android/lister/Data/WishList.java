@@ -51,7 +51,15 @@ public class WishList
         this.tags = tags;
         this.showDone = showDone;
         this.daysToDelete = daysToDelete;
-        order = Data.getLists().size();
+        order = 0;
+        for(WishList list : Data.getLists())
+        {
+            if(list.order > order)
+            {
+                order = list.order;
+            }
+        }
+        order++;
         findPeople();
         deleteItems();
     }
