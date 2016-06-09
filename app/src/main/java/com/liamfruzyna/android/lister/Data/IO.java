@@ -36,11 +36,17 @@ public class IO
     public static final String PREFS = "Lister Prefs";
     public static final String HIGHLIGHT_DATE_PREF = "HIGHLIGHT_DATE_PREF";
     public static final String CURRENT_LIST_PREF = "CURRENT_LIST_PREF";
-    public static final String SAVE_REMOTE_PREF = "SAVE_REMOTE_PREF";
-    public static final String SERVER_ADDRESS_PREF = "SERVER_ADDRESS_PREF";
-    public static final String SERVER_USER_PREF = "SERVER_USER_PREF";
-    public static final String SERVER_PASSWORD_PREF = "SERVER_PASSWORD_PREF";
-    public static final String SERVER_DIR_PREF = "SERVER_DIR_PREF";
+    public static final String NAME_OBJ = "name";
+    public static final String ARCHIVED_OBJ = "archived";
+    public static final String ORDER_OBJ = "order";
+    public static final String AUTO_OBJ = "auto";
+    public static final String SHOW_DONE_OBJ = "showDone";
+    public static final String DAYS_TO_DELETE_OBJ = "daysToDelete";
+    public static final String CRITERIA_OBJ = "criteria";
+    public static final String ITEM_OBJ = "item";
+    public static final String DONE_OBJ = "done";
+    public static final String ITEMS_OBJ = "items";
+    public static final String TAGS_OBJ = "tags";
 
     public static final String fileDir = Environment.getExternalStoragePublicDirectory("Lists").toString();
 
@@ -67,7 +73,7 @@ public class IO
         System.out.println("Saving: " + list.name);
         try
         {
-            if(list.auto)
+            if (list.auto)
             {
                 save();
             }
@@ -85,12 +91,12 @@ public class IO
     public static String getListString(WishList list) throws JSONException
     {
         JSONObject jlist = new JSONObject();
-        jlist.put("name", list.name);
-        jlist.put("archived", list.archived);
-        jlist.put("order", list.order);
-        jlist.put("auto", list.auto);
-        jlist.put("showDone", list.showDone);
-        jlist.put("daysToDelete", list.daysToDelete);
+        jlist.put(NAME_OBJ, list.name);
+        jlist.put(ARCHIVED_OBJ, list.archived);
+        jlist.put(ORDER_OBJ, list.order);
+        jlist.put(AUTO_OBJ, list.auto);
+        jlist.put(SHOW_DONE_OBJ, list.showDone);
+        jlist.put(DAYS_TO_DELETE_OBJ, list.daysToDelete);
         if (list.auto)
         {
             AutoList alist = (AutoList) list;
@@ -100,19 +106,20 @@ public class IO
             {
                 jcriteria.put(c);
             }
-            jlist.put("criteria", jcriteria);
-        } else
+            jlist.put(CRITERIA_OBJ, jcriteria);
+        }
+        else
         {
             JSONArray jitems = new JSONArray();
             List<Item> items = list.items;
             for (Item item : items)
             {
                 JSONObject jitem = new JSONObject();
-                jitem.put("item", item.item);
-                jitem.put("done", item.done);
+                jitem.put(ITEM_OBJ, item.item);
+                jitem.put(DONE_OBJ, item.done);
                 jitems.put(jitem);
             }
-            jlist.put("items", jitems);
+            jlist.put(ITEMS_OBJ, jitems);
         }
         JSONArray jtags = new JSONArray();
         List<String> tags = list.tags;
@@ -120,8 +127,26 @@ public class IO
         {
             jtags.put(tag);
         }
-        jlist.put("tags", jtags);
+        jlist.put(TAGS_OBJ, jtags);
         return jlist.toString();
+    }
+
+    public static boolean getBoolean(String name, JSONObject container) throws JSONException
+    {
+        if (container.has(name))
+        {
+            return container.getBoolean(name);
+        }
+        return false;
+    }
+
+    public static int getInt(String name, JSONObject container) throws JSONException
+    {
+        if (container.has(name))
+        {
+            return container.getInt(name);
+        }
+        return 0;
     }
 
     public static void finishLoad(List<String> jlists)
@@ -131,67 +156,7 @@ public class IO
         {
             try
             {
-                System.out.println("Reading: " + jliststr);
-                JSONObject jlist = new JSONObject(jliststr);
-                List<Item> items = new ArrayList<>();
-                List<String> criteria = new ArrayList<>();
-                List<String> tags = new ArrayList<>();
-                JSONArray jtags = jlist.getJSONArray("tags");
-                for (int j = 0; j < jtags.length(); j++)
-                {
-                    tags.add(jtags.getString(j));
-                }
-                boolean archived = false;
-                if (jlist.has("archived"))
-                {
-                    archived = jlist.getBoolean("archived");
-                }
-                int order = 0;
-                if (jlist.has("order"))
-                {
-                    order = jlist.getInt("order");
-                }
-                int daysToDelete = 0;
-                if (jlist.has("daysToDelete"))
-                {
-                    daysToDelete = jlist.getInt("daysToDelete");
-                }
-                boolean showDone = true;
-                if (jlist.has("showDone"))
-                {
-                    showDone = jlist.getBoolean("showDone");
-                }
-                if (jlist.has("auto"))
-                {
-                    boolean auto = jlist.getBoolean("auto");
-                    if (auto)
-                    {
-                        JSONArray jcriteria = jlist.getJSONArray("criteria");
-                        for (int j = 0; j < jcriteria.length(); j++)
-                        {
-                            criteria.add((String) jcriteria.get(j));
-                        }
-                        lists.add(new AutoList(jlist.getString("name"), tags, archived, order, criteria, showDone, daysToDelete));
-                    } else
-                    {
-                        JSONArray jitems = jlist.getJSONArray("items");
-                        for (int j = 0; j < jitems.length(); j++)
-                        {
-                            Item item = new Item(jitems.getJSONObject(j).getString("item"), jitems.getJSONObject(j).getBoolean("done"));
-                            items.add(item);
-                        }
-                        lists.add(new WishList(jlist.getString("name"), items, tags, archived, order, showDone, daysToDelete));
-                    }
-                } else
-                {
-                    JSONArray jitems = jlist.getJSONArray("items");
-                    for (int j = 0; j < jitems.length(); j++)
-                    {
-                        Item item = new Item(jitems.getJSONObject(j).getString("item"), jitems.getJSONObject(j).getBoolean("done"));
-                        items.add(item);
-                    }
-                    lists.add(new WishList(jlist.getString("name"), items, tags, archived, order, showDone, daysToDelete));
-                }
+                lists.add(readString(jliststr));
             } catch (JSONException e)
             {
                 e.printStackTrace();
@@ -206,50 +171,35 @@ public class IO
         JSONObject jlist = new JSONObject(json);
         List<Item> items = new ArrayList<>();
         List<String> criteria = new ArrayList<>();
-        boolean auto = jlist.getBoolean("auto");
+        boolean auto = getBoolean(AUTO_OBJ, jlist);
         List<String> tags = new ArrayList<>();
-        JSONArray jtags = jlist.getJSONArray("tags");
+        JSONArray jtags = jlist.getJSONArray(TAGS_OBJ);
         for (int j = 0; j < jtags.length(); j++)
         {
             tags.add(jtags.getString(j));
         }
-        boolean archived = false;
-        if (jlist.has("archived"))
-        {
-            archived = jlist.getBoolean("archived");
-        }
-        int order = 0;
-        if (jlist.has("order"))
-        {
-            order = jlist.getInt("order");
-        }
-        int daysToDelete = 0;
-        if (jlist.has("daysToDelete"))
-        {
-            daysToDelete = jlist.getInt("daysToDelete");
-        }
-        boolean showDone = true;
-        if (jlist.has("showDone"))
-        {
-            showDone = jlist.getBoolean("showDone");
-        }
+        boolean archived = getBoolean(ARCHIVED_OBJ, jlist);
+        boolean showDone = getBoolean(SHOW_DONE_OBJ, jlist);
+        int daysToDelete = getInt(DAYS_TO_DELETE_OBJ, jlist);
+        int order = getInt(ORDER_OBJ, jlist);
         if (auto)
         {
-            JSONArray jcriteria = jlist.getJSONArray("criteria");
+            JSONArray jcriteria = jlist.getJSONArray(CRITERIA_OBJ);
             for (int j = 0; j < jcriteria.length(); j++)
             {
                 criteria.add((String) jcriteria.get(j));
             }
-            return new AutoList(jlist.getString("name"), tags, archived, order, criteria, showDone, daysToDelete);
-        } else
+            return new AutoList(jlist.getString(NAME_OBJ), tags, archived, order, criteria, showDone, daysToDelete);
+        }
+        else
         {
-            JSONArray jitems = jlist.getJSONArray("items");
+            JSONArray jitems = jlist.getJSONArray(ITEMS_OBJ);
             for (int j = 0; j < jitems.length(); j++)
             {
-                Item item = new Item(jitems.getJSONObject(j).getString("item"), jitems.getJSONObject(j).getBoolean("done"));
+                Item item = new Item(jitems.getJSONObject(j).getString(ITEM_OBJ), jitems.getJSONObject(j).getBoolean(DONE_OBJ));
                 items.add(item);
             }
-            return new WishList(jlist.getString("name"), items, tags, archived, order, showDone, daysToDelete);
+            return new WishList(jlist.getString(NAME_OBJ), items, tags, archived, order, showDone, daysToDelete);
         }
     }
 
