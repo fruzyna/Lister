@@ -111,7 +111,7 @@ public class WLActivity extends ActionBarActivity
 
         IO.finishLoad(IO.readFromFile());
 
-        //makes sure that lists isn't null
+        //makes sure that lists aren't null
         if (Data.getLists() == null)
         {
             Data.setLists(new ArrayList<WishList>());
