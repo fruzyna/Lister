@@ -14,6 +14,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.liamfruzyna.android.lister.Data.Data;
 import com.liamfruzyna.android.lister.Fragments.WLFragment;
@@ -22,6 +23,8 @@ import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.R;
 import com.liamfruzyna.android.lister.Data.WishList;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -138,35 +141,60 @@ public class NewListDialog extends DialogFragment
                                 {
                                     sb.append("include ");
                                 }
+
+                                String data = "";
                                 switch (spinner.getSelectedItemPosition())
                                 {
                                     case 0:
                                         //tag
                                         sb.append("tag ");
-                                        sb.append(((EditText) container.findViewById(R.id.editText)).getText().toString());
+                                        data = ((EditText) container.findViewById(R.id.editText)).getText().toString();
                                         break;
                                     case 1:
                                         //person
                                         sb.append("person ");
-                                        sb.append(((EditText) container.findViewById(R.id.editText)).getText().toString());
+                                        data = ((EditText) container.findViewById(R.id.editText)).getText().toString();
                                         break;
                                     case 2:
                                         //date range
                                         sb.append("date_range ");
-                                        sb.append(((EditText) container.findViewById(R.id.editText1)).getText().toString() + " " + ((EditText) container.findViewById(R.id.editText2)).getText().toString());
+                                        String start = ((EditText) container.findViewById(R.id.editText1)).getText().toString();
+                                        String end = ((EditText) container.findViewById(R.id.editText2)).getText().toString();
+                                        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy");
+                                        try {
+                                            sdf.parse(start);
+                                            sdf.parse(end);
+                                            data = start + " " + end;
+                                        } catch (ParseException e) {
+                                            data = "BAD_DATE";
+                                        }
                                         break;
                                     case 3:
                                         //time
                                         sb.append("time ");
-                                        sb.append(((EditText) container.findViewById(R.id.editText)).getText().toString());
+                                        data = ((EditText) container.findViewById(R.id.editText)).getText().toString();
                                         break;
                                     case 4:
                                         //day
                                         sb.append("day ");
-                                        sb.append(days[((Spinner) container.findViewById(R.id.spinner)).getSelectedItemPosition()]);
+                                        data = days[((Spinner) container.findViewById(R.id.spinner)).getSelectedItemPosition()];
                                         break;
                                 }
-                                criteria.add(sb.toString());
+                                sb.append(data);
+                                System.out.println("Data: " + data);
+                                if(data.equals(""))
+                                {
+                                    Toast.makeText(getActivity(), "Empty field ignored", Toast.LENGTH_SHORT).show();
+                                }
+                                else if(data.equals("BAD_DATE"))
+                                {
+                                    Toast.makeText(getActivity(), "Bad date used in Date Range field. Use format MM/dd/yy", Toast.LENGTH_LONG).show();
+                                }
+                                else
+                                {
+                                    System.out.println("Adding criteria: " + sb.toString());
+                                    criteria.add(sb.toString());
+                                }
                             }
                             newList = new AutoList(name.getText().toString(), new ArrayList<>(Arrays.asList(tags.getText().toString().split(" "))), criteria, done.isChecked(), daysToDelete);
                         } else

@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.liamfruzyna.android.lister.Data.Data;
 import com.liamfruzyna.android.lister.Fragments.WLFragment;
@@ -22,6 +23,8 @@ import com.liamfruzyna.android.lister.Data.AutoList;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,36 +78,59 @@ public class EditCriteriaDialog extends DialogFragment
                             {
                                 sb.append("include ");
                             }
+                            String data = "";
                             switch (spinner.getSelectedItemPosition())
                             {
                                 case 0:
                                     //tag
                                     sb.append("tag ");
-                                    sb.append(((EditText) container.findViewById(R.id.editText)).getText().toString());
+                                    data = ((EditText) container.findViewById(R.id.editText)).getText().toString();
                                     break;
                                 case 1:
                                     //person
                                     sb.append("person ");
-                                    sb.append(((EditText) container.findViewById(R.id.editText)).getText().toString());
+                                    data = ((EditText) container.findViewById(R.id.editText)).getText().toString();
                                     break;
                                 case 2:
                                     //date range
                                     sb.append("date_range ");
-                                    sb.append(((EditText) container.findViewById(R.id.editText1)).getText().toString() + " " + ((EditText) container.findViewById(R.id.editText2)).getText().toString());
+                                    String start = ((EditText) container.findViewById(R.id.editText1)).getText().toString();
+                                    String end = ((EditText) container.findViewById(R.id.editText2)).getText().toString();
+                                    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy");
+                                    try {
+                                        sdf.parse(start);
+                                        sdf.parse(end);
+                                        data = start + " " + end;
+                                    } catch (ParseException e) {
+                                        data = "BAD_DATE";
+                                    }
                                     break;
                                 case 3:
                                     //time
                                     sb.append("time ");
-                                    sb.append(((EditText) container.findViewById(R.id.editText)).getText().toString());
+                                    data = ((EditText) container.findViewById(R.id.editText)).getText().toString();
                                     break;
                                 case 4:
                                     //day
                                     sb.append("day ");
-                                    sb.append(days[((Spinner) container.findViewById(R.id.spinner)).getSelectedItemPosition()]);
+                                    data = days[((Spinner) container.findViewById(R.id.spinner)).getSelectedItemPosition()];
                                     break;
                             }
-                            System.out.println("Criteria: " + sb.toString());
-                            criteria.add(sb.toString());
+                            sb.append(data);
+                            System.out.println("Data: " + data);
+                            if(data.equals(""))
+                            {
+                                Toast.makeText(getActivity(), "Empty field ignored", Toast.LENGTH_SHORT).show();
+                            }
+                            else if(data.equals("BAD_DATE"))
+                            {
+                                Toast.makeText(getActivity(), "Bad date used in Date Range field. Use format MM/dd/yy", Toast.LENGTH_LONG).show();
+                            }
+                            else
+                            {
+                                System.out.println("Adding criteria: " + sb.toString());
+                                criteria.add(sb.toString());
+                            }
                         }
                         list.setCriteria(criteria);
                         WLFragment.getFrag(getActivity()).updateList();
@@ -170,7 +196,7 @@ public class EditCriteriaDialog extends DialogFragment
             {
                 num = 4;
             }
-            setupSpinner(view, num, c.split(data[2])[1]);
+            setupSpinner(view, num, c.split(data[2])[1], true);
             views.add(view);
             container.addView(view);
         }
@@ -181,14 +207,14 @@ public class EditCriteriaDialog extends DialogFragment
             public void onClick(View v)
             {
                 View view = inflater.inflate(R.layout.criteria_item, null);
-                setupSpinner(view, 0, "");
+                setupSpinner(view, 0, "", false);
                 views.add(view);
                 container.addView(view);
             }
         });
     }
 
-    public void setupSpinner(View view, int pos, final String data)
+    public void setupSpinner(View view, int pos, final String data, boolean existing)
     {
         Spinner spinner = (Spinner) view.findViewById(R.id.spinner);
         final LinearLayout container = (LinearLayout) view.findViewById(R.id.container);
@@ -204,23 +230,35 @@ public class EditCriteriaDialog extends DialogFragment
             case 0:
                 //Tag
                 sub = inflater.inflate(R.layout.criteria_item_string, container, false);
-                ((EditText) sub.findViewById(R.id.editText)).setText(data.substring(1));
+                if(existing)
+                {
+                    ((EditText) sub.findViewById(R.id.editText)).setText(data.substring(1));
+                }
                 break;
             case 1:
                 //Person
                 sub = inflater.inflate(R.layout.criteria_item_string, container, false);
-                ((EditText) sub.findViewById(R.id.editText)).setText(data.substring(1));
+                if(existing)
+                {
+                    ((EditText) sub.findViewById(R.id.editText)).setText(data.substring(1));
+                }
                 break;
             case 2:
                 //Date Range
                 sub = inflater.inflate(R.layout.criteria_item_dates, container, false);
-                ((EditText) sub.findViewById(R.id.editText1)).setText(data.split(" ")[0].substring(1));
-                ((EditText) sub.findViewById(R.id.editText2)).setText(data.split(" ")[1].substring(1));
+                if(existing)
+                {
+                    ((EditText) sub.findViewById(R.id.editText1)).setText(data.split(" ")[0].substring(1));
+                    ((EditText) sub.findViewById(R.id.editText2)).setText(data.split(" ")[1].substring(1));
+                }
                 break;
             case 3:
                 //Time
                 sub = inflater.inflate(R.layout.criteria_item_int, container, false);
-                ((EditText) sub.findViewById(R.id.editText)).setText(data.substring(1));
+                if(existing)
+                {
+                    ((EditText) sub.findViewById(R.id.editText)).setText(data.substring(1));
+                }
                 break;
             case 4:
                 //Day
@@ -229,12 +267,15 @@ public class EditCriteriaDialog extends DialogFragment
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item, days);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 day.setAdapter(adapter);
-                for(int i = 0; i < days.length; i++)
+                if(existing)
                 {
-                    if(days[i].equals(data.substring(1) + "day"))
+                    for(int i = 0; i < days.length; i++)
                     {
-                        day.setSelection(i);
-                        break;
+                        if(days[i].equals(data.substring(1) + "day"))
+                        {
+                            day.setSelection(i);
+                            break;
+                        }
                     }
                 }
                 break;
