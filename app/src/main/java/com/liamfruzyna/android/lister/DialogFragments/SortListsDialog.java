@@ -39,10 +39,13 @@ public class SortListsDialog extends DialogFragment
         lists = Data.getUnArchived();
 
         //setup list of lists to share
-        list.setAdapter(new ArrayAdapter<WishList>(getActivity(), R.layout.dialog_sort_lists, R.id.textView, lists) {
-            public View getView(final int position, View convertView, ViewGroup parent) {
+        list.setAdapter(new ArrayAdapter<WishList>(getActivity(), R.layout.dialog_sort_lists, R.id.textView, lists)
+        {
+            public View getView(final int position, View convertView, ViewGroup parent)
+            {
                 View view;
-                if (convertView == null) {
+                if (convertView == null)
+                {
                     LayoutInflater infl = (LayoutInflater) getActivity().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
                     convertView = infl.inflate(R.layout.dialog_sort_lists, parent, false);
                 }
@@ -51,25 +54,28 @@ public class SortListsDialog extends DialogFragment
                 final TextView tv = ((TextView) view.findViewById(R.id.textView));
                 tv.setText(lists.get(position).order + " - " + lists.get(position).name);
 
-                ((Button) view.findViewById(R.id.down)).setOnClickListener(new View.OnClickListener() {
+                ((Button) view.findViewById(R.id.down)).setOnClickListener(new View.OnClickListener()
+                {
                     @Override
-                    public void onClick(View v) {
-                        if (lists.get(position).order > 1) {
+                    public void onClick(View v)
+                    {
+                        if (lists.get(position).order > 1)
+                        {
                             lists.get(position).order--;
                             tv.setText(lists.get(position).order + " - " + lists.get(position).name);
-                            IO.saveList();
                         }
                     }
                 });
-                ((Button) view.findViewById(R.id.up)).setOnClickListener(new View.OnClickListener() {
+                ((Button) view.findViewById(R.id.up)).setOnClickListener(new View.OnClickListener()
+                {
                     @Override
-                    public void onClick(View v) {
-                        if(lists.get(position).order < 9999)
+                    public void onClick(View v)
+                    {
+                        if (lists.get(position).order < 9999)
                         {
                             lists.get(position).order++;
                         }
                         tv.setText(lists.get(position).order + " - " + lists.get(position).name);
-                        IO.saveList();
                     }
                 });
                 return view;
@@ -80,8 +86,18 @@ public class SortListsDialog extends DialogFragment
         builder.setMessage("Press up/down to move lists around")
                 .setTitle("Sort Lists")
                 .setView(v)
-                .setNegativeButton("BACK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
+                .setPositiveButton("SAVE", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        IO.save();
+                    }
+                })
+                .setNegativeButton("BACK", new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int id)
+                    {
                         //do nothing
                     }
                 });
