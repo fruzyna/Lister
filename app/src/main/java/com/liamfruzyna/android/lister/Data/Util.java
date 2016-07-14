@@ -192,30 +192,4 @@ public class Util
 
         return names;
     }
-
-    /*
-    public static boolean hasActiveInternetConnection(Context context) {
-        if (isNetworkAvailable(context)) {
-            try {
-                HttpURLConnection urlc = (HttpURLConnection) (new URL("http://google.com").openConnection());
-                urlc.setRequestProperty("User-Agent", "Test");
-                urlc.setRequestProperty("Connection", "close");
-                urlc.setConnectTimeout(1500);
-                urlc.connect();
-                return (urlc.getResponseCode() == 200);
-            } catch (IOException e) {
-                System.out.println("Error checking internet connection");
-            }
-        } else {
-            System.out.println("No network available!");
-        }
-        return false;
-    }
-
-    private static boolean isNetworkAvailable(Context c) {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null;
-     }*/
 }

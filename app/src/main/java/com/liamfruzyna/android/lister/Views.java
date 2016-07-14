@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.liamfruzyna.android.lister.Data.AutoList;
@@ -155,6 +156,10 @@ public class Views
     {
         View view = inflater.inflate(R.layout.checkbox_list_item, list, false);
 
+        Item item = Data.getItems().get(i);
+        LinearLayout tags = (LinearLayout) view.findViewById(R.id.tags);
+
+
         //init checkbox and set text, checked status, and color
         final CheckBox cb = (CheckBox) view.findViewById(R.id.checkbox);
         int color = Color.parseColor(Data.getItems().get(i).color);
@@ -169,13 +174,43 @@ public class Views
             if (date.getYear() == today.getYear() && date.getMonth() == today.getMonth() && date.getDate() == today.getDate() && !Data.getItems().get(i).done)
             {
                 color = Color.parseColor("#FFA500");
-            } else if (date.compareTo(today) < 0 && !Data.getItems().get(i).done)
+            }
+            else if (date.compareTo(today) < 0 && !Data.getItems().get(i).done)
             {
                 color = Color.RED;
             }
         }
 
-        SpannableStringBuilder s = Util.colorTags(Data.getItems().get(i).item, color);
+        //SpannableStringBuilder s = Util.colorTags(item.item, color);
+        //cb.setText(s);
+        String s = item.item.toString();
+        for(String tag : item.tags)
+        {
+            RelativeLayout tagView = (RelativeLayout) inflater.inflate(R.layout.tag_list_item, tags, false);
+            TextView tagText = (TextView) tagView.findViewById(R.id.tag);
+            tagText.setText("#" + tag);
+            tags.addView(tagView);
+            s = s.replace("#" + tag, "");
+        }
+        for(String tag : item.people)
+        {
+            RelativeLayout tagView = (RelativeLayout) inflater.inflate(R.layout.tag_list_item, tags, false);
+            TextView tagText = (TextView) tagView.findViewById(R.id.tag);
+            tagText.setText("@" + tag);
+            tags.addView(tagView);
+            s = s.replace("@" + tag, "");
+        }
+        if(item.formattedDate != "NONE")
+        {
+            RelativeLayout tagView = (RelativeLayout) inflater.inflate(R.layout.tag_list_item, tags, false);
+            TextView tagText = (TextView) tagView.findViewById(R.id.tag);
+            tagText.setText(item.formattedDate);
+            tags.addView(tagView);
+            s = s.replace(item.formattedDate, "");
+        }
+
+
+        IO.log("Views", "createItem", s);
         cb.setText(s);
         cb.setTextColor(color);
         cb.setChecked(Data.getItems().get(i).done);
@@ -189,13 +224,16 @@ public class Views
             cb.setPaintFlags(0);
         }
 
+        cb.setClickable(false);
+
         //listen for checkbox to be checked
-        cb.setOnClickListener(new View.OnClickListener()
+        view.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                Data.getItems().get(i).done = cb.isChecked();
+                Data.getItems().get(i).done = !Data.getItems().get(i).done;
+                cb.setChecked(Data.getItems().get(i).done);
                 //if it is checked cross it out
                 if (cb.isChecked())
                 {
@@ -210,7 +248,7 @@ public class Views
         });
 
         //listen for item to be long pressed
-        cb.setOnLongClickListener(new View.OnLongClickListener()
+        view.setOnLongClickListener(new View.OnLongClickListener()
         {
             @Override
             public boolean onLongClick(View v)

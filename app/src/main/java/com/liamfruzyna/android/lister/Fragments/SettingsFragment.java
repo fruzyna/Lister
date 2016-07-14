@@ -129,44 +129,7 @@ public class SettingsFragment extends PreferenceFragment
             }
         });
         item.addPreference(highlight);
-/*
-        PreferenceCategory remote = new PreferenceCategory(getActivity());
-        remote.setTitle("Remote");
-        ps.addPreference(remote);
 
-        //Whether or not to get from and save to server
-        Preference useRemote = new CheckBoxPreference(getActivity());
-        useRemote.setTitle("Save Remotely");
-        useRemote.setSummary("Save data to an FTP Server of your choice");
-        ((CheckBoxPreference) useRemote).setChecked(settings.getBoolean(IO.SAVE_REMOTE_PREF, false));
-        useRemote.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
-        {
-            @Override
-            public boolean onPreferenceClick(Preference preference)
-            {
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putBoolean(IO.SAVE_REMOTE_PREF, ((CheckBoxPreference) preference).isChecked());
-                editor.commit();
-                return false;
-            }
-        });
-        remote.addPreference(useRemote);
-
-        Preference server = new Preference(getActivity());
-        server.setTitle("Edit Server Info");
-        server.setSummary("Edit the server address, username, and password");
-        server.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
-        {
-            @Override
-            public boolean onPreferenceClick(Preference preference)
-            {
-                DialogFragment dialog = new EditServerDialog();
-                dialog.show(getFragmentManager(), "");
-                return true;
-            }
-        });
-        remote.addPreference(server);
-*/
         PreferenceCategory about = new PreferenceCategory(getActivity());
         about.setTitle("About");
         ps.addPreference(about);
