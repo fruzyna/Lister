@@ -115,7 +115,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
                         list.addView(Views.createEditItem(inflater, i, list, this));
                     } else
                     {
-                        list.addView(Views.createItem(inflater, i, list, this));
+                        list.addView(Views.createItem(getActivity(), i, list, this));
                     }
                 }
             }

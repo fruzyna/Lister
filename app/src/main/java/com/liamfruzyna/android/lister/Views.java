@@ -20,6 +20,9 @@ import com.liamfruzyna.android.lister.Data.Data;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.Item;
 import com.liamfruzyna.android.lister.Data.Util;
+import com.liamfruzyna.android.lister.Fragments.DatesFragment;
+import com.liamfruzyna.android.lister.Fragments.PeopleFragment;
+import com.liamfruzyna.android.lister.Fragments.TagsFragment;
 import com.liamfruzyna.android.lister.Fragments.WLFragment;
 
 import java.util.Calendar;
@@ -152,8 +155,9 @@ public class Views
 
 
     //creates the item view that is displayed on screen
-    public static View createItem(LayoutInflater inflater, final int i, LinearLayout list, final WLFragment f)
+    public static View createItem(final Context c, final int i, LinearLayout list, final WLFragment f)
     {
+        LayoutInflater inflater = LayoutInflater.from(c);
         View view = inflater.inflate(R.layout.checkbox_list_item, list, false);
 
         Item item = Data.getItems().get(i);
@@ -191,6 +195,16 @@ public class Views
             tagText.setText("#" + tag);
             tags.addView(tagView);
             s = s.replace("#" + tag, "");
+
+            tagView.setClickable(true);
+            tagView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    ((WLActivity) c).changeFragment(new TagsFragment(), "Tags");
+                }
+            });
         }
         for(String tag : item.people)
         {
@@ -199,6 +213,16 @@ public class Views
             tagText.setText("@" + tag);
             tags.addView(tagView);
             s = s.replace("@" + tag, "");
+
+            tagView.setClickable(true);
+            tagView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    ((WLActivity) c).changeFragment(new PeopleFragment(), "People");
+                }
+            });
         }
         if(item.formattedDate != "NONE")
         {
@@ -207,6 +231,16 @@ public class Views
             tagText.setText(item.formattedDate);
             tags.addView(tagView);
             s = s.replace(item.formattedDate, "");
+
+            tagView.setClickable(true);
+            tagView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    ((WLActivity) c).changeFragment(new DatesFragment(), "Dates");
+                }
+            });
         }
 
 

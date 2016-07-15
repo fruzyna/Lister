@@ -217,11 +217,6 @@ public class WLActivity extends ActionBarActivity
     public void onResume()
     {
         super.onResume();
-/*
-        if(Data.getLists() == null)
-        {
-            new RemoteReadTask().execute("");
-        }*/
     }
 
     @Override
