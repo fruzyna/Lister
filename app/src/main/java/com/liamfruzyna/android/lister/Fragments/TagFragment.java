@@ -128,6 +128,22 @@ public class TagFragment extends Fragment implements AdapterView.OnItemSelectedL
         ArrayAdapter<String> sadapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item, getTags());
         sadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spin.setAdapter(sadapter);
+
+
+        if(getArguments().containsKey("tag"))
+        {
+            String initTag = getArguments().getString("tag");
+
+            List<String> tags = getTags();
+            for(int i = 0; i < tags.size(); i++)
+            {
+                if(tags.get(i).equals(initTag))
+                {
+                    spin.setSelection(i);
+                }
+            }
+        }
+
         current = spin.getSelectedItemPosition();
         updateList();
         spin.setOnItemSelectedListener(this);

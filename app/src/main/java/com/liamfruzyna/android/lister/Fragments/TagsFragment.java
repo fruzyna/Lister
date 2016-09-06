@@ -16,6 +16,7 @@ import java.util.List;
  */
 public class TagsFragment extends TagFragment
 {
+
     //finds all the different tags there are
     @Override
     public List<String> getTags()
