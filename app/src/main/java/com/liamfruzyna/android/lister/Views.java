@@ -186,67 +186,17 @@ public class Views
                 color = Color.RED;
             }
         }
-/**/
+
         for(int j = 0; j < item.item.split(" ").length; j++)
         {
             String word = item.item.split(" ")[j];
-            System.out.print("Putting");
-            if(word.charAt(0) == '#')
+            if(word.length() > 0)
             {
-                System.out.print(" hashtag ");
-                RelativeLayout tagView = (RelativeLayout) inflater.inflate(R.layout.tag_list_item, tags, false);
-                TextView tagText = (TextView) tagView.findViewById(R.id.tag);
-                tagText.setText(word);
-                tags.addView(tagView);
-
-                tagView.setClickable(true);
-                tagView.setOnClickListener(new View.OnClickListener()
+                if (word.charAt(0) == '#')
                 {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        TextView tagText = (TextView) view.findViewById(R.id.tag);
-                        Bundle bundle = new Bundle();
-                        bundle.putString("tag", tagText.getText().toString().replace("#", ""));
-                        //set Fragmentclass Arguments
-                        Fragment frag = new TagsFragment();
-                        frag.setArguments(bundle);
-                        ((WLActivity) c).changeFragment(frag, "Tags");
-                    }
-                });
-            }
-            else if(word.charAt(0) == '@')
-            {
-                System.out.print(" person ");
-                RelativeLayout tagView = (RelativeLayout) inflater.inflate(R.layout.tag_list_item, tags, false);
-                TextView tagText = (TextView) tagView.findViewById(R.id.tag);
-                tagText.setText(word);
-                tags.addView(tagView);
-
-                tagView.setClickable(true);
-                tagView.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        TextView tagText = (TextView) view.findViewById(R.id.tag);
-                        Bundle bundle = new Bundle();
-                        bundle.putString("tag", tagText.getText().toString().replace("@", ""));
-                        //set Fragmentclass Arguments
-                        Fragment frag = new PeopleFragment();
-                        frag.setArguments(bundle);
-                        ((WLActivity) c).changeFragment(frag, "People");
-                    }
-                });
-            }
-            else if(word.contains("/"))
-            {
-                if(item.formattedDate != "NONE")
-                {
-                    System.out.print(" date ");
                     RelativeLayout tagView = (RelativeLayout) inflater.inflate(R.layout.tag_list_item, tags, false);
                     TextView tagText = (TextView) tagView.findViewById(R.id.tag);
-                    tagText.setText(item.formattedDate);
+                    tagText.setText(word);
                     tags.addView(tagView);
 
                     tagView.setClickable(true);
@@ -257,32 +207,79 @@ public class Views
                         {
                             TextView tagText = (TextView) view.findViewById(R.id.tag);
                             Bundle bundle = new Bundle();
-                            bundle.putString("tag", tagText.getText().toString());
+                            bundle.putString("tag", tagText.getText().toString().replace("#", ""));
                             //set Fragmentclass Arguments
-                            Fragment frag = new DatesFragment();
+                            Fragment frag = new TagsFragment();
                             frag.setArguments(bundle);
-                            ((WLActivity) c).changeFragment(frag, "Dates");
+                            ((WLActivity) c).changeFragment(frag, "Tags");
                         }
                     });
                 }
-            }
-            else
-            {
-                System.out.print(" word ");
-                RelativeLayout tagView = (RelativeLayout) inflater.inflate(R.layout.item_name, tags, false);
-                TextView tagText = (TextView) tagView.findViewById(R.id.textView);
-                tagText.setText(word);
-                tagText.setTextColor(color);
-                tags.addView(tagView);
-            }
-            System.out.println(word);
+                else if (word.charAt(0) == '@')
+                {
+                    RelativeLayout tagView = (RelativeLayout) inflater.inflate(R.layout.tag_list_item, tags, false);
+                    TextView tagText = (TextView) tagView.findViewById(R.id.tag);
+                    tagText.setText(word);
+                    tags.addView(tagView);
 
-            if(j < item.item.split(" ").length - 1)
-            {
-                RelativeLayout tagView = (RelativeLayout) inflater.inflate(R.layout.item_name, tags, false);
-                TextView tagText = (TextView) tagView.findViewById(R.id.textView);
-                tagText.setText(" ");
-                tags.addView(tagView);
+                    tagView.setClickable(true);
+                    tagView.setOnClickListener(new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View view)
+                        {
+                            TextView tagText = (TextView) view.findViewById(R.id.tag);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("tag", tagText.getText().toString().replace("@", ""));
+                            //set Fragmentclass Arguments
+                            Fragment frag = new PeopleFragment();
+                            frag.setArguments(bundle);
+                            ((WLActivity) c).changeFragment(frag, "People");
+                        }
+                    });
+                }
+                else if (word.contains("/"))
+                {
+                    if (item.formattedDate != "NONE")
+                    {
+                        RelativeLayout tagView = (RelativeLayout) inflater.inflate(R.layout.tag_list_item, tags, false);
+                        TextView tagText = (TextView) tagView.findViewById(R.id.tag);
+                        tagText.setText(item.formattedDate);
+                        tags.addView(tagView);
+
+                        tagView.setClickable(true);
+                        tagView.setOnClickListener(new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View view)
+                            {
+                                TextView tagText = (TextView) view.findViewById(R.id.tag);
+                                Bundle bundle = new Bundle();
+                                bundle.putString("tag", tagText.getText().toString());
+                                //set Fragmentclass Arguments
+                                Fragment frag = new DatesFragment();
+                                frag.setArguments(bundle);
+                                ((WLActivity) c).changeFragment(frag, "Dates");
+                            }
+                        });
+                    }
+                }
+                else
+                {
+                    RelativeLayout tagView = (RelativeLayout) inflater.inflate(R.layout.item_name, tags, false);
+                    TextView tagText = (TextView) tagView.findViewById(R.id.textView);
+                    tagText.setText(word);
+                    tagText.setTextColor(color);
+                    tags.addView(tagView);
+                }
+
+                if (j < item.item.split(" ").length - 1)
+                {
+                    RelativeLayout tagView = (RelativeLayout) inflater.inflate(R.layout.item_name, tags, false);
+                    TextView tagText = (TextView) tagView.findViewById(R.id.textView);
+                    tagText.setText(" ");
+                    tags.addView(tagView);
+                }
             }
         }
         /*
