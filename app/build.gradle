@@ -8,8 +8,8 @@ android {
         applicationId "com.liamfruzyna.android.wishlister"
         minSdkVersion 14
         targetSdkVersion 24
-        versionCode 34
-        versionName "3.3"
+        versionCode 35
+        versionName "3.4"
     }
     buildTypes {
         release {
@@ -20,8 +20,8 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:cardview-v7:23.1.1'
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:design:23.1.1'
+    compile 'com.android.support:cardview-v7:24+'
+    compile 'com.android.support:appcompat-v7:24+'
+    compile 'com.android.support:design:24+'
     compile files('libs/commons-net-3.4.jar')
 }
