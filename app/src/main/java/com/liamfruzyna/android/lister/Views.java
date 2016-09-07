@@ -186,7 +186,7 @@ public class Views
                 color = Color.RED;
             }
         }
-
+/**/
         for(int j = 0; j < item.item.split(" ").length; j++)
         {
             String word = item.item.split(" ")[j];
@@ -269,16 +269,20 @@ public class Views
             else
             {
                 System.out.print(" word ");
-                TextView text = new TextView(c);
-                text.setText(word);
-                text.setTextColor(color);
+                RelativeLayout tagView = (RelativeLayout) inflater.inflate(R.layout.item_name, tags, false);
+                TextView tagText = (TextView) tagView.findViewById(R.id.textView);
+                tagText.setText(word);
+                tagText.setTextColor(color);
+                tags.addView(tagView);
             }
             System.out.println(word);
 
             if(j < item.item.split(" ").length - 1)
             {
-                TextView text = new TextView(c);
-                text.setText(" ");
+                RelativeLayout tagView = (RelativeLayout) inflater.inflate(R.layout.item_name, tags, false);
+                TextView tagText = (TextView) tagView.findViewById(R.id.textView);
+                tagText.setText(" ");
+                tags.addView(tagView);
             }
         }
         /*
