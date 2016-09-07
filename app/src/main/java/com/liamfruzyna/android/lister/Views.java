@@ -1,10 +1,12 @@
 package com.liamfruzyna.android.lister;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.liamfruzyna.android.lister.Data.AutoList;
@@ -19,6 +22,9 @@ import com.liamfruzyna.android.lister.Data.Data;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.Item;
 import com.liamfruzyna.android.lister.Data.Util;
+import com.liamfruzyna.android.lister.Fragments.DatesFragment;
+import com.liamfruzyna.android.lister.Fragments.PeopleFragment;
+import com.liamfruzyna.android.lister.Fragments.TagsFragment;
 import com.liamfruzyna.android.lister.Fragments.WLFragment;
 
 import java.util.Calendar;
@@ -151,9 +157,14 @@ public class Views
 
 
     //creates the item view that is displayed on screen
-    public static View createItem(LayoutInflater inflater, final int i, LinearLayout list, final WLFragment f)
+    public static View createItem(final Context c, final int i, LinearLayout list, final WLFragment f)
     {
+        LayoutInflater inflater = LayoutInflater.from(c);
         View view = inflater.inflate(R.layout.checkbox_list_item, list, false);
+
+        Item item = Data.getItems().get(i);
+        LinearLayout tags = (LinearLayout) view.findViewById(R.id.tags);
+
 
         //init checkbox and set text, checked status, and color
         final CheckBox cb = (CheckBox) view.findViewById(R.id.checkbox);
@@ -169,14 +180,191 @@ public class Views
             if (date.getYear() == today.getYear() && date.getMonth() == today.getMonth() && date.getDate() == today.getDate() && !Data.getItems().get(i).done)
             {
                 color = Color.parseColor("#FFA500");
-            } else if (date.compareTo(today) < 0 && !Data.getItems().get(i).done)
+            }
+            else if (date.compareTo(today) < 0 && !Data.getItems().get(i).done)
             {
                 color = Color.RED;
             }
         }
+/**/
+        for(int j = 0; j < item.item.split(" ").length; j++)
+        {
+            String word = item.item.split(" ")[j];
+            System.out.print("Putting");
+            if(word.charAt(0) == '#')
+            {
+                System.out.print(" hashtag ");
+                RelativeLayout tagView = (RelativeLayout) inflater.inflate(R.layout.tag_list_item, tags, false);
+                TextView tagText = (TextView) tagView.findViewById(R.id.tag);
+                tagText.setText(word);
+                tags.addView(tagView);
 
-        SpannableStringBuilder s = Util.colorTags(Data.getItems().get(i).item, color);
-        cb.setText(s);
+                tagView.setClickable(true);
+                tagView.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        TextView tagText = (TextView) view.findViewById(R.id.tag);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("tag", tagText.getText().toString().replace("#", ""));
+                        //set Fragmentclass Arguments
+                        Fragment frag = new TagsFragment();
+                        frag.setArguments(bundle);
+                        ((WLActivity) c).changeFragment(frag, "Tags");
+                    }
+                });
+            }
+            else if(word.charAt(0) == '@')
+            {
+                System.out.print(" person ");
+                RelativeLayout tagView = (RelativeLayout) inflater.inflate(R.layout.tag_list_item, tags, false);
+                TextView tagText = (TextView) tagView.findViewById(R.id.tag);
+                tagText.setText(word);
+                tags.addView(tagView);
+
+                tagView.setClickable(true);
+                tagView.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        TextView tagText = (TextView) view.findViewById(R.id.tag);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("tag", tagText.getText().toString().replace("@", ""));
+                        //set Fragmentclass Arguments
+                        Fragment frag = new PeopleFragment();
+                        frag.setArguments(bundle);
+                        ((WLActivity) c).changeFragment(frag, "People");
+                    }
+                });
+            }
+            else if(word.contains("/"))
+            {
+                if(item.formattedDate != "NONE")
+                {
+                    System.out.print(" date ");
+                    RelativeLayout tagView = (RelativeLayout) inflater.inflate(R.layout.tag_list_item, tags, false);
+                    TextView tagText = (TextView) tagView.findViewById(R.id.tag);
+                    tagText.setText(item.formattedDate);
+                    tags.addView(tagView);
+
+                    tagView.setClickable(true);
+                    tagView.setOnClickListener(new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View view)
+                        {
+                            TextView tagText = (TextView) view.findViewById(R.id.tag);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("tag", tagText.getText().toString());
+                            //set Fragmentclass Arguments
+                            Fragment frag = new DatesFragment();
+                            frag.setArguments(bundle);
+                            ((WLActivity) c).changeFragment(frag, "Dates");
+                        }
+                    });
+                }
+            }
+            else
+            {
+                System.out.print(" word ");
+                RelativeLayout tagView = (RelativeLayout) inflater.inflate(R.layout.item_name, tags, false);
+                TextView tagText = (TextView) tagView.findViewById(R.id.textView);
+                tagText.setText(word);
+                tagText.setTextColor(color);
+                tags.addView(tagView);
+            }
+            System.out.println(word);
+
+            if(j < item.item.split(" ").length - 1)
+            {
+                RelativeLayout tagView = (RelativeLayout) inflater.inflate(R.layout.item_name, tags, false);
+                TextView tagText = (TextView) tagView.findViewById(R.id.textView);
+                tagText.setText(" ");
+                tags.addView(tagView);
+            }
+        }
+        /*
+        //SpannableStringBuilder s = Util.colorTags(item.item, color);
+        //cb.setText(s);
+        String s = item.item.toString();
+        for(String tag : item.tags)
+        {
+            RelativeLayout tagView = (RelativeLayout) inflater.inflate(R.layout.tag_list_item, tags, false);
+            TextView tagText = (TextView) tagView.findViewById(R.id.tag);
+            tagText.setText("#" + tag);
+            tags.addView(tagView);
+            s = s.replace("#" + tag, "");
+
+            tagView.setClickable(true);
+            tagView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    TextView tagText = (TextView) view.findViewById(R.id.tag);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("tag", tagText.getText().toString().replace("#", ""));
+                    //set Fragmentclass Arguments
+                    Fragment frag = new TagsFragment();
+                    frag.setArguments(bundle);
+                    ((WLActivity) c).changeFragment(frag, "Tags");
+                }
+            });
+        }
+        for(String tag : item.people)
+        {
+            RelativeLayout tagView = (RelativeLayout) inflater.inflate(R.layout.tag_list_item, tags, false);
+            TextView tagText = (TextView) tagView.findViewById(R.id.tag);
+            tagText.setText("@" + tag);
+            tags.addView(tagView);
+            s = s.replace("@" + tag, "");
+
+            tagView.setClickable(true);
+            tagView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    TextView tagText = (TextView) view.findViewById(R.id.tag);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("tag", tagText.getText().toString().replace("@", ""));
+                    //set Fragmentclass Arguments
+                    Fragment frag = new PeopleFragment();
+                    frag.setArguments(bundle);
+                    ((WLActivity) c).changeFragment(frag, "People");
+                }
+            });
+        }
+        if(item.formattedDate != "NONE")
+        {
+            RelativeLayout tagView = (RelativeLayout) inflater.inflate(R.layout.tag_list_item, tags, false);
+            TextView tagText = (TextView) tagView.findViewById(R.id.tag);
+            tagText.setText(item.formattedDate);
+            tags.addView(tagView);
+            s = s.replace(item.formattedDate, "");
+
+            tagView.setClickable(true);
+            tagView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    TextView tagText = (TextView) view.findViewById(R.id.tag);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("tag", tagText.getText().toString());
+                    //set Fragmentclass Arguments
+                    Fragment frag = new DatesFragment();
+                    frag.setArguments(bundle);
+                    ((WLActivity) c).changeFragment(frag, "Dates");
+                }
+            });
+        }
+
+
+        IO.log("Views", "createItem", s);*/
+        cb.setText("");
         cb.setTextColor(color);
         cb.setChecked(Data.getItems().get(i).done);
 
@@ -189,13 +377,16 @@ public class Views
             cb.setPaintFlags(0);
         }
 
+        cb.setClickable(false);
+
         //listen for checkbox to be checked
-        cb.setOnClickListener(new View.OnClickListener()
+        view.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                Data.getItems().get(i).done = cb.isChecked();
+                Data.getItems().get(i).done = !Data.getItems().get(i).done;
+                cb.setChecked(Data.getItems().get(i).done);
                 //if it is checked cross it out
                 if (cb.isChecked())
                 {
@@ -210,7 +401,7 @@ public class Views
         });
 
         //listen for item to be long pressed
-        cb.setOnLongClickListener(new View.OnLongClickListener()
+        view.setOnLongClickListener(new View.OnLongClickListener()
         {
             @Override
             public boolean onLongClick(View v)

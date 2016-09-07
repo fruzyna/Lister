@@ -209,7 +209,7 @@ public class IO
         File dir = new File(fileDir);
         dir.mkdirs();
         File file = new File(fileDir, name + ".json");
-        log("IO", "Writing to " + file.toString());
+        log("IO", "writeToFile", "Writing to " + file.toString());
         if (!file.exists())
         {
             try
@@ -245,7 +245,7 @@ public class IO
         for (int i = 0; i < files.length; i++)
         {
             File file = files[i];
-            log("IO", "Reading from " + file.toString());
+            log("IO", "readFromFile", "Reading from " + file.toString());
             StringBuilder sb = new StringBuilder();
             try
             {
@@ -267,5 +267,10 @@ public class IO
     public static void log(String title, String message)
     {
         System.out.println("[" + title + "] " + message);
+    }
+
+    public static void log(String clas, String method, String message)
+    {
+        System.out.println("[" + clas + ":" + method + "()] " + message);
     }
 }

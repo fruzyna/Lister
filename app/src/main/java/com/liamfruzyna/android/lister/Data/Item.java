@@ -32,6 +32,7 @@ public class Item
     public List<String> people = new ArrayList<>();
     public List<String> tags = new ArrayList<>();
     public Date date = new Date(1097, 3, 24);
+    public String formattedDate = "NONE";
 
     //the constructor if you don't know what this is don't ask me
     public Item(String item, Boolean done)
@@ -106,6 +107,7 @@ public class Item
                 } else {
                     year = Integer.parseInt(date[2]);
                 }
+                formattedDate = (month+1) + "/" + day + "/" + year;
                 if(year < 2000)
                 {
                     year += 2000;
@@ -135,6 +137,7 @@ public class Item
                 year = Calendar.getInstance().getTime().getYear();
                 IO.log("Item:parseItem", "Found date: " + month + "/" + day + "/" + year);
                 this.date = new Date(year, month, day);
+                formattedDate = (1+month) + "/" + day;
             }
         }
     }

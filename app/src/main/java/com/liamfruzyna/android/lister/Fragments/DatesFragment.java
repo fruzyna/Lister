@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.liamfruzyna.android.lister.Data.Item;
 import com.liamfruzyna.android.lister.Data.WishList;
+import com.liamfruzyna.android.lister.R;
 
 import java.util.ArrayList;
 import java.util.Date;
