@@ -162,7 +162,7 @@ public class Views
         LayoutInflater inflater = LayoutInflater.from(c);
         View view = inflater.inflate(R.layout.checkbox_list_item, list, false);
 
-        Item item = Data.getItems().get(i);
+        final Item item = Data.getItems().get(i);
         LinearLayout tags = (LinearLayout) view.findViewById(R.id.tags);
 
 
@@ -255,7 +255,7 @@ public class Views
                             {
                                 TextView tagText = (TextView) view.findViewById(R.id.tag);
                                 Bundle bundle = new Bundle();
-                                bundle.putString("tag", tagText.getText().toString());
+                                bundle.putString("tag", DatesFragment.getDate(item.date));
                                 //set Fragmentclass Arguments
                                 Fragment frag = new DatesFragment();
                                 frag.setArguments(bundle);

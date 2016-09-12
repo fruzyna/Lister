@@ -30,15 +30,7 @@ public class DatesFragment extends TagFragment
             {
                 for (Item item : list.items)
                 {
-                    boolean found = false;
-                    for(String date : dates)
-                    {
-                        if(item.date.equals(date))
-                        {
-                            found = true;
-                        }
-                    }
-                    if(!found)
+                    if(!dates.contains(getDate(item.date)) && !getDate(item.date).contains("Apr 24 2997"))
                     {
                         dates.add(getDate(item.date));
                     }
@@ -77,7 +69,7 @@ public class DatesFragment extends TagFragment
         return items;
     }
 
-    public String getDate(Date date)
+    public static String getDate(Date date)
     {
         String[] array = date.toString().split(" ");
         return array[1] + " " + array[2] + " " + array[5];

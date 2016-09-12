@@ -130,16 +130,19 @@ public class TagFragment extends Fragment implements AdapterView.OnItemSelectedL
         spin.setAdapter(sadapter);
 
 
-        if(getArguments().containsKey("tag"))
+        if(getArguments() != null)
         {
-            String initTag = getArguments().getString("tag");
-
-            List<String> tags = getTags();
-            for(int i = 0; i < tags.size(); i++)
+            if(getArguments().containsKey("tag"))
             {
-                if(tags.get(i).equals(initTag))
+                String initTag = getArguments().getString("tag");
+
+                List<String> tags = getTags();
+                for(int i = 0; i < tags.size(); i++)
                 {
-                    spin.setSelection(i);
+                    if(tags.get(i).equals(initTag))
+                    {
+                        spin.setSelection(i);
+                    }
                 }
             }
         }
