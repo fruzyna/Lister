@@ -109,6 +109,7 @@ public class Views
                 f.edit = -1;
                 IO.log("EditItemDialog", "Updating " + item.item + " to " + name.getText().toString());
                 item.item = name.getText().toString();
+                item.parseItem();
                 IO.saveList();
                 f.updateList();
             }
