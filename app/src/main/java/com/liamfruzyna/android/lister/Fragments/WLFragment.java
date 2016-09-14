@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -112,7 +113,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
                 {
                     if (edit == i)
                     {
-                        list.addView(Views.createEditItem(inflater, i, list, this));
+                        list.addView(Views.createEditItem(getActivity(), inflater, i, list, this));
                     } else
                     {
                         list.addView(Views.createItem(getActivity(), i, list, this));
@@ -124,6 +125,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
             tagcv.removeAllViews();
             inflater = LayoutInflater.from(c);
             View view;
+            final Activity a = getActivity();
             if (editTags)
             {
                 view = inflater.inflate(R.layout.tags_edit_item, tagcv, false);
@@ -140,6 +142,11 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
                     {
                         IO.log("EditTagDialog", "Settings " + Data.getCurrentList().name + "'s tags to " + editText.getText().toString());
                         Data.getCurrentList().tags = new ArrayList<>(Arrays.asList(editText.getText().toString().split(" ")));
+                        View view = a.getCurrentFocus();
+                        if (view != null) {
+                            InputMethodManager imm = (InputMethodManager) c.getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                        }
                         updateList();
                         IO.saveList();
                         editTags = false;
@@ -152,6 +159,11 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
                     public void onClick(View v)
                     {
                         editTags = false;
+                        View view = a.getCurrentFocus();
+                        if (view != null) {
+                            InputMethodManager imm = (InputMethodManager) c.getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                        }
                         updateList();
                     }
                 });

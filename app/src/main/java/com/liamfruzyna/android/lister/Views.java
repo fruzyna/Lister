@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -36,7 +37,7 @@ import java.util.Date;
 public class Views
 {
 
-    public static View createEditItem(LayoutInflater inflater, final int i, LinearLayout list, final WLFragment f)
+    public static View createEditItem(final Activity c, LayoutInflater inflater, final int i, LinearLayout list, final WLFragment f)
     {
         View view = inflater.inflate(R.layout.checkbox_edit_item, list, false);
 
@@ -77,6 +78,11 @@ public class Views
                     IO.log("EditItemDialog", "Removing " + item);
                     Data.getItems().remove(item);
                     Data.getCurrentList().items.remove(item);
+                    View view = c.getCurrentFocus();
+                    if (view != null) {
+                        InputMethodManager imm = (InputMethodManager) c.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    }
                     f.removeItemSnackbar(item);
                     IO.saveList();
                     f.updateList();
@@ -94,6 +100,11 @@ public class Views
                     IO.log("EditItemDialog", "Removing " + item);
                     Data.getItems().remove(item);
                     Data.getCurrentList().items.remove(item);
+                    View view = c.getCurrentFocus();
+                    if (view != null) {
+                        InputMethodManager imm = (InputMethodManager) c.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    }
                     f.removeItemSnackbar(item);
                     IO.saveList();
                 }
@@ -109,6 +120,11 @@ public class Views
                 f.edit = -1;
                 IO.log("EditItemDialog", "Updating " + item.item + " to " + name.getText().toString());
                 item.item = name.getText().toString();
+                View view = c.getCurrentFocus();
+                if (view != null) {
+                    InputMethodManager imm = (InputMethodManager) c.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
                 item.parseItem();
                 IO.saveList();
                 f.updateList();
