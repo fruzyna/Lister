@@ -214,6 +214,17 @@ public class Views
                             ((WLActivity) c).changeFragment(frag, "Tags");
                         }
                     });
+                    tagView.setOnLongClickListener(new View.OnLongClickListener()
+                    {
+                        @Override
+                        public boolean onLongClick(View v)
+                        {
+                            //transition to edit checkbox
+                            f.edit = i;
+                            f.updateList();
+                            return true;
+                        }
+                    });
                 }
                 else if (word.charAt(0) == '@')
                 {
@@ -235,6 +246,17 @@ public class Views
                             Fragment frag = new PeopleFragment();
                             frag.setArguments(bundle);
                             ((WLActivity) c).changeFragment(frag, "People");
+                        }
+                    });
+                    tagView.setOnLongClickListener(new View.OnLongClickListener()
+                    {
+                        @Override
+                        public boolean onLongClick(View v)
+                        {
+                            //transition to edit checkbox
+                            f.edit = i;
+                            f.updateList();
+                            return true;
                         }
                     });
                 }
@@ -260,6 +282,17 @@ public class Views
                                 Fragment frag = new DatesFragment();
                                 frag.setArguments(bundle);
                                 ((WLActivity) c).changeFragment(frag, "Dates");
+                            }
+                        });
+                        tagView.setOnLongClickListener(new View.OnLongClickListener()
+                        {
+                            @Override
+                            public boolean onLongClick(View v)
+                            {
+                                //transition to edit checkbox
+                                f.edit = i;
+                                f.updateList();
+                                return true;
                             }
                         });
                     }
