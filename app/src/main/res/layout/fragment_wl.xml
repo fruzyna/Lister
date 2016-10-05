@@ -4,6 +4,7 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
@@ -15,6 +16,15 @@
         android:layout_marginBottom="8dp"
         android:layout_marginRight="8dp"/>
 
+    <HorizontalScrollView
+        android:id="@+id/hsv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:fillViewport="true"
+        android:measureAllChildren="false"
+        android:scrollbars="none" >
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,10 +33,12 @@
         android:layout_alignParentTop="true"
         android:id="@+id/suggestions"/>
 
+    </HorizontalScrollView>
+
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/suggestions"
+                android:layout_below="@id/hsv"
                 android:id="@+id/scroll">
 
         <LinearLayout
