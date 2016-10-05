@@ -7,7 +7,9 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.SpannableStringBuilder;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -30,6 +32,7 @@ import com.liamfruzyna.android.lister.Fragments.WLFragment;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by mail929 on 3/17/16.
@@ -59,6 +62,55 @@ public class Views
             {
                 item.done = cb.isChecked();
                 IO.saveList();
+            }
+        });
+
+        final LinearLayout sug = (LinearLayout) c.findViewById(R.id.suggestions);
+
+
+        name.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable)
+            {
+                sug.removeAllViews();
+                final String text = editable.toString();
+                final String last = text.split(" ")[text.split(" ").length - 1];
+                if(last.contains("#") && last.indexOf("#") != last.length()-1)
+                {
+                    String start = last.replace("#", "");
+                    List<String> tags = Data.getTags();
+                    for(int i = 0; i < tags.size(); i++)
+                    {
+                        String tag = tags.get(i);
+                        if(tag.contains(start))
+                        {
+                            View child = c.getLayoutInflater().inflate(R.layout.tagsug_button, null);
+                            final Button b = (Button) child.findViewById(R.id.button);
+                            b.setText("#" + tag);
+                            b.setOnClickListener(new View.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(View view)
+                                {
+                                    name.setText(text.replace(last, b.getText()));
+                                    sug.removeAllViews();
+                                }
+                            });
+                            sug.addView(child);
+                        }
+                    }
+                }
             }
         });
 

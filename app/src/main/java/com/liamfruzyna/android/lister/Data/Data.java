@@ -99,4 +99,49 @@ public class Data
         return null;
     }
 
+
+    public static List<String> getTags()
+    {
+        List<String> tags = new ArrayList<>();
+        for(WishList list : lists)
+        {
+            if(!list.archived)
+            {
+                for(String tag : list.tags)
+                {
+                    boolean found = false;
+                    for(String tagg : tags)
+                    {
+                        if(tagg.toLowerCase().equals(tag.toLowerCase()))
+                        {
+                            found = true;
+                        }
+                    }
+                    if(!found && !tag.contains("@"))
+                    {
+                        tags.add(tag);
+                    }
+                }
+                for(Item item : list.items)
+                {
+                    for(String tag : item.tags)
+                    {
+                        boolean found = false;
+                        for(String tagg : tags)
+                        {
+                            if(tag.toLowerCase().equals(tagg.toLowerCase()))
+                            {
+                                found = true;
+                            }
+                        }
+                        if(!found)
+                        {
+                            tags.add(tag);
+                        }
+                    }
+                }
+            }
+        }
+        return tags;
+    }
 }

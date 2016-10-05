@@ -24,11 +24,11 @@ public class Util
     public static Item findEarliest(List<Item> items)
     {
         Item earliest = items.get(0);
-        if(items.size() > 1)
+        if (items.size() > 1)
         {
-            for(Item item : items)
+            for (Item item : items)
             {
-                if(item.date.before(earliest.date))
+                if (item.date.before(earliest.date))
                 {
                     earliest = item;
                 }
@@ -41,7 +41,7 @@ public class Util
     public static List<Item> sortByDate(List<Item> todo)
     {
         List<Item> build = new ArrayList<>();
-        while(todo.size() > 0)
+        while (todo.size() > 0)
         {
             Item item = findEarliest(todo);
             build.add(item);
@@ -57,14 +57,14 @@ public class Util
 
         for (Item item : temp)
         {
-            if(!item.done)
+            if (!item.done)
             {
                 items.add(item);
             }
         }
         for (Item item : temp)
         {
-            if(item.done)
+            if (item.done)
             {
                 items.add(item);
             }
@@ -79,14 +79,14 @@ public class Util
 
         for (Item item : temp)
         {
-            if(!item.priority)
+            if (!item.priority)
             {
                 items.add(item);
             }
         }
         for (Item item : temp)
         {
-            if(item.priority)
+            if (item.priority)
             {
                 items.add(item);
             }
@@ -97,12 +97,12 @@ public class Util
     //Takes a list of items and reorganizes it based off if they are done
     public static List<Item> newList(List<Item> items)
     {
-        if(items == null)
+        if (items == null)
         {
             items = new ArrayList<>();
         }
         List<Item> copy = new ArrayList<>();
-        for(Item item : items)
+        for (Item item : items)
         {
             copy.add(item);
         }
@@ -115,11 +115,11 @@ public class Util
         final SpannableStringBuilder sb = new SpannableStringBuilder();
         int alpha = Color.argb(128, Color.red(color), Color.green(color), Color.blue(color));
         String[] words = item.split(" ");
-        for(int i = 0; i < words.length; i++)
+        for (int i = 0; i < words.length; i++)
         {
-            if(words[i].length() > 0)
+            if (words[i].length() > 0)
             {
-                if(words[i].charAt(0) == '#')
+                if (words[i].charAt(0) == '#')
                 {
                     SpannableString s = new SpannableString(words[i]);
                     s.setSpan(new ForegroundColorSpan(alpha), 0, words[i].length(), 0);
@@ -130,7 +130,7 @@ public class Util
                     sb.append(words[i]);
                 }
             }
-            if(i < words.length - 1)
+            if (i < words.length - 1)
             {
                 sb.append(" ");
             }
@@ -173,7 +173,8 @@ public class Util
                         lowest = copy.get(j).order;
                         count = j;
                     }
-                } else
+                }
+                else
                 {
                     extra.add(copy.get(j).name);
                 }
