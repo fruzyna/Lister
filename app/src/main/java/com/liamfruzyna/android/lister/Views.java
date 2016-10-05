@@ -93,11 +93,36 @@ public class Views
                     for(int i = 0; i < tags.size(); i++)
                     {
                         String tag = tags.get(i);
-                        if(tag.contains(start))
+                        if(tag.toLowerCase().contains(start.toLowerCase()))
                         {
                             View child = c.getLayoutInflater().inflate(R.layout.tagsug_button, null);
                             final Button b = (Button) child.findViewById(R.id.button);
                             b.setText("#" + tag);
+                            b.setOnClickListener(new View.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(View view)
+                                {
+                                    name.setText(text.replace(last, b.getText()));
+                                    sug.removeAllViews();
+                                }
+                            });
+                            sug.addView(child);
+                        }
+                    }
+                }
+                if(last.contains("@") && last.indexOf("@") != last.length()-1)
+                {
+                    String start = last.replace("@", "");
+                    List<String> tags = Data.getPeopleTags();
+                    for(int i = 0; i < tags.size(); i++)
+                    {
+                        String tag = tags.get(i);
+                        if(tag.toLowerCase().contains(start.toLowerCase()))
+                        {
+                            View child = c.getLayoutInflater().inflate(R.layout.tagsug_button, null);
+                            final Button b = (Button) child.findViewById(R.id.button);
+                            b.setText("@" + tag);
                             b.setOnClickListener(new View.OnClickListener()
                             {
                                 @Override

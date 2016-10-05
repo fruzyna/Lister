@@ -144,4 +144,52 @@ public class Data
         }
         return tags;
     }
+
+    public static List<String> getPeopleTags()
+    {
+        List<String> people = new ArrayList<>();
+        for (WishList list : lists)
+        {
+            if (!list.archived)
+            {
+                for (Item item : list.items)
+                {
+                    for (String person : item.people)
+                    {
+                        boolean found = false;
+                        for (String personn : people)
+                        {
+                            if (person.toLowerCase().equals(personn.toLowerCase()))
+                            {
+                                found = true;
+                            }
+                        }
+                        if (!found)
+                        {
+                            people.add(person);
+                        }
+                    }
+                }
+                for (String person : list.people)
+                {
+                    IO.log("PeopleFragment:getTags", "Looking for " + person);
+                    boolean found = false;
+                    for (String sPerson : people)
+                    {
+                        if (person.toLowerCase().equals(sPerson.toLowerCase()))
+                        {
+                            found = true;
+                        }
+                    }
+                    if (!found)
+                    {
+                        IO.log("PeopleFragment:getTags", "Adding " + person);
+                        people.add(person);
+                    }
+                }
+
+            }
+        }
+        return people;
+    }
 }
