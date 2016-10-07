@@ -103,7 +103,8 @@ public class Views
                                 @Override
                                 public void onClick(View view)
                                 {
-                                    name.setText(text.replace(last, b.getText()));
+                                    name.setText("");
+                                    name.append(text.replace(last, b.getText()) + " ");
                                     sug.removeAllViews();
                                 }
                             });
@@ -128,7 +129,8 @@ public class Views
                                 @Override
                                 public void onClick(View view)
                                 {
-                                    name.setText(text.replace(last, b.getText()));
+                                    name.setText("");
+                                    name.append(text.replace(last, b.getText()) + " ");
                                     sug.removeAllViews();
                                 }
                             });
