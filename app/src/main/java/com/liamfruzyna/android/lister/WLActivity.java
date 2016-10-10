@@ -28,6 +28,7 @@ import com.liamfruzyna.android.lister.Data.Data;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.Util;
 import com.liamfruzyna.android.lister.Data.WishList;
+import com.liamfruzyna.android.lister.Fragments.CalendarFragment;
 import com.liamfruzyna.android.lister.Fragments.DatesFragment;
 import com.liamfruzyna.android.lister.Fragments.PeopleFragment;
 import com.liamfruzyna.android.lister.Fragments.SettingsFragment;
@@ -78,7 +79,7 @@ public class WLActivity extends ActionBarActivity
                     break;
                 case 3:
                     //Date Viewer
-                    frag = new DatesFragment();
+                    frag = new CalendarFragment();
                     tag = "Dates";
                     break;
             }
