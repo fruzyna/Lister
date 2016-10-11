@@ -1,18 +1,9 @@
-<com.liamfruzyna.android.lister.ScrimInsetsFrameLayout
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/scrimInsetsFrameLayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="start"
-    android:background="@color/background_gray"
-    android:elevation="10dp"
-    android:fitsSystemWindows="true"
-    app:insetForeground="#4000">
+
 
     <android.support.v4.widget.DrawerLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:background="@color/background_gray"
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -24,7 +15,6 @@
             android:orientation="vertical">
 
             <android.support.v7.widget.Toolbar
-                android:paddingTop="24dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/toolbar"
@@ -87,5 +77,3 @@
         </LinearLayout>
 
     </android.support.v4.widget.DrawerLayout>
-
-</com.liamfruzyna.android.lister.ScrimInsetsFrameLayout>
