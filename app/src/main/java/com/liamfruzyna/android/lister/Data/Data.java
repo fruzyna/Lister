@@ -99,4 +99,97 @@ public class Data
         return null;
     }
 
+
+    public static List<String> getTags()
+    {
+        List<String> tags = new ArrayList<>();
+        for(WishList list : lists)
+        {
+            if(!list.archived)
+            {
+                for(String tag : list.tags)
+                {
+                    boolean found = false;
+                    for(String tagg : tags)
+                    {
+                        if(tagg.toLowerCase().equals(tag.toLowerCase()))
+                        {
+                            found = true;
+                        }
+                    }
+                    if(!found && !tag.contains("@"))
+                    {
+                        tags.add(tag);
+                    }
+                }
+                for(Item item : list.items)
+                {
+                    for(String tag : item.tags)
+                    {
+                        boolean found = false;
+                        for(String tagg : tags)
+                        {
+                            if(tag.toLowerCase().equals(tagg.toLowerCase()))
+                            {
+                                found = true;
+                            }
+                        }
+                        if(!found)
+                        {
+                            tags.add(tag);
+                        }
+                    }
+                }
+            }
+        }
+        return tags;
+    }
+
+    public static List<String> getPeopleTags()
+    {
+        List<String> people = new ArrayList<>();
+        for (WishList list : lists)
+        {
+            if (!list.archived)
+            {
+                for (Item item : list.items)
+                {
+                    for (String person : item.people)
+                    {
+                        boolean found = false;
+                        for (String personn : people)
+                        {
+                            if (person.toLowerCase().equals(personn.toLowerCase()))
+                            {
+                                found = true;
+                            }
+                        }
+                        if (!found)
+                        {
+                            people.add(person);
+                        }
+                    }
+                }
+                for (String person : list.people)
+                {
+                    IO.log("PeopleFragment:getTags", "Looking for " + person);
+                    boolean found = false;
+                    for (String sPerson : people)
+                    {
+                        if (person.toLowerCase().equals(sPerson.toLowerCase()))
+                        {
+                            found = true;
+                        }
+                    }
+                    if (!found)
+                    {
+                        IO.log("PeopleFragment:getTags", "Adding " + person);
+                        people.add(person);
+                    }
+                }
+
+            }
+        }
+        return people;
+    }
 }
