@@ -362,7 +362,49 @@ public class Views
                     {
                         RelativeLayout tagView = (RelativeLayout) inflater.inflate(R.layout.tag_list_item, tags, false);
                         TextView tagText = (TextView) tagView.findViewById(R.id.tag);
-                        tagText.setText(item.formattedDate);
+
+                        Date date = Data.getItems().get(i).date;
+                        Date today = Calendar.getInstance().getTime();
+                        if (date.getYear() == today.getYear() && date.getMonth() == today.getMonth() && date.getDate() == today.getDate())
+                        {
+                            tagText.setText("Today");
+                        }
+                        else if (date.getTime() - today.getTime() <= 604800000 && date.getTime() > today.getTime())
+                        {
+                            Calendar cal = Calendar.getInstance();
+                            cal.setTime(date);
+                            int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+                            String day = "IDK";
+                            switch(dayOfWeek)
+                            {
+                                case Calendar.MONDAY:
+                                    day = "Monday";
+                                    break;
+                                case Calendar.TUESDAY:
+                                    day = "Tuesday";
+                                    break;
+                                case Calendar.WEDNESDAY:
+                                    day = "Wednesday";
+                                    break;
+                                case Calendar.THURSDAY:
+                                    day = "Thursday";
+                                    break;
+                                case Calendar.FRIDAY:
+                                    day = "Friday";
+                                    break;
+                                case Calendar.SATURDAY:
+                                    day = "Saturday";
+                                    break;
+                                case Calendar.SUNDAY:
+                                    day = "Sunday";
+                                    break;
+                            }
+                            tagText.setText(day);
+                        }
+                        else
+                        {
+                            tagText.setText(item.formattedDate);
+                        }
                         tags.addView(tagView);
 
                         tagView.setClickable(true);
