@@ -121,7 +121,7 @@ public class AutoList extends WishList
                                     toCal.add(Calendar.DAY_OF_YEAR, 1);
                                     Date to = toCal.getTime();
                                     Date from = sdf.parse(parts[3]);
-                                    if(item.date.after(from) && item.date.before(to))
+                                    if((item.date.after(from) && item.date.before(to)) || (list.date.after(from) && list.date.before(to)))
                                     {
                                         add = make;
                                     }
@@ -139,7 +139,7 @@ public class AutoList extends WishList
                                 nowCal.add(Calendar.DAY_OF_YEAR, -1);
                                 Date by = byCal.getTime();
                                 Date now = nowCal.getTime();
-                                if(item.date.before(by) && item.date.after(now))
+                                if((item.date.before(by) && item.date.after(now)) || (list.date.before(by) && list.date.after(now)))
                                 {
                                     add = make;
                                 }
@@ -187,7 +187,7 @@ public class AutoList extends WishList
                                 byCal.add(Calendar.DAY_OF_YEAR, remaining);
                                 Date by = byCal.getTime();
                                 Date now = nowCal.getTime();
-                                if(item.date.before(by) && item.date.after(now))
+                                if((item.date.before(by) && item.date.after(now)) || (list.date.before(by) && list.date.after(now)))
                                 {
                                     add = make;
                                 }

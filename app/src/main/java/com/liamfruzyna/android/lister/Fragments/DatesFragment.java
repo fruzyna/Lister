@@ -35,6 +35,11 @@ public class DatesFragment extends TagFragment
                         dates.add(getDate(item.date));
                     }
                 }
+                String date = getDate(list.date);
+                if(!dates.contains(date) && !date.contains("Apr 24 2997"))
+                {
+                    dates.add(date);
+                }
             }
         }
         return dates;
@@ -59,7 +64,7 @@ public class DatesFragment extends TagFragment
             {
                 for(Item item : list.items)
                 {
-                    if(getDate(item.date).equals(person) && !items.contains(item))
+                    if((getDate(item.date).equals(person) && !items.contains(item)) || getDate(list.date).equals(person))
                     {
                         items.add(item);
                     }
