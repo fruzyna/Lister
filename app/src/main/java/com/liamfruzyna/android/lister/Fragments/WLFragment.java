@@ -16,9 +16,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -170,8 +172,8 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
             } else
             {
                 view = inflater.inflate(R.layout.tags_list_item, tagcv, false);
-                ((RelativeLayout) view.findViewById(R.id.tag)).removeAllViews();
-                ((RelativeLayout) view.findViewById(R.id.tag)).addView(Views.createTags(c, this));
+                ((HorizontalScrollView) view.findViewById(R.id.tag)).removeAllViews();
+                ((HorizontalScrollView) view.findViewById(R.id.tag)).addView(Views.createTags(c, this));
                 tagEdit = (Button) view.findViewById(R.id.editTag);
                 tagEdit.setOnClickListener(f);
             }

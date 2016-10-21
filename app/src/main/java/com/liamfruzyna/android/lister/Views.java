@@ -24,7 +24,6 @@ import com.liamfruzyna.android.lister.Data.AutoList;
 import com.liamfruzyna.android.lister.Data.Data;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.Item;
-import com.liamfruzyna.android.lister.Data.Util;
 import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.Fragments.DatesFragment;
 import com.liamfruzyna.android.lister.Fragments.PeopleFragment;
