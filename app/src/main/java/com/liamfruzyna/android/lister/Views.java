@@ -24,7 +24,7 @@ import com.liamfruzyna.android.lister.Data.AutoList;
 import com.liamfruzyna.android.lister.Data.Data;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.Item;
-import com.liamfruzyna.android.lister.Data.Util;
+import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.Fragments.DatesFragment;
 import com.liamfruzyna.android.lister.Fragments.PeopleFragment;
 import com.liamfruzyna.android.lister.Fragments.TagsFragment;
@@ -224,6 +224,168 @@ public class Views
         TextView tv = new TextView(c);
         tv.setText(sb.toString());
         return tv;
+    }
+
+    public static LinearLayout createTags(final Context c, final WLFragment f)
+    {
+        LayoutInflater inflater = LayoutInflater.from(c);
+        LinearLayout tags = new LinearLayout(c);
+
+        final WishList list = Data.getListFromName(Data.getCurrentName());
+        for(String word : list.tags)
+        {
+            if(word.length() > 0)
+            {
+                if (word.charAt(0) == '@')
+                {
+                    RelativeLayout tagView = (RelativeLayout) inflater.inflate(R.layout.tag_list_item, tags, false);
+                    TextView tagText = (TextView) tagView.findViewById(R.id.tag);
+                    tagText.setText(word);
+                    tags.addView(tagView);
+
+                    tagView.setClickable(true);
+                    tagView.setOnClickListener(new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View view)
+                        {
+                            TextView tagText = (TextView) view.findViewById(R.id.tag);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("tag", tagText.getText().toString().replace("@", ""));
+                            //set Fragmentclass Arguments
+                            Fragment frag = new PeopleFragment();
+                            frag.setArguments(bundle);
+                            ((WLActivity) c).changeFragment(frag, "People");
+                        }
+                    });
+                    tagView.setOnLongClickListener(new View.OnLongClickListener()
+                    {
+                        @Override
+                        public boolean onLongClick(View v)
+                        {
+                            //transition to edit checkbox
+                            f.editTags = true;
+                            f.updateList();
+                            return true;
+                        }
+                    });
+                }
+                else if (word.contains("/"))
+                {
+                    if (list.formattedDate != "NONE")
+                    {
+                        RelativeLayout tagView = (RelativeLayout) inflater.inflate(R.layout.tag_list_item, tags, false);
+                        TextView tagText = (TextView) tagView.findViewById(R.id.tag);
+
+                        Date date = list.date;
+                        Date today = Calendar.getInstance().getTime();
+                        if (date.getYear() == today.getYear() && date.getMonth() == today.getMonth() && date.getDate() == today.getDate())
+                        {
+                            tagText.setText("Today");
+                        }
+                        else if (date.getTime() - today.getTime() <= 604800000 && date.getTime() > today.getTime())
+                        {
+                            Calendar cal = Calendar.getInstance();
+                            cal.setTime(date);
+                            int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+                            String day = "IDK";
+                            switch (dayOfWeek)
+                            {
+                                case Calendar.MONDAY:
+                                    day = "Monday";
+                                    break;
+                                case Calendar.TUESDAY:
+                                    day = "Tuesday";
+                                    break;
+                                case Calendar.WEDNESDAY:
+                                    day = "Wednesday";
+                                    break;
+                                case Calendar.THURSDAY:
+                                    day = "Thursday";
+                                    break;
+                                case Calendar.FRIDAY:
+                                    day = "Friday";
+                                    break;
+                                case Calendar.SATURDAY:
+                                    day = "Saturday";
+                                    break;
+                                case Calendar.SUNDAY:
+                                    day = "Sunday";
+                                    break;
+                            }
+                            tagText.setText(day);
+                        }
+                        else
+                        {
+                            tagText.setText(list.formattedDate);
+                        }
+                        tags.addView(tagView);
+
+                        tagView.setClickable(true);
+                        tagView.setOnClickListener(new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View view)
+                            {
+                                TextView tagText = (TextView) view.findViewById(R.id.tag);
+                                Bundle bundle = new Bundle();
+                                bundle.putString("tag", DatesFragment.getDate(list.date));
+                                //set Fragmentclass Arguments
+                                Fragment frag = new DatesFragment();
+                                frag.setArguments(bundle);
+                                ((WLActivity) c).changeFragment(frag, "Dates");
+                            }
+                        });
+                        tagView.setOnLongClickListener(new View.OnLongClickListener()
+                        {
+                            @Override
+                            public boolean onLongClick(View v)
+                            {
+                                //transition to edit checkbox
+                                f.editTags = true;
+                                f.updateList();
+                                return true;
+                            }
+                        });
+                    }
+                }
+                else
+                {
+                    RelativeLayout tagView = (RelativeLayout) inflater.inflate(R.layout.tag_list_item, tags, false);
+                    TextView tagText = (TextView) tagView.findViewById(R.id.tag);
+                    tagText.setText(word);
+                    tags.addView(tagView);
+
+                    tagView.setClickable(true);
+                    tagView.setOnClickListener(new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View view)
+                        {
+                            TextView tagText = (TextView) view.findViewById(R.id.tag);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("tag", tagText.getText().toString().replace("#", ""));
+                            //set Fragmentclass Arguments
+                            Fragment frag = new TagsFragment();
+                            frag.setArguments(bundle);
+                            ((WLActivity) c).changeFragment(frag, "Tags");
+                        }
+                    });
+                    tagView.setOnLongClickListener(new View.OnLongClickListener()
+                    {
+                        @Override
+                        public boolean onLongClick(View v)
+                        {
+                            //transition to edit checkbox
+                            f.editTags = true;
+                            f.updateList();
+                            return true;
+                        }
+                    });
+                }
+            }
+        }
+        return tags;
     }
 
     //creates the textview with a lists tags
