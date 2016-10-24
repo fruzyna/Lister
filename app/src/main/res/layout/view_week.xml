@@ -5,59 +5,103 @@
               android:layout_weight="1"
               android:orientation="horizontal">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
                   android:id="@+id/monday"
                   android:layout_width="0dp"
                   android:layout_height="wrap_content"
                   android:layout_weight="1"
+                  android:paddingLeft="4dp"
+                  android:paddingTop="4dp"
                   android:orientation="vertical">
     </LinearLayout>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/divider"/>
+
+    <LinearLayout
                   android:id="@+id/tuesday"
                   android:layout_width="0dp"
                   android:layout_height="wrap_content"
                   android:layout_weight="1"
+                  android:paddingLeft="4dp"
+                  android:paddingTop="4dp"
                   android:orientation="vertical">
     </LinearLayout>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/divider"/>
+
+    <LinearLayout
                   android:id="@+id/wednesday"
                   android:layout_width="0dp"
                   android:layout_height="wrap_content"
                   android:layout_weight="1"
+                  android:paddingLeft="4dp"
+                  android:paddingTop="4dp"
                   android:orientation="vertical">
     </LinearLayout>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/divider"/>
+
+    <LinearLayout
                   android:id="@+id/thursday"
                   android:layout_width="0dp"
                   android:layout_height="wrap_content"
                   android:layout_weight="1"
+                  android:paddingLeft="4dp"
+                  android:paddingTop="4dp"
                   android:orientation="vertical">
     </LinearLayout>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/divider"/>
+
+    <LinearLayout
                   android:id="@+id/friday"
                   android:layout_width="0dp"
                   android:layout_height="wrap_content"
                   android:layout_weight="1"
+                  android:paddingLeft="4dp"
+                  android:paddingTop="4dp"
                   android:orientation="vertical">
     </LinearLayout>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/divider"/>
+
+    <LinearLayout
                   android:id="@+id/saturday"
                   android:layout_width="0dp"
                   android:layout_height="wrap_content"
                   android:layout_weight="1"
+                  android:paddingLeft="4dp"
+                  android:paddingTop="4dp"
                   android:orientation="vertical">
     </LinearLayout>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/divider"/>
+
+    <LinearLayout
                   android:id="@+id/sunday"
                   android:layout_width="0dp"
                   android:layout_height="wrap_content"
                   android:layout_weight="1"
+                  android:paddingLeft="4dp"
+                  android:paddingTop="4dp"
                   android:orientation="vertical">
     </LinearLayout>
 </LinearLayout>

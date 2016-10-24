@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.liamfruzyna.android.lister.Data.Item;
+import com.liamfruzyna.android.lister.Data.Util;
 import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.R;
 
@@ -30,9 +31,9 @@ public class DatesFragment extends TagFragment
             {
                 for (Item item : list.items)
                 {
-                    if(!dates.contains(getDate(item.date)) && !getDate(item.date).contains("Apr 24 2997"))
+                    if(!dates.contains(Util.getDate(item.date)) && !Util.getDate(item.date).contains("Apr 24 2997"))
                     {
-                        dates.add(getDate(item.date));
+                        dates.add(Util.getDate(item.date));
                     }
                 }
             }
@@ -50,7 +51,7 @@ public class DatesFragment extends TagFragment
 
     //Gets all the items in unarchived lists containing a name
     @Override
-    public List<Item> getTagItems(String person)
+    public List<Item> getTagItems(String date)
     {
         List<Item> items = new ArrayList<>();
         for(WishList list : lists)
@@ -59,7 +60,7 @@ public class DatesFragment extends TagFragment
             {
                 for(Item item : list.items)
                 {
-                    if(getDate(item.date).equals(person) && !items.contains(item))
+                    if(Util.getDate(item.date).equals(date) && !items.contains(item))
                     {
                         items.add(item);
                     }
@@ -67,11 +68,5 @@ public class DatesFragment extends TagFragment
             }
         }
         return items;
-    }
-
-    public static String getDate(Date date)
-    {
-        String[] array = date.toString().split(" ");
-        return array[1] + " " + array[2] + " " + array[5];
     }
 }
