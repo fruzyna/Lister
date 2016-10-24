@@ -40,6 +40,7 @@ public class TagFragment extends Fragment implements AdapterView.OnItemSelectedL
     Spinner spin;
     int current;
     boolean firstSelect = true;
+    CheckBox showChecked;
 
     //finds all the different people in unarchived lists
     public List<String> getTags()
@@ -63,56 +64,59 @@ public class TagFragment extends Fragment implements AdapterView.OnItemSelectedL
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         for (final Item item : items)
         {
-            View view = inflater.inflate(R.layout.checkbox_list_item, list, false);
-            //init checkbox and set text
-            final CheckBox cb = (CheckBox) view.findViewById(R.id.checkbox);
-            int color = Color.parseColor(item.color);
+            if(!item.done || showChecked.isChecked())
+            {
+                View view = inflater.inflate(R.layout.checkbox_list_item, list, false);
+                //init checkbox and set text
+                final CheckBox cb = (CheckBox) view.findViewById(R.id.checkbox);
+                int color = Color.parseColor(item.color);
 
-            //color item text based off date (late is red, day of is orange)
-            SharedPreferences settings = getActivity().getSharedPreferences(IO.PREFS, 0);
-            boolean highlight = settings.getBoolean(IO.HIGHLIGHT_DATE_PREF, true);
-            if (highlight)
-            {
-                Date date = item.date;
-                Date today = Calendar.getInstance().getTime();
-                if (date.getYear() == today.getYear() && date.getMonth() == today.getMonth() && date.getDate() == today.getDate() && !item.done)
+                //color item text based off date (late is red, day of is orange)
+                SharedPreferences settings = getActivity().getSharedPreferences(IO.PREFS, 0);
+                boolean highlight = settings.getBoolean(IO.HIGHLIGHT_DATE_PREF, true);
+                if (highlight)
                 {
-                    color = Color.parseColor("#FFA500");
-                } else if (date.compareTo(today) < 0 && !item.done)
-                {
-                    color = Color.RED;
-                }
-            }
-
-            SpannableStringBuilder s = Util.colorTags(item.item, color);
-            cb.setText(s);
-            cb.setTextColor(Color.parseColor(item.color));
-            cb.setChecked(item.done);
-            if (item.done)
-            {
-                cb.setPaintFlags(cb.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            } else
-            {
-                cb.setPaintFlags(0);
-            }
-
-            cb.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    item.done = cb.isChecked();
-                    if (cb.isChecked())
+                    Date date = item.date;
+                    Date today = Calendar.getInstance().getTime();
+                    if (date.getYear() == today.getYear() && date.getMonth() == today.getMonth() && date.getDate() == today.getDate() && !item.done)
                     {
-                        cb.setPaintFlags(cb.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                    } else
+                        color = Color.parseColor("#FFA500");
+                    } else if (date.compareTo(today) < 0 && !item.done)
                     {
-                        cb.setPaintFlags(0);
+                        color = Color.RED;
                     }
-                    IO.save();
                 }
-            });
-            list.addView(view);
+
+                SpannableStringBuilder s = Util.colorTags(item.item, color);
+                cb.setText(s);
+                cb.setTextColor(Color.parseColor(item.color));
+                cb.setChecked(item.done);
+                if (item.done)
+                {
+                    cb.setPaintFlags(cb.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                } else
+                {
+                    cb.setPaintFlags(0);
+                }
+
+                cb.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        item.done = cb.isChecked();
+                        if (cb.isChecked())
+                        {
+                            cb.setPaintFlags(cb.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                        } else
+                        {
+                            cb.setPaintFlags(0);
+                        }
+                        IO.save();
+                    }
+                });
+                list.addView(view);
+            }
         }
     }
 
@@ -123,6 +127,16 @@ public class TagFragment extends Fragment implements AdapterView.OnItemSelectedL
 
         list = (LinearLayout) view.findViewById(R.id.list);
         spin = (Spinner) view.findViewById(R.id.spinner);
+        showChecked = (CheckBox) view.findViewById(R.id.checked);
+
+        showChecked.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                updateList();
+            }
+        });
 
         lists = Data.getLists();
         ArrayAdapter<String> sadapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item, getTags());

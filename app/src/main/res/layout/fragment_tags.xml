@@ -14,10 +14,12 @@
         android:elevation="8dp"
         android:orientation="vertical"/>
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar">
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -51,9 +53,17 @@
                             android:id="@+id/spinner"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true"
                             android:layout_alignParentTop="true"
-                            android:layout_centerVertical="true"/>
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"/>
+
+                        <CheckBox
+                            android:text="Show Checked"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentRight="true"
+                            android:id="@+id/checked"/>
 
                     </RelativeLayout>
 
@@ -61,7 +71,7 @@
                         android:id="@+id/divider"
                         android:layout_width="fill_parent"
                         android:layout_height="1dp"
-                        android:layout_below="@id/top"
+                        android:layout_below="@+id/top"
                         android:background="@android:color/darker_gray"/>
 
 
