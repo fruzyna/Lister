@@ -24,6 +24,7 @@ import com.liamfruzyna.android.lister.Data.AutoList;
 import com.liamfruzyna.android.lister.Data.Data;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.Item;
+import com.liamfruzyna.android.lister.Data.Util;
 import com.liamfruzyna.android.lister.Data.WishList;
 import com.liamfruzyna.android.lister.Fragments.DatesFragment;
 import com.liamfruzyna.android.lister.Fragments.PeopleFragment;
@@ -329,7 +330,7 @@ public class Views
                             {
                                 TextView tagText = (TextView) view.findViewById(R.id.tag);
                                 Bundle bundle = new Bundle();
-                                bundle.putString("tag", DatesFragment.getDate(list.date));
+                                bundle.putString("tag", Util.getDate(list.date));
                                 //set Fragmentclass Arguments
                                 Fragment frag = new DatesFragment();
                                 frag.setArguments(bundle);
