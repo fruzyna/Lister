@@ -44,7 +44,7 @@ import java.util.List;
 
 public class WLActivity extends ActionBarActivity
 {
-    private String[] drawerTitles = {"Home", "Tag Viewer", "People Viewer", "Date Viewer", "Settings"};
+    private String[] drawerTitles = {"Home", "Tag Viewer", "People Viewer", "Date Viewer", "Calendar View", "Settings"};
     private DrawerLayout drawer;
     private ListView drawerList;
     private ActionBarDrawerToggle drawerToggle;
@@ -78,6 +78,11 @@ public class WLActivity extends ActionBarActivity
                     tag = "People";
                     break;
                 case 3:
+                    //Date Viewer
+                    frag = new DatesFragment();
+                    tag = "Dates";
+                    break;
+                case 4:
                     //Date Viewer
                     frag = new CalendarFragment();
                     tag = "Dates";
@@ -146,7 +151,7 @@ public class WLActivity extends ActionBarActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id)
             {
-                if (position != 4)
+                if (position != 5)
                 {
                     new Open().execute(Integer.toString(position));
                 } else
