@@ -28,6 +28,7 @@ import com.liamfruzyna.android.lister.Data.Data;
 import com.liamfruzyna.android.lister.Data.IO;
 import com.liamfruzyna.android.lister.Data.Util;
 import com.liamfruzyna.android.lister.Data.WishList;
+import com.liamfruzyna.android.lister.Fragments.CalendarFragment;
 import com.liamfruzyna.android.lister.Fragments.DatesFragment;
 import com.liamfruzyna.android.lister.Fragments.PeopleFragment;
 import com.liamfruzyna.android.lister.Fragments.SettingsFragment;
@@ -43,7 +44,7 @@ import java.util.List;
 
 public class WLActivity extends ActionBarActivity
 {
-    private String[] drawerTitles = {"Home", "Tag Viewer", "People Viewer", "Date Viewer", "Settings"};
+    private String[] drawerTitles = {"Home", "Tag Viewer", "People Viewer", "Date Viewer", "Calendar View", "Settings"};
     private DrawerLayout drawer;
     private ListView drawerList;
     private ActionBarDrawerToggle drawerToggle;
@@ -79,6 +80,11 @@ public class WLActivity extends ActionBarActivity
                 case 3:
                     //Date Viewer
                     frag = new DatesFragment();
+                    tag = "Dates";
+                    break;
+                case 4:
+                    //Date Viewer
+                    frag = new CalendarFragment();
                     tag = "Dates";
                     break;
             }
@@ -145,7 +151,7 @@ public class WLActivity extends ActionBarActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id)
             {
-                if (position != 4)
+                if (position != 5)
                 {
                     new Open().execute(Integer.toString(position));
                 } else

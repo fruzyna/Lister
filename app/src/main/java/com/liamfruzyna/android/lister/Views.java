@@ -577,7 +577,7 @@ public class Views
                             {
                                 TextView tagText = (TextView) view.findViewById(R.id.tag);
                                 Bundle bundle = new Bundle();
-                                bundle.putString("tag", DatesFragment.getDate(item.date));
+                                bundle.putString("tag", Util.getDate(item.date));
                                 //set Fragmentclass Arguments
                                 Fragment frag = new DatesFragment();
                                 frag.setArguments(bundle);

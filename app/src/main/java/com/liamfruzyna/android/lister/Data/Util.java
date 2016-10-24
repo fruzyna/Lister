@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -192,5 +193,11 @@ public class Util
         }
 
         return names;
+    }
+
+    public static String getDate(Date date)
+    {
+        String[] array = date.toString().split(" ");
+        return array[1] + " " + array[2] + " " + array[5];
     }
 }
