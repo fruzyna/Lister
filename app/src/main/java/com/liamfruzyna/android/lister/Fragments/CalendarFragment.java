@@ -3,7 +3,6 @@ package com.liamfruzyna.android.lister.Fragments;
 import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +20,7 @@ import com.liamfruzyna.android.lister.R;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-
-import static com.liamfruzyna.android.lister.R.styleable.Spinner;
 
 /**
  * Created by mail929 on 10/10/16.
