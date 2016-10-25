@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@+id/editTag"
         android:padding="8dp"
-        android:id="@+id/tag"
+        android:id="@+id/tagscroll"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
 

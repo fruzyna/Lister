@@ -172,8 +172,8 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
             } else
             {
                 view = inflater.inflate(R.layout.tags_list_item, tagcv, false);
-                ((HorizontalScrollView) view.findViewById(R.id.tag)).removeAllViews();
-                ((HorizontalScrollView) view.findViewById(R.id.tag)).addView(Views.createTags(c, this));
+                ((HorizontalScrollView) view.findViewById(R.id.tagscroll)).removeAllViews();
+                ((HorizontalScrollView) view.findViewById(R.id.tagscroll)).addView(Views.createTags(c, this));
                 tagEdit = (Button) view.findViewById(R.id.editTag);
                 tagEdit.setOnClickListener(f);
             }
