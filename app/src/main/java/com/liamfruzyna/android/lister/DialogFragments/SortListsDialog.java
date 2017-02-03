@@ -91,7 +91,7 @@ public class SortListsDialog extends DialogFragment
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
-                        IO.save();
+                        IO.getInstance().saveList();
                     }
                 })
                 .setNegativeButton("BACK", new DialogInterface.OnClickListener()

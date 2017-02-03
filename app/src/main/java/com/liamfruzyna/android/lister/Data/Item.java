@@ -52,10 +52,8 @@ public class Item
             Date by = byCal.getTime();
             if(date.before(by))
             {
-                IO.log("Item:deleteItem", date + " is before " + by);
                 return true;
             }
-            IO.log("Item:deleteItem", date + " is not before " + by);
         }
         return false;
     }
@@ -112,7 +110,6 @@ public class Item
                 {
                     year += 2000;
                 }
-                IO.log("Item:parseItem", "Found date: " + month + "/" + day + "/" + year);
                 this.date = new Date(year, month, day);
             }
             else if(date.length == 2)
@@ -135,7 +132,6 @@ public class Item
                     day = Integer.parseInt(date[1]);
                 }
                 year = Calendar.getInstance().getTime().getYear();
-                IO.log("Item:parseItem", "Found date: " + month + "/" + day + "/" + year);
                 this.date = new Date(year, month, day);
                 formattedDate = (1+month) + "/" + day;
             }
@@ -152,7 +148,6 @@ public class Item
             {
                 person = person.split(" ")[0];
             }
-            IO.log("Item:findPeople", "Found Person: " + person);
             people.add(person);
         }
     }
@@ -167,7 +162,6 @@ public class Item
             {
                 tag = tag.split(" ")[0];
             }
-            IO.log("Item:findTags", "Found Tag: " + tag);
             tags.add(tag);
 
             if(isColor(tag))
@@ -179,7 +173,6 @@ public class Item
                     color = color.split(" ")[0];
                 }
                 this.color = "#" + color;
-                IO.log("Item:findTags", "Found Color: " + this.color);
             }
         }
     }
@@ -204,5 +197,10 @@ public class Item
         {
             return false;
         }
+    }
+
+    public boolean equals(Item item)
+    {
+        return (item.done == done) && (item.item.equals(item));
     }
 }

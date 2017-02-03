@@ -60,7 +60,6 @@ public class AutoList extends WishList
                             }
                             c = sb.toString();
                             parts = c.split(" ");
-                            IO.save();
                         }
                         boolean make = true;
                         String type = parts[2];
@@ -204,7 +203,6 @@ public class AutoList extends WishList
                     }
                     if(add)
                     {
-                        IO.log("AutoList:findItems", "Adding " + item.item);
                         found.add(item);
                     }
                 }

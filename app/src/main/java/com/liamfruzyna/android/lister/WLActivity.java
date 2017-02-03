@@ -49,10 +49,6 @@ public class WLActivity extends ActionBarActivity
     private ListView drawerList;
     private ActionBarDrawerToggle drawerToggle;
 
-    private Activity c = this;
-
-    public static SharedPreferences settings;
-
     private class Open extends AsyncTask<String, Void, String>
     {
         @Override
@@ -113,9 +109,7 @@ public class WLActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wl);
 
-        settings = getSharedPreferences(IO.PREFS, 0);
-
-        IO.finishLoad(IO.readFromFile());
+        IO.firstInstance(this).finishLoad(IO.getInstance().readFromFile());
 
         //makes sure that lists aren't null
         if (Data.getLists() == null)
@@ -125,9 +119,9 @@ public class WLActivity extends ActionBarActivity
 
         Data.setUnArchived(Util.populateUnArchived());
 
-        if (ContextCompat.checkSelfPermission(c, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
         {
-            ActivityCompat.requestPermissions(c, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
         } else
         {
             changeFragment(new WLFragment(), "WL");

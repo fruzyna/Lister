@@ -176,4 +176,30 @@ public class WishList
             }
         }
     }
+
+    public boolean equals(WishList list)
+    {
+        boolean allMatch = true;
+        if(list.items.size() != items.size())
+        {
+            return false;
+        }
+        for(Item item : items)
+        {
+            boolean match = false;
+            for(Item newItem : list.items)
+            {
+                if(newItem.equals(item))
+                {
+                    match = true;
+                }
+            }
+            if(!match)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

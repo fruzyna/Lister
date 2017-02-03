@@ -72,8 +72,7 @@ public class TagFragment extends Fragment implements AdapterView.OnItemSelectedL
                 int color = Color.parseColor(item.color);
 
                 //color item text based off date (late is red, day of is orange)
-                SharedPreferences settings = getActivity().getSharedPreferences(IO.PREFS, 0);
-                boolean highlight = settings.getBoolean(IO.HIGHLIGHT_DATE_PREF, true);
+                boolean highlight = IO.getInstance().getBoolean(IO.HIGHLIGHT_DATE_PREF, true);
                 if (highlight)
                 {
                     Date date = item.date;
@@ -112,7 +111,7 @@ public class TagFragment extends Fragment implements AdapterView.OnItemSelectedL
                         {
                             cb.setPaintFlags(0);
                         }
-                        IO.save();
+                        IO.getInstance().save();
                     }
                 });
                 list.addView(view);

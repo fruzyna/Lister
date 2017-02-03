@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.liamfruzyna.android.lister.Data.IO;
+import com.liamfruzyna.android.lister.DialogFragments.ServerDialog;
 import com.liamfruzyna.android.lister.DialogFragments.ShareListDialog;
 import com.liamfruzyna.android.lister.DialogFragments.ImportListDialog;
 import com.liamfruzyna.android.lister.DialogFragments.SortListsDialog;
@@ -27,7 +28,6 @@ import com.liamfruzyna.android.lister.R;
  */
 public class SettingsFragment extends PreferenceFragment
 {
-    SharedPreferences settings;
     View view;
 
     @Override
@@ -107,6 +107,22 @@ public class SettingsFragment extends PreferenceFragment
         });
         gen.addPreference(unArchive);
 
+        //Prompts to choose a list to unarchive
+        Preference cloudSync = new Preference(getActivity());
+        cloudSync.setTitle("Cloud Sync Lists");
+        cloudSync.setSummary("Set a Lister NodeJS to save lists to");
+        cloudSync.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
+        {
+            @Override
+            public boolean onPreferenceClick(Preference preference)
+            {
+                DialogFragment dialog = new ServerDialog();
+                dialog.show(getFragmentManager(), "");
+                return true;
+            }
+        });
+        gen.addPreference(cloudSync);
+
         PreferenceCategory item = new PreferenceCategory(getActivity());
         item.setTitle("Items");
         ps.addPreference(item);
@@ -115,14 +131,13 @@ public class SettingsFragment extends PreferenceFragment
         Preference highlight = new CheckBoxPreference(getActivity());
         highlight.setTitle("Highlight Items");
         highlight.setSummary("Highlight items based off their due dates");
-        settings = getActivity().getSharedPreferences(IO.PREFS, 0);
-        ((CheckBoxPreference) highlight).setChecked(settings.getBoolean(IO.HIGHLIGHT_DATE_PREF, true));
+        ((CheckBoxPreference) highlight).setChecked(IO.getInstance().getBoolean(IO.HIGHLIGHT_DATE_PREF, true));
         highlight.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
         {
             @Override
             public boolean onPreferenceClick(Preference preference)
             {
-                SharedPreferences.Editor editor = settings.edit();
+                SharedPreferences.Editor editor = IO.getInstance().getPrefs().edit();
                 editor.putBoolean(IO.HIGHLIGHT_DATE_PREF, ((CheckBoxPreference) preference).isChecked());
                 editor.commit();
                 return false;

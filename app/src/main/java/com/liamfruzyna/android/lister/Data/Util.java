@@ -150,7 +150,6 @@ public class Util
                 unArchived.add(list);
             }
         }
-        System.out.println("Unarchived Lists: " + Data.getUnArchived().size());
         return unArchived;
     }
 
@@ -170,7 +169,6 @@ public class Util
                 {
                     if (copy.get(j).order < lowest)
                     {
-                        IO.log("WLActivity:sortLists", "New Lowest " + copy.get(j).name + " with order of " + copy.get(j).order);
                         lowest = copy.get(j).order;
                         count = j;
                     }
@@ -180,7 +178,6 @@ public class Util
                     extra.add(copy.get(j).name);
                 }
             }
-            IO.log("WLActivity:sortLists", "Adding " + copy.get(count).name + " with order of " + copy.get(count).order);
             names.add(copy.get(count).name);
             copy.remove(count);
         }

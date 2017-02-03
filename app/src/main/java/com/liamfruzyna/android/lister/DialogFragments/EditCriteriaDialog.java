@@ -134,7 +134,7 @@ public class EditCriteriaDialog extends DialogFragment
                         }
                         list.setCriteria(criteria);
                         WLFragment.getFrag(getActivity()).updateList();
-                        IO.saveList();
+                        IO.getInstance().saveList();
                     }
 
                 })

@@ -50,7 +50,6 @@ import java.util.Arrays;
 public class WLFragment extends Fragment implements AdapterView.OnItemSelectedListener, View.OnClickListener, View.OnLongClickListener
 {
     private View view;
-    private static SharedPreferences prefs;
     private static SharedPreferences.Editor editor;
 
     static LinearLayout list;
@@ -92,7 +91,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
             if (wl.auto)
             {
                 ((AutoList) wl).findItems();
-                criteria.addView(Views.createCriteria(c));
+                criteria.addView(Views.createCriteria(getActivity()));
                 autotv.setText("Auto");
                 view.findViewById(R.id.newitem).setVisibility(View.GONE);
                 view.findViewById(R.id.criteria).setVisibility(View.VISIBLE);
@@ -108,7 +107,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
 
             //populates the list with the items
             list.removeAllViews();
-            LayoutInflater inflater = LayoutInflater.from(c);
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
             for (int i = 0; i < Data.getItems().size(); i++)
             {
                 if (!Data.getItems().get(i).done || wl.showDone)
@@ -125,7 +124,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
 
             //populates the tags
             tagcv.removeAllViews();
-            inflater = LayoutInflater.from(c);
+            inflater = LayoutInflater.from(getActivity());
             View view;
             final Activity a = getActivity();
             if (editTags)
@@ -142,15 +141,14 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
                     @Override
                     public void onClick(View v)
                     {
-                        IO.log("EditTagDialog", "Settings " + Data.getCurrentList().name + "'s tags to " + editText.getText().toString());
                         Data.getCurrentList().tags = new ArrayList<>(Arrays.asList(editText.getText().toString().split(" ")));
                         View view = a.getCurrentFocus();
                         if (view != null) {
-                            InputMethodManager imm = (InputMethodManager) c.getSystemService(Context.INPUT_METHOD_SERVICE);
+                            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                         }
                         updateList();
-                        IO.saveList();
+                        IO.getInstance().saveList();
                         editTags = false;
                         updateList();
                     }
@@ -163,7 +161,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
                         editTags = false;
                         View view = a.getCurrentFocus();
                         if (view != null) {
-                            InputMethodManager imm = (InputMethodManager) c.getSystemService(Context.INPUT_METHOD_SERVICE);
+                            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                         }
                         updateList();
@@ -173,7 +171,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
             {
                 view = inflater.inflate(R.layout.tags_list_item, tagcv, false);
                 ((HorizontalScrollView) view.findViewById(R.id.tagscroll)).removeAllViews();
-                ((HorizontalScrollView) view.findViewById(R.id.tagscroll)).addView(Views.createTags(c, this));
+                ((HorizontalScrollView) view.findViewById(R.id.tagscroll)).addView(Views.createTags(getActivity(), this));
                 tagEdit = (Button) view.findViewById(R.id.editTag);
                 tagEdit.setOnClickListener(f);
             }
@@ -187,8 +185,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
         view = infl.inflate(R.layout.fragment_wl, parent, false);
 
         //setup shared preferences
-        prefs = getActivity().getSharedPreferences(IO.PREFS, 0);
-        editor = prefs.edit();
+        editor = IO.getInstance().getPrefs().edit();
 
         c = getActivity();
 
@@ -228,10 +225,8 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
         }
 
         //setup spinner
-        spin.setSelection(prefs.getInt(IO.CURRENT_LIST_PREF, 0));
+        spin.setSelection(IO.getInstance().getInt(IO.CURRENT_LIST_PREF));
         Data.setCurrent(spin.getSelectedItemPosition());
-        IO.log("WLActivity:updateList", "Spinner is at " + spin.getSelectedItemPosition());
-        IO.log("WLActivity:updateList", "Set spinner to " + prefs.getInt(IO.CURRENT_LIST_PREF, 0));
 
         //sets listeners
         fab.setOnClickListener(f);
@@ -264,7 +259,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
         System.out.println("Names: " + Data.getNames());
 
         //sets up adapter
-        ArrayAdapter<String> sadapter = new ArrayAdapter<>(c, R.layout.spinner_item, Data.getNames());
+        ArrayAdapter<String> sadapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item, Data.getNames());
         sadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spin.setAdapter(sadapter);
         Data.setCurrent(spin.getSelectedItemPosition());
@@ -307,8 +302,6 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
             editTags = false;
             Data.setCurrent(spin.getSelectedItemPosition());
             editor.putInt(IO.CURRENT_LIST_PREF, Data.getCurrent());
-            IO.log("WLActivity:onItemSelected", "Saved position of " + Data.getCurrent());
-            IO.log("WLActivity:onItemSelected", "Position is saved as " + prefs.getInt(IO.CURRENT_LIST_PREF, 0));
             editor.commit();
             if(Data.getCurrentList().auto)
             {
@@ -413,7 +406,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
         {
             Data.getCurrentList().showDone = ((CheckBox) v).isChecked();
             updateList();
-            IO.saveList();
+            IO.getInstance().saveList();
         } else if (v.equals(tagEdit))
         {
             if (Data.getUnArchived().size() > 0)

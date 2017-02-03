@@ -77,7 +77,7 @@ public class EditListNameDialog extends DialogFragment
                         WLFragment.getFrag(getActivity()).setupSpinner();
                         File file = new File(IO.fileDir, old + ".json");
                         file.delete();
-                        IO.saveList();
+                        IO.getInstance().saveList();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener()

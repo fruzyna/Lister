@@ -6,8 +6,7 @@ import java.util.List;
 /**
  * Created by mail929 on 3/17/16.
  */
-public class Data
-{
+public class Data {
     private static int current = 0;
     private static List<String> names = new ArrayList<>();
     private static List<Item> items = new ArrayList<>();
@@ -15,12 +14,9 @@ public class Data
     private static List<WishList> unArchived = new ArrayList<>();
 
     //returns the list currently viewable on screen
-    public static WishList getCurrentList()
-    {
-        for(int i = 0; i < unArchived.size(); i++)
-        {
-            if(unArchived.get(i).name.equals(names.get(current)))
-            {
+    public static WishList getCurrentList() {
+        for (int i = 0; i < unArchived.size(); i++) {
+            if (unArchived.get(i).name.equals(names.get(current))) {
                 return unArchived.get(i);
             }
         }
@@ -28,71 +24,57 @@ public class Data
     }
 
     //returns the name of the current selected list
-    public static String getCurrentName()
-    {
+    public static String getCurrentName() {
         return names.get(current);
     }
 
     //returns the items currently displayed on screen
-    public static List<Item> getItems()
-    {
+    public static List<Item> getItems() {
         return items;
     }
 
     //returns all the lists
-    public static List<WishList> getLists()
-    {
+    public static List<WishList> getLists() {
         return lists;
     }
 
     //returns all the unarchived lists
-    public static List<WishList> getUnArchived()
-    {
+    public static List<WishList> getUnArchived() {
         return unArchived;
     }
 
-    public static void setCurrent(int current)
-    {
+    public static void setCurrent(int current) {
         Data.current = current;
     }
 
-    public static int getCurrent()
-    {
+    public static int getCurrent() {
         return current;
     }
 
-    public static List<String> getNames()
-    {
+    public static List<String> getNames() {
         return names;
     }
 
-    public static void setNames(List<String> names)
-    {
+    public static void setNames(List<String> names) {
         Data.names = names;
     }
 
-    public static void setUnArchived(List<WishList> unArchived)
-    {
+    public static void setUnArchived(List<WishList> unArchived) {
         Data.unArchived = unArchived;
     }
 
-    public static void setLists(List<WishList> lists)
-    {
+    public static void setLists(List<WishList> lists) {
         Data.lists = lists;
     }
 
-    public static void setItems(List<Item> items)
-    {
+    public static void setItems(List<Item> items) {
         Data.items = items;
     }
 
     //takes the name of a list and returns the list object
-    public static WishList getListFromName(String name)
-    {
-        for (WishList list : unArchived)
-        {
-            if (list.name.equals(name))
-            {
+    public static WishList getListFromName(String name) {
+        for (WishList list : unArchived) {
+            if (list.name.equals(name)) {
                 return list;
             }
         }
@@ -100,42 +82,30 @@ public class Data
     }
 
 
-    public static List<String> getTags()
-    {
+    public static List<String> getTags() {
         List<String> tags = new ArrayList<>();
-        for(WishList list : lists)
-        {
-            if(!list.archived)
-            {
-                for(String tag : list.tags)
-                {
+        for (WishList list : lists) {
+            if (!list.archived) {
+                for (String tag : list.tags) {
                     boolean found = false;
-                    for(String tagg : tags)
-                    {
-                        if(tagg.toLowerCase().equals(tag.toLowerCase()))
-                        {
+                    for (String tagg : tags) {
+                        if (tagg.toLowerCase().equals(tag.toLowerCase())) {
                             found = true;
                         }
                     }
-                    if(!found && !tag.contains("@"))
-                    {
+                    if (!found && !tag.contains("@")) {
                         tags.add(tag);
                     }
                 }
-                for(Item item : list.items)
-                {
-                    for(String tag : item.tags)
-                    {
+                for (Item item : list.items) {
+                    for (String tag : item.tags) {
                         boolean found = false;
-                        for(String tagg : tags)
-                        {
-                            if(tag.toLowerCase().equals(tagg.toLowerCase()))
-                            {
+                        for (String tagg : tags) {
+                            if (tag.toLowerCase().equals(tagg.toLowerCase())) {
                                 found = true;
                             }
                         }
-                        if(!found)
-                        {
+                        if (!found) {
                             tags.add(tag);
                         }
                     }
@@ -145,44 +115,32 @@ public class Data
         return tags;
     }
 
-    public static List<String> getPeopleTags()
-    {
+    public static List<String> getPeopleTags() {
         List<String> people = new ArrayList<>();
-        for (WishList list : lists)
-        {
-            if (!list.archived)
-            {
-                for (Item item : list.items)
-                {
-                    for (String person : item.people)
-                    {
+        for (WishList list : lists) {
+            if (!list.archived) {
+                for (Item item : list.items) {
+                    for (String person : item.people) {
                         boolean found = false;
-                        for (String personn : people)
-                        {
-                            if (person.toLowerCase().equals(personn.toLowerCase()))
-                            {
+                        for (String personn : people) {
+                            if (person.toLowerCase().equals(personn.toLowerCase())) {
                                 found = true;
                             }
                         }
-                        if (!found)
-                        {
+                        if (!found) {
                             people.add(person);
                         }
                     }
                 }
-                for (String person : list.people)
-                {
+                for (String person : list.people) {
                     IO.log("PeopleFragment:getTags", "Looking for " + person);
                     boolean found = false;
-                    for (String sPerson : people)
-                    {
-                        if (person.toLowerCase().equals(sPerson.toLowerCase()))
-                        {
+                    for (String sPerson : people) {
+                        if (person.toLowerCase().equals(sPerson.toLowerCase())) {
                             found = true;
                         }
                     }
-                    if (!found)
-                    {
+                    if (!found) {
                         IO.log("PeopleFragment:getTags", "Adding " + person);
                         people.add(person);
                     }
@@ -191,5 +149,22 @@ public class Data
             }
         }
         return people;
+    }
+
+    public static void replaceList(WishList list)
+    {
+        boolean found = false;
+        for(int i = 0; i < lists.size(); i++)
+        {
+            if(lists.get(i).name.equals(list.name))
+            {
+                found = true;
+                lists.set(i, list);
+            }
+        }
+        if(!found)
+        {
+            lists.add(list);
+        }
     }
 }

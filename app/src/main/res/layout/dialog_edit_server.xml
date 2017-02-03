@@ -5,15 +5,6 @@
                 android:paddingLeft="24dp"
                 android:paddingRight="24dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Server Address"
-        android:id="@+id/textView5"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
-
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -66,22 +57,41 @@
         android:layout_alignRight="@+id/user"
         android:layout_alignEnd="@+id/user"/>
 
+    <Button
+        android:text="Check for Username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/password"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/namecheck" />
+
+    <TextView
+        android:text="Check for username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/exists"
+        android:layout_alignBaseline="@+id/namecheck"
+        android:layout_alignBottom="@+id/namecheck"
+        android:layout_toRightOf="@+id/namecheck"
+        android:layout_toEndOf="@+id/namecheck" />
+
+    <CheckBox
+        android:text="Sync"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sync"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save Location"
-        android:id="@+id/textView8"
-        android:layout_below="@+id/password"
+        android:text="Server Address"
+        android:id="@+id/textView5"
+        android:layout_below="@+id/sync"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/dir"
-        android:layout_below="@+id/textView8"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/password"
-        android:layout_alignEnd="@+id/password"/>
 </RelativeLayout>

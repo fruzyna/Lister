@@ -1,31 +1,24 @@
 package com.liamfruzyna.android.lister.Data;
 
-import android.content.Context;
+import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Environment;
 
-import com.liamfruzyna.android.lister.WLActivity;
-
-import org.apache.commons.net.ftp.FTP;
-import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPFile;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.InetAddress;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -36,6 +29,11 @@ public class IO
     public static final String PREFS = "Lister Prefs";
     public static final String HIGHLIGHT_DATE_PREF = "HIGHLIGHT_DATE_PREF";
     public static final String CURRENT_LIST_PREF = "CURRENT_LIST_PREF";
+    public static final String SERVER_PREF = "SERVER_PREF";
+    public static final String SERVER_ADDRESS_PREF = "SERVER_ADDRESS_PREF";
+    public static final String SERVER_USER_PREF = "SERVER_USER_PREF";
+    public static final String SERVER_PASSWORD_PREF = "SERVER_PASSWORD_PREF";
+    public static final String TIME_PREF = "TIME_PREF";
     public static final String NAME_OBJ = "name";
     public static final String ARCHIVED_OBJ = "archived";
     public static final String ORDER_OBJ = "order";
@@ -50,27 +48,72 @@ public class IO
 
     public static final String fileDir = Environment.getExternalStoragePublicDirectory("Lists").toString();
 
-    private static Context c;
+    public static IO instance;
+
+    private Activity c;
+    private SharedPreferences prefs;
+
+    /**
+     * Used to establish IO and it's SharedPreferences
+     * @param c Main activity used to init SharedPreferenes
+     * @return Current instance of IO
+     */
+    public static IO firstInstance(Activity c)
+    {
+        if(instance == null)
+        {
+            instance = new IO(c);
+        }
+        return instance;
+    }
+
+    public static IO getInstance()
+    {
+        if(instance == null)
+        {
+            instance = new IO();
+        }
+        return instance;
+    }
+
+    public IO(Activity c)
+    {
+        this.c = c;
+        prefs = c.getSharedPreferences(PREFS, 0);
+    }
+
+    public IO() {
+        System.out.println("Warning creating IO w/o context");
+    }
 
     //writes list datas to files for each list
-    public static void save()
+    public void save()
     {
+        boolean sync = getBoolean(SERVER_PREF, false);
         try
         {
             for (WishList list : Data.getLists())
             {
-                writeToFile(list.name, getListString(list));
+                String data = getListString(list);
+                System.out.println(list.name + ": " + data);
+                writeToFile(list.name, data);
+                if(sync)
+                {
+                    new UploadListTask().execute(data, prefs.getString(SERVER_ADDRESS_PREF, ""), prefs.getString(SERVER_USER_PREF, ""),  prefs.getString(SERVER_PASSWORD_PREF, ""), list.name);
+                }
             }
+            SharedPreferences.Editor edit = prefs.edit();
+            edit.putLong(TIME_PREF, System.currentTimeMillis());
+            edit.commit();
         } catch (JSONException e)
         {
             e.printStackTrace();
         }
     }
 
-    public static void saveList()
+    public void saveList()
     {
         WishList list = Data.getCurrentList();
-        System.out.println("Saving: " + list.name);
         try
         {
             if (list.auto)
@@ -79,17 +122,24 @@ public class IO
             }
             else
             {
-                writeToFile(list.name, getListString(list));
+                String data = getListString(list);
+                System.out.println(list.name + ": " + data);
+                writeToFile(list.name, data);
+                if(getBoolean(SERVER_PREF, false))
+                {
+                    new UploadListTask().execute(data, prefs.getString(SERVER_ADDRESS_PREF, ""), prefs.getString(SERVER_USER_PREF, ""),  prefs.getString(SERVER_PASSWORD_PREF, ""), list.name);
+                }
             }
+            SharedPreferences.Editor edit = prefs.edit();
+            edit.putLong(TIME_PREF, System.currentTimeMillis());
+            edit.commit();
         } catch (JSONException e)
         {
             e.printStackTrace();
         }
     }
 
-    //creates a json string based off of a list
-    public static String getListString(WishList list) throws JSONException
-    {
+    public JSONObject getListObject(WishList list) throws JSONException {
         JSONObject jlist = new JSONObject();
         jlist.put(NAME_OBJ, list.name);
         jlist.put(ARCHIVED_OBJ, list.archived);
@@ -128,10 +178,16 @@ public class IO
             jtags.put(tag);
         }
         jlist.put(TAGS_OBJ, jtags);
-        return jlist.toString();
+        return jlist;
     }
 
-    public static boolean getBoolean(String name, JSONObject container) throws JSONException
+    //creates a json string based off of a list
+    public String getListString(WishList list) throws JSONException
+    {
+        return getListObject(list).toString();
+    }
+
+    public boolean getBoolean(String name, JSONObject container) throws JSONException
     {
         if (container.has(name))
         {
@@ -140,7 +196,7 @@ public class IO
         return false;
     }
 
-    public static int getInt(String name, JSONObject container) throws JSONException
+    public int getInt(String name, JSONObject container) throws JSONException
     {
         if (container.has(name))
         {
@@ -149,7 +205,7 @@ public class IO
         return 0;
     }
 
-    public static void finishLoad(List<String> jlists)
+    public void finishLoad(List<String> jlists)
     {
         List<WishList> lists = new ArrayList<>();
         for (String jliststr : jlists)
@@ -162,11 +218,15 @@ public class IO
                 e.printStackTrace();
             }
         }
+        if(getBoolean(SERVER_PREF, false))
+        {
+            new SyncListsTask().execute(prefs.getString(SERVER_ADDRESS_PREF, ""), prefs.getString(SERVER_USER_PREF, ""),  prefs.getString(SERVER_PASSWORD_PREF, ""));
+        }
         Data.setLists(lists);
     }
 
     //creates a single list from a json string
-    public static WishList readString(String json) throws JSONException
+    public WishList readString(String json) throws JSONException
     {
         JSONObject jlist = new JSONObject(json);
         List<Item> items = new ArrayList<>();
@@ -204,12 +264,11 @@ public class IO
     }
 
     //takes a list's json string and saves it to a file
-    private static File writeToFile(String name, String data)
+    private File writeToFile(String name, String data)
     {
         File dir = new File(fileDir);
         dir.mkdirs();
         File file = new File(fileDir, name + ".json");
-        log("IO", "writeToFile", "Writing to " + file.toString());
         if (!file.exists())
         {
             try
@@ -229,12 +288,11 @@ public class IO
         {
             e.printStackTrace();
         }
-        System.out.println("File TS: " + file.lastModified());
         return file;
     }
 
     //creates a list of strings from all the save files
-    public static List<String> readFromFile()
+    public List<String> readFromFile()
     {
         List<String> data = new ArrayList<>();
         File[] files = new File(fileDir).listFiles();
@@ -245,7 +303,6 @@ public class IO
         for (int i = 0; i < files.length; i++)
         {
             File file = files[i];
-            log("IO", "readFromFile", "Reading from " + file.toString());
             StringBuilder sb = new StringBuilder();
             try
             {
@@ -273,4 +330,130 @@ public class IO
     {
         System.out.println("[" + clas + ":" + method + "()] " + message);
     }
+
+
+    private class UploadListTask extends AsyncTask<String, Integer, String> {
+        protected String doInBackground(String... urls) {
+            try {
+                String data = urls[0].replace("#", "[^]");
+                String urlString = "http://" + urls[1] + "/sync/?user=" + urls[2] + "&password=" + urls[3] + "&list=" + urls[4] + "&data=" + data;
+                return webRequest(urlString);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return "ERROR";
+        }
+
+        protected void onProgressUpdate(Integer... progress) {
+        }
+
+        protected void onPostExecute(String result) {
+            System.out.println(result);
+        }
+    }
+
+    private class SyncListsTask extends AsyncTask<String, Integer, ArrayList<WishList>> {
+        protected ArrayList<WishList> doInBackground(String... urls) {
+            try {
+                String urlString = "http://" + urls[0] + "/getLists/?user=" + urls[1] + "&password=" + urls[2];
+                String result = webRequest(urlString);
+                if(result != null) {
+                    ArrayList<WishList> list = new ArrayList<>();
+                    System.out.println("Avail Lists: " + result);
+                    String lists[] = result.replace("\"", "").replace("[", "").replace("]", "").split(",");
+                    String time = webRequest("http://" + urls[0] + "/get/?user=" + urls[1] + "&password=" + urls[2] + "&list=time");
+                    if(!time.contains("NOT_FOUND") && !time.contains("WRONG_PASSWORD"))
+                    {
+                        if(Long.parseLong(time) > getLong(TIME_PREF))
+                        {
+                            System.out.println("Server Newer");
+                            for (int i = 0; i < lists.length; i++) {
+                                try {
+                                    if (!lists[i].equals("time") && !lists[i].equals("password")) {
+                                        urlString = "http://" + urls[0] + "/get/?user=" + urls[1] + "&password=" + urls[2] + "&list=" + lists[i];
+                                        String output = webRequest(urlString);
+                                        list.add(readString(output));
+                                    }
+                                }
+                                catch(Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                        else
+                        {
+                            System.out.println("Server Older");
+                        }
+                    }
+                    return list;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        protected void onProgressUpdate(Integer... progress) {
+        }
+
+        protected void onPostExecute(ArrayList<WishList> result) {
+            if(result != null)
+            {
+                if(result.size() > 0)
+                {
+                    System.out.println("Updating lists");
+                    for(WishList list : result)
+                    {
+                        Data.replaceList(list);
+                    }
+                    try
+                    {
+                        for (WishList list : Data.getLists())
+                        {
+                            writeToFile(list.name, getListString(list));
+                        }
+                    } catch (JSONException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            else
+            {
+                System.out.println("Error fetching remote lists");
+            }
+        }
+    }
+
+    public String webRequest(String urlString) throws IOException
+    {
+        System.out.println(urlString);
+        URL url = new URL(urlString);
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        try {
+            BufferedInputStream in = new BufferedInputStream(urlConnection.getInputStream());
+            byte[] contents = new byte[1024];
+
+            int bytesRead = 0;
+            String result = "";
+            while ((bytesRead = in.read(contents)) != -1) {
+                result += new String(contents, 0, bytesRead);
+            }
+            in.close();
+            return result;
+
+        } finally {
+            urlConnection.disconnect();
+        }
+    }
+
+    public SharedPreferences getPrefs()
+    {
+        return prefs;
+    }
+
+    public String getString(String key) { return prefs.getString(key, ""); }
+    public int getInt(String key) { return prefs.getInt(key, 0); }
+    public long getLong(String key) { return prefs.getLong(key, 0); }
+    public boolean getBoolean(String key, boolean temp) { return prefs.getBoolean(key, temp); }
 }

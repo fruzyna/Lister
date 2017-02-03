@@ -68,7 +68,7 @@ public class ShareListDialog extends DialogFragment
                 sharingIntent.setType("text/plain");
                 String shareBody = null;
                 try {
-                    shareBody = IO.getListString(Data.getLists().get(position));
+                    shareBody = IO.getInstance().getListString(Data.getLists().get(position));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

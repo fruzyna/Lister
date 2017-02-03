@@ -205,7 +205,7 @@ public class NewListDialog extends DialogFragment
                         List<WishList> unArchieved = Data.getUnArchived();
                         unArchieved.add(newList);
                         WLFragment.openNewest();
-                        IO.saveList();
+                        IO.getInstance().saveList();
                         WLFragment.getFrag(getActivity()).updateList();
                     }
                 })

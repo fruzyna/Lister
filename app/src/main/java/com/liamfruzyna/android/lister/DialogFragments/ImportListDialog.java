@@ -41,12 +41,12 @@ public class ImportListDialog extends DialogFragment
                     {
                         try {
                             IO.log("ImportListDialog", "Importing list from " + editText.getText().toString());
-                            Data.getLists().add(IO.readString(editText.getText().toString()));
+                            Data.getLists().add(IO.getInstance().readString(editText.getText().toString()));
                         } catch (JSONException e) {
                             e.printStackTrace();
                             IO.log("ImportListDialog", "Error reading list json");
                         }
-                        IO.saveList();
+                        IO.getInstance().saveList();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {

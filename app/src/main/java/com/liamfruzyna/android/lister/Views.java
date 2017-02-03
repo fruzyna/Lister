@@ -62,7 +62,7 @@ public class Views
             public void onClick(View v)
             {
                 item.done = cb.isChecked();
-                IO.saveList();
+                IO.getInstance().saveList();
             }
         });
 
@@ -164,7 +164,7 @@ public class Views
                         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                     }
                     f.removeItemSnackbar(item);
-                    IO.saveList();
+                    IO.getInstance().saveList();
                     f.updateList();
                 }
             });
@@ -186,7 +186,7 @@ public class Views
                         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                     }
                     f.removeItemSnackbar(item);
-                    IO.saveList();
+                    IO.getInstance().saveList();
                 }
                 f.edit = -1;
                 f.updateList();
@@ -206,7 +206,7 @@ public class Views
                     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 }
                 item.parseItem();
-                IO.saveList();
+                IO.getInstance().saveList();
                 f.updateList();
             }
         });
@@ -430,8 +430,7 @@ public class Views
         int color = Color.parseColor(Data.getItems().get(i).color);
 
         //color item text based off date (late is red, day of is orange)
-        SharedPreferences settings = f.getActivity().getSharedPreferences(IO.PREFS, 0);
-        boolean highlight = settings.getBoolean(IO.HIGHLIGHT_DATE_PREF, true);
+        boolean highlight = IO.getInstance().getBoolean(IO.HIGHLIGHT_DATE_PREF, true);
         if (highlight)
         {
             Date date = Data.getItems().get(i).date;
@@ -726,7 +725,7 @@ public class Views
                 {
                     cb.setPaintFlags(0);
                 }
-                IO.saveList();
+                IO.getInstance().saveList();
 
             }
         });
