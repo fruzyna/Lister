@@ -35,8 +35,7 @@ public class RemoveListDialog extends DialogFragment
                     public void onClick(DialogInterface dialog, int id)
                     {
                         IO.log("RemoveListDialog", "Removing and deleting list " + current.name);
-                        File file = new File(IO.fileDir, current.name + ".json");
-                        file.delete();
+                        IO.getInstance().deleteList(current.name);
                         lists.remove(current);
                         Data.getUnArchived().remove(current);
                         WLFragment.getFrag(getActivity()).removeListSnackbar(current);

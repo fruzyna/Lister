@@ -75,8 +75,7 @@ public class EditListNameDialog extends DialogFragment
                         }
                         list.daysToDelete = daysToDelete;
                         WLFragment.getFrag(getActivity()).setupSpinner();
-                        File file = new File(IO.fileDir, old + ".json");
-                        file.delete();
+                        IO.getInstance().deleteList(old);
                         IO.getInstance().saveList();
                     }
                 })

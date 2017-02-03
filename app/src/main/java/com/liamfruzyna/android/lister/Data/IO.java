@@ -331,12 +331,37 @@ public class IO
         System.out.println("[" + clas + ":" + method + "()] " + message);
     }
 
+    public void deleteList(String name)
+    {
+        new DeleteListTask().execute(prefs.getString(SERVER_ADDRESS_PREF, ""), prefs.getString(SERVER_USER_PREF, ""),  prefs.getString(SERVER_PASSWORD_PREF, ""), name);
+        File file = new File(fileDir, name + ".json");
+        file.delete();
+    }
 
     private class UploadListTask extends AsyncTask<String, Integer, String> {
         protected String doInBackground(String... urls) {
             try {
                 String data = urls[0].replace("#", "[^]");
                 String urlString = "http://" + urls[1] + "/sync/?user=" + urls[2] + "&password=" + urls[3] + "&list=" + urls[4] + "&data=" + data;
+                return webRequest(urlString);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return "ERROR";
+        }
+
+        protected void onProgressUpdate(Integer... progress) {
+        }
+
+        protected void onPostExecute(String result) {
+            System.out.println(result);
+        }
+    }
+
+    private class DeleteListTask extends AsyncTask<String, Integer, String> {
+        protected String doInBackground(String... urls) {
+            try {
+                String urlString = "http://" + urls[0] + "/remove/?user=" + urls[1] + "&password=" + urls[2] + "&list=" + urls[3];
                 return webRequest(urlString);
             } catch (IOException e) {
                 e.printStackTrace();
