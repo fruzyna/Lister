@@ -176,6 +176,7 @@ public class WLFragment extends Fragment implements AdapterView.OnItemSelectedLi
                 tagEdit.setOnClickListener(f);
             }
             tagcv.addView(view);
+            System.out.println("refreshing");
         }
     }
 

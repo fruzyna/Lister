@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Environment;
 
+import com.liamfruzyna.android.lister.WLActivity;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,6 +22,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.liamfruzyna.android.lister.Fragments.WLFragment.getFrag;
 
 /**
  * Created by mail929 on 11/6/14.
@@ -49,6 +53,7 @@ public class IO
     public static final String fileDir = Environment.getExternalStoragePublicDirectory("Lists").toString();
 
     public static IO instance;
+    public static boolean ready = false;
 
     private Activity c;
     private SharedPreferences prefs;
@@ -222,6 +227,9 @@ public class IO
         {
             new SyncListsTask().execute(prefs.getString(SERVER_ADDRESS_PREF, ""), prefs.getString(SERVER_USER_PREF, ""),  prefs.getString(SERVER_PASSWORD_PREF, ""));
         }
+        else {
+            ready = true;
+        }
         Data.setLists(lists);
     }
 
@@ -385,34 +393,30 @@ public class IO
                 if(result != null) {
                     ArrayList<WishList> list = new ArrayList<>();
                     System.out.println("Avail Lists: " + result);
-                    String lists[] = result.replace("\"", "").replace("[", "").replace("]", "").split(",");
-                    String time = webRequest("http://" + urls[0] + "/get/?user=" + urls[1] + "&password=" + urls[2] + "&list=time");
-                    if(!time.contains("NOT_FOUND") && !time.contains("WRONG_PASSWORD"))
-                    {
-                        if(Long.parseLong(time) > getLong(TIME_PREF))
-                        {
-                            System.out.println("Server Newer");
-                            for (int i = 0; i < lists.length; i++) {
+                    JSONArray lists = new JSONArray(result);
+                            for (int i = 0; i < lists.length(); i++) {
                                 try {
-                                    if (!lists[i].equals("time") && !lists[i].equals("password")) {
-                                        urlString = "http://" + urls[0] + "/get/?user=" + urls[1] + "&password=" + urls[2] + "&list=" + lists[i];
+                                    JSONObject jlist = lists.getJSONObject(i);
+                                    if (Long.parseLong(jlist.getString("time")) > getLong(TIME_PREF)) {
+                                        urlString = "http://" + urls[0] + "/get/?user=" + urls[1] + "&password=" + urls[2] + "&list=" + jlist.getString("name");
                                         String output = webRequest(urlString);
-                                        list.add(readString(output));
+                                        WishList wl = readString(output);
+                                        list.add(wl);
+                                        Data.replaceList(wl);
+                                    }
+                                    else {
+                                        System.out.println("local newer");
                                     }
                                 }
                                 catch(Exception e) {
                                     e.printStackTrace();
                                 }
+
                             }
-                        }
-                        else
-                        {
-                            System.out.println("Server Older");
-                        }
-                    }
+                    ready = true;
                     return list;
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;
@@ -426,13 +430,9 @@ public class IO
             {
                 if(result.size() > 0)
                 {
-                    System.out.println("Updating lists");
-                    for(WishList list : result)
-                    {
-                        Data.replaceList(list);
-                    }
                     try
                     {
+                        ready = true;
                         for (WishList list : Data.getLists())
                         {
                             writeToFile(list.name, getListString(list));
@@ -447,6 +447,7 @@ public class IO
             {
                 System.out.println("Error fetching remote lists");
             }
+            ready = true;
         }
     }
 

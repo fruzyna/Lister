@@ -111,6 +111,8 @@ public class WLActivity extends ActionBarActivity
 
         IO.firstInstance(this).finishLoad(IO.getInstance().readFromFile());
 
+        while(!IO.ready);
+
         //makes sure that lists aren't null
         if (Data.getLists() == null)
         {
