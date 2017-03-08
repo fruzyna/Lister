@@ -538,7 +538,14 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
                     week.add(Calendar.DAY_OF_YEAR, 7);
                     Calendar yesterday = Calendar.getInstance();
                     yesterday.add(Calendar.DAY_OF_YEAR, -1);
-                    if(itemDate.after(yesterday) && itemDate.before(Calendar.getInstance()))
+                    Calendar tomorrow = Calendar.getInstance();
+                    tomorrow.add(Calendar.DAY_OF_YEAR, 1);
+                    if(itemDate.before(tomorrow) && itemDate.after(Calendar.getInstance()))
+                    {
+                        //if it's today say today
+                        word = "Tomorrow";
+                    }
+                    else if(itemDate.after(yesterday) && itemDate.before(Calendar.getInstance()))
                     {
                         //if it's today say today
                         word = "Today";
