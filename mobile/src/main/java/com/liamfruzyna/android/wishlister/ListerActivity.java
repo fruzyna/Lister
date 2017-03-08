@@ -886,9 +886,10 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
                                 public void onClick(View v)
                                 {
                                     String itemString = itemEdit.getText().toString();
-                                    itemString = itemString.replace(itemString.substring(itemString.lastIndexOf(" ") + 1), "#" + tag);
+                                    itemString = itemString.replace(itemString.substring(itemString.lastIndexOf(" ") + 1), "#" + tag + " ");
                                     itemEdit.setText(itemString);
                                     itemEdit.setSelection(itemEdit.getText().length() );
+                                    suggestionsBox.removeAllViews();
                                 }
                             });
                             suggestionsBox.addView(sugBut);
