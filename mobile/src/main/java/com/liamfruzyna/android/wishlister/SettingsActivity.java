@@ -210,6 +210,16 @@ public class SettingsActivity extends AppCompatActivity
             {
                 e.printStackTrace();
             }
+            version.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
+            {
+                @Override
+                public boolean onPreferenceClick(Preference preference)
+                {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://github.com/mail929/Lister"));
+                    startActivity(browserIntent);
+                    return true;
+                }
+            });
             about.addPreference(version);
 
             //About me and a link to my site
