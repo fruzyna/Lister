@@ -414,14 +414,16 @@ public class IO
                     ArrayList<ListObj> list = new ArrayList<>();
                     System.out.println("Avail Lists: " + result);
                     JSONArray lists = new JSONArray(result);
+                    System.out.println("lists " + lists.length());
                     for (int i = 0; i < lists.length(); i++)
                     {
                         try
                         {
                             JSONObject jlist = lists.getJSONObject(i);
-                            if (Long.parseLong(jlist.getString("time")) > getLong(TIME_PREF))
+                            String name = jlist.getString("name");
+                            if (Long.parseLong(jlist.getString("time")) > getLong(TIME_PREF) || Data.getListFromName(name) == null)
                             {
-                                urlString = "http://" + server + "/get/?user=" + server + "&password=" + password + "&list=" + jlist.getString("name");
+                                urlString = "http://" + server + "/get/?user=" + server + "&password=" + password + "&list=" + name;
                                 String output = webRequest(urlString);
                                 System.out.println(jlist.getString("name") + ": " + output);
                                 ListObj wl = readString(output);
@@ -478,7 +480,7 @@ public class IO
         {
             ArrayList<ListObj> lists = new ArrayList<>();
             System.out.println("Avail Lists: " + result);
-            JSONArray jLists = null;
+            JSONArray jLists;
             try
             {
                 jLists = new JSONArray(result);
@@ -487,9 +489,10 @@ public class IO
                     try
                     {
                         JSONObject jlist = jLists.getJSONObject(i);
-                        if (Long.parseLong(jlist.getString("time")) > getLong(TIME_PREF))
+                        String name = jlist.getString("name");
+                        if (Long.parseLong(jlist.getString("time")) > getLong(TIME_PREF) || Data.getListFromName(name) == null)
                         {
-                            urlString = "http://" + server + "/get/?user=" + user + "&password=" + password + "&list=" + jlist.getString("name");
+                            urlString = "http://" + server + "/get/?user=" + user + "&password=" + password + "&list=" + name;
                             String output = webRequest(urlString);
                             ListObj wl = readString(output);
                             lists.add(wl);

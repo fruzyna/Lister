@@ -21,6 +21,19 @@ public class ListObj
     public boolean archived = false;
     public boolean showDone;
 
+    public ListObj(String name, java.util.List<Item> items, java.util.List<String> tags)
+    {
+        this.name = name;
+        this.items = items;
+        this.tags = tags;
+        this.archived = false;
+        this.showDone = true;
+        this.daysToDelete = 0;
+        findPeople();
+        findDate();
+        deleteItems();
+    }
+
     public ListObj(String name, java.util.List<Item> items, java.util.List<String> tags, boolean archived, boolean showDone, int daysToDelete)
     {
         this.name = name;

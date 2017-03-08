@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Lister</string>
+    <string-array name="welcome">
+        <item>Welcome to Lister, this is your first list</item>
+        <item>Add an item by pressing "+ Add Item" below</item>
+        <item>Lists can feature many kinds of tags including #hash tags @people tags and date tags</item>
+        <item>Hashtags can also include hex color codes to color an item #FF00FF</item>
+        <item>New Lists can be created with the #FF5722 + button at the bottom</item>
+        <item>Lists can be deleted or archived with the check and X buttons just below</item>
+    </string-array>
 </resources>

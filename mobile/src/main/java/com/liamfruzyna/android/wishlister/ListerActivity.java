@@ -87,11 +87,16 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
     {
         inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        setupSpinner();
+        if(Data.getLists().size() > 0)
+        {
+            setupSpinner();
 
-        loadList();
+            loadList();
 
-        setupButtons();
+            setupButtons();
+        }
+
+        setupFab();
     }
 
     /**
@@ -382,7 +387,7 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
             cb.setOnClickListener(this);
 
             //Sets up item name view
-            LinearLayout tags = ((LinearLayout) box.findViewById(R.id.tags));
+            FlowLayout tags = ((FlowLayout) box.findViewById(R.id.tags));
             tags.setOnClickListener(this);
             tags.setOnLongClickListener(this);
 
@@ -495,7 +500,7 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
      * @param item Item word is source from
      * @param word Word to add
      */
-    public void addWord(LinearLayout tags, Item item, String word)
+    public void addWord(FlowLayout tags, Item item, String word)
     {
         //Makes sure it is not an empty word
         if(word.length() != 0)
@@ -586,6 +591,7 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
                 TextView wordView = new TextView(this);
                 wordView.setText(word);
                 wordView.setTextColor(Color.parseColor(item.color));
+                wordView.setPadding(0, 4, 0, 4);
                 tags.addView(wordView);
             }
             //Add space after every word
@@ -616,7 +622,13 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
         //List settings button
         listSettings = ((ImageButton) findViewById(R.id.listSettings));
         listSettings.setOnClickListener(this);
+    }
 
+    /**
+     * Sets up floating action button
+     */
+    public void setupFab()
+    {
         //Add list floating action button
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_add_white));

@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by mail929 on 3/6/17.
@@ -43,8 +44,9 @@ public class SignoutDialog extends DialogFragment
                             File file = new File(IO.fileDir, list.name + ".json");
                             file.delete();
                         }
+                        Data.setLists(new ArrayList<ListObj>());
 
-                        Intent intent = new Intent(getActivity(), ListerActivity.class);
+                        Intent intent = new Intent(getActivity(), SplashActivity.class);
                         startActivity(intent);
                     }
                 })

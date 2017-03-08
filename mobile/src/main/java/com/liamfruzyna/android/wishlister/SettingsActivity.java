@@ -105,7 +105,7 @@ public class SettingsActivity extends AppCompatActivity
                 {
                     if(IO.getInstance().getString(IO.SERVER_ADDRESS_PREF).equals("") || IO.getInstance().getString(IO.SERVER_USER_PREF).equals(""))
                     {
-                        Intent intent = new Intent(getActivity(), ListerActivity.class);
+                        Intent intent = new Intent(getActivity(), LoginActivity.class);
                         startActivity(intent);
                     }
                     else

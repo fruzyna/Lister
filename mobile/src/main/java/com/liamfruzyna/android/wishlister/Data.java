@@ -13,6 +13,10 @@ public class Data {
 
     //returns the list currently viewable on screen
     public static ListObj getCurrentList() {
+        if(current == -1)
+        {
+            current = 0;
+        }
         return getUnArchived().get(current);
     }
 

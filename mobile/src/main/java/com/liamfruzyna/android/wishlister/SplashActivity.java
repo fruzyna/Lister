@@ -9,6 +9,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SplashActivity extends AppCompatActivity
 {
 
@@ -51,6 +54,19 @@ public class SplashActivity extends AppCompatActivity
                     System.out.println("Reading");
                     IO.getInstance().loadFromFile();
                 }
+
+                if(Data.getLists().size() == 0)
+                {
+                    List<Item> items = new ArrayList<>();
+                    for(String s : c[0].getResources().getStringArray(R.array.welcome))
+                    {
+                        items.add(new Item(s, false));
+                    }
+                    ListObj list = new ListObj("Welcome List", items, new ArrayList<String>());
+                    Data.replaceList(list);
+                    IO.getInstance().saveAndSync();
+                }
+
                 Intent intent = new Intent(c[0], ListerActivity.class);
                 startActivity(intent);
             }
