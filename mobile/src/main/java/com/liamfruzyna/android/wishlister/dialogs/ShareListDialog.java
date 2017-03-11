@@ -1,9 +1,11 @@
-package com.liamfruzyna.android.wishlister;
+package com.liamfruzyna.android.wishlister.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,13 +15,17 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.liamfruzyna.android.wishlister.data.Data;
+import com.liamfruzyna.android.wishlister.data.IO;
+import com.liamfruzyna.android.wishlister.data.ListObj;
+import com.liamfruzyna.android.wishlister.R;
+
+import org.json.JSONException;
 
 /**
- * Created by mail929 on 10/31/15.
+ * Created by mail929 on 10/29/15.
  */
-public class UnArchiveDialog extends DialogFragment
+public class ShareListDialog extends DialogFragment
 {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState)
@@ -29,17 +35,9 @@ public class UnArchiveDialog extends DialogFragment
         final View v = inflater.inflate(R.layout.dialog_share_list, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         ListView list = (ListView) v.findViewById(R.id.listView);
-        final List<ListObj> archived = new ArrayList<>();
-        for(ListObj wlist : Data.getLists())
-        {
-            if(wlist.archived)
-            {
-                archived.add(wlist);
-            }
-        }
 
-        //sets up list of archived items
-        list.setAdapter(new ArrayAdapter<ListObj>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, archived) {
+        //setup list of lists to share
+        list.setAdapter(new ArrayAdapter<ListObj>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, Data.getLists()) {
             public View getView(final int position, View convertView, ViewGroup parent) {
                 View view;
                 if (convertView == null) {
@@ -48,24 +46,39 @@ public class UnArchiveDialog extends DialogFragment
                 }
                 view = super.getView(position, convertView, parent);
 
-                ((TextView) view.findViewById(android.R.id.text1)).setText(archived.get(position).name);
+                ListObj list = Data.getLists().get(position);
+                TextView tv = (TextView) view.findViewById(android.R.id.text1);
+                tv.setText(list.name);
+                if(list.archived)
+                {
+                    tv.setTextColor(Color.rgb(128, 128, 128));
+                }
                 return view;
             }
         });
 
-        //sets up listener for choosing an archived list
+        //listen for list chosen
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-                archived.get(position).archived = false;
-                IO.getInstance().saveAndSync();
+                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                String shareBody = null;
+                try {
+                    shareBody = IO.getInstance().getListString(Data.getLists().get(position));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "New List");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+                startActivity(Intent.createChooser(sharingIntent, "Share via"));
             }
         });
 
         //setup dialog
-        builder.setMessage("Choose a list to unarchive")
-                .setTitle("Unarchive a List")
+        builder.setMessage("Choose a list to share")
+                .setTitle("Share a List")
                 .setView(v)
                 .setNegativeButton("BACK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {

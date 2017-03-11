@@ -1,4 +1,4 @@
-package com.liamfruzyna.android.wishlister;
+package com.liamfruzyna.android.wishlister.data;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

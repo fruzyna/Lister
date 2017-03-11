@@ -1,7 +1,8 @@
-package com.liamfruzyna.android.wishlister;
+package com.liamfruzyna.android.wishlister.data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by mail929 on 2/24/17.
@@ -180,5 +181,42 @@ public class Data {
         {
             lists.add(list);
         }
+    }
+
+    public static ArrayList<String> getTagItems(String tag)
+    {
+        ArrayList<String> items = new ArrayList<>();
+        for(ListObj list : getLists())
+        {
+            if(!list.auto)
+            {
+                for(Item item : list.items)
+                {
+                    if(item.item.contains(tag))
+                    {
+                        items.add(item.item);
+                    }
+                }
+            }
+        }
+        return items;
+    }
+
+    public static long calcHash(Item item)
+    {
+        long value = 0;
+        if(item.done)
+        {
+            value = 1;
+        }
+
+        int i = 1;
+        for(char c : item.item.toCharArray())
+        {
+            value += Math.pow(2*c, i);
+            i++;
+        }
+
+        return value;
     }
 }

@@ -1,4 +1,4 @@
-package com.liamfruzyna.android.wishlister;
+package com.liamfruzyna.android.wishlister.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -10,7 +10,16 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import com.liamfruzyna.android.wishlister.data.Data;
+import com.liamfruzyna.android.wishlister.data.IO;
+import com.liamfruzyna.android.wishlister.data.Item;
+import com.liamfruzyna.android.wishlister.data.ListObj;
+import com.liamfruzyna.android.wishlister.R;
+import com.liamfruzyna.android.wishlister.activities.ListerActivity;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by mail929 on 2/27/17.

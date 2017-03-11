@@ -1,4 +1,4 @@
-package com.liamfruzyna.android.wishlister;
+package com.liamfruzyna.android.wishlister.activities;
 
 import android.app.DialogFragment;
 import android.content.Intent;
@@ -12,6 +12,12 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.support.v7.app.AppCompatActivity;
+
+import com.liamfruzyna.android.wishlister.data.IO;
+import com.liamfruzyna.android.wishlister.dialogs.ImportListDialog;
+import com.liamfruzyna.android.wishlister.dialogs.ShareListDialog;
+import com.liamfruzyna.android.wishlister.dialogs.SignoutDialog;
+import com.liamfruzyna.android.wishlister.dialogs.UnArchiveDialog;
 
 /**
  * Created by mail929 on 3/3/17.

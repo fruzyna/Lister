@@ -1,4 +1,4 @@
-package com.liamfruzyna.android.wishlister;
+package com.liamfruzyna.android.wishlister.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -15,6 +15,13 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.liamfruzyna.android.wishlister.data.AutoList;
+import com.liamfruzyna.android.wishlister.data.Data;
+import com.liamfruzyna.android.wishlister.data.IO;
+import com.liamfruzyna.android.wishlister.data.ListObj;
+import com.liamfruzyna.android.wishlister.R;
+import com.liamfruzyna.android.wishlister.activities.ListerActivity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

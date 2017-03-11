@@ -1,4 +1,4 @@
-package com.liamfruzyna.android.wishlister;
+package com.liamfruzyna.android.wishlister.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,6 +8,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.liamfruzyna.android.wishlister.data.IO;
+import com.liamfruzyna.android.wishlister.R;
 
 /**
  * Created by mail929 on 2/24/17.

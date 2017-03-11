@@ -1,4 +1,4 @@
-package com.liamfruzyna.android.wishlister;
+package com.liamfruzyna.android.wishlister.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -7,6 +7,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
+import com.liamfruzyna.android.wishlister.data.Data;
+import com.liamfruzyna.android.wishlister.data.IO;
+import com.liamfruzyna.android.wishlister.data.ListObj;
+import com.liamfruzyna.android.wishlister.activities.SplashActivity;
 
 import java.io.File;
 import java.util.ArrayList;

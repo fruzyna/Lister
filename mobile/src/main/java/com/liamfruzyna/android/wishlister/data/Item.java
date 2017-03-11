@@ -1,4 +1,4 @@
-package com.liamfruzyna.android.wishlister;
+package com.liamfruzyna.android.wishlister.data;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,6 +27,13 @@ public class Item
         this.item = item;
         parseItem();
         this.done = done;
+    }
+
+    public Item(String item)
+    {
+        this.item = item;
+        parseItem();
+        done = false;
     }
 
     public boolean deleteItem(int daysToDelete)

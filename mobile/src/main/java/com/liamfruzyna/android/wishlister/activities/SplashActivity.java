@@ -1,4 +1,4 @@
-package com.liamfruzyna.android.wishlister;
+package com.liamfruzyna.android.wishlister.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,8 +9,16 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.liamfruzyna.android.wishlister.data.Data;
+import com.liamfruzyna.android.wishlister.data.IO;
+import com.liamfruzyna.android.wishlister.data.Item;
+import com.liamfruzyna.android.wishlister.data.ListObj;
+import com.liamfruzyna.android.wishlister.R;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SplashActivity extends AppCompatActivity
 {
@@ -60,7 +68,7 @@ public class SplashActivity extends AppCompatActivity
                     List<Item> items = new ArrayList<>();
                     for(String s : c[0].getResources().getStringArray(R.array.welcome))
                     {
-                        items.add(new Item(s, false));
+                        items.add(new Item(s));
                     }
                     ListObj list = new ListObj("Welcome List", items, new ArrayList<String>());
                     Data.replaceList(list);

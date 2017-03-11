@@ -1,4 +1,4 @@
-package com.liamfruzyna.android.wishlister;
+package com.liamfruzyna.android.wishlister.views;
 
 import android.content.Context;
 import android.util.AttributeSet;

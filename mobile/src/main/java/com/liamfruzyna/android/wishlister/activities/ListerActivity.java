@@ -1,4 +1,4 @@
-package com.liamfruzyna.android.wishlister;
+package com.liamfruzyna.android.wishlister.activities;
 
 import android.app.DialogFragment;
 import android.content.Context;
@@ -25,6 +25,18 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.liamfruzyna.android.wishlister.dialogs.ArchiveListDialog;
+import com.liamfruzyna.android.wishlister.data.AutoList;
+import com.liamfruzyna.android.wishlister.data.Data;
+import com.liamfruzyna.android.wishlister.dialogs.DeleteListDialog;
+import com.liamfruzyna.android.wishlister.dialogs.ListViewDialog;
+import com.liamfruzyna.android.wishlister.views.FlowLayout;
+import com.liamfruzyna.android.wishlister.data.IO;
+import com.liamfruzyna.android.wishlister.data.Item;
+import com.liamfruzyna.android.wishlister.dialogs.ListSettingsDialog;
+import com.liamfruzyna.android.wishlister.dialogs.NewListDialog;
+import com.liamfruzyna.android.wishlister.R;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -317,7 +329,7 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
         criterionView.removeAllViews();
 
         //Add each item as a new textview below the last
-        for(String criterion : ((AutoList) Data.getCurrentList()).criteria)
+        for(String criterion : ((AutoList) Data.getCurrentList()).getCriteria())
         {
             TextView criteriaText = new TextView(this);
             criteriaText.setText(criterion);
@@ -500,7 +512,7 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
      * @param item Item word is source from
      * @param word Word to add
      */
-    public void addWord(FlowLayout tags, Item item, String word)
+    public void addWord(FlowLayout tags, Item item, final String word)
     {
         //Makes sure it is not an empty word
         if(word.length() != 0)
@@ -510,6 +522,20 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
                 //Surround hashtags with box
                 View wordView = inflater.inflate(R.layout.tag_list_item, null);
                 TextView wordTextView = ((TextView) wordView.findViewById(R.id.tag));
+
+                wordView.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        DialogFragment dialog = new ListViewDialog();
+                        Bundle bundle = new Bundle();
+                        bundle.putStringArrayList("ITEMS", Data.getTagItems(word));
+                        dialog.setArguments(bundle);
+                        dialog.show(getFragmentManager(), "");
+                    }
+                });
+
                 wordTextView.setText(word);
                 wordTextView.setTextColor(Color.parseColor(item.color));
                 tags.addView(wordView);
@@ -519,6 +545,20 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
                 //Surround people tags with box
                 View wordView = inflater.inflate(R.layout.tag_list_item, null);
                 TextView wordTextView = ((TextView) wordView.findViewById(R.id.tag));
+
+                wordView.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        DialogFragment dialog = new ListViewDialog();
+                        Bundle bundle = new Bundle();
+                        bundle.putStringArrayList("ITEMS", Data.getTagItems(word));
+                        dialog.setArguments(bundle);
+                        dialog.show(getFragmentManager(), "");
+                    }
+                });
+
                 wordTextView.setText(word);
                 wordTextView.setTextColor(Color.parseColor(item.color));
                 tags.addView(wordView);
@@ -529,8 +569,23 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
                 View wordView = inflater.inflate(R.layout.tag_list_item, null);
                 TextView wordTextView = ((TextView) wordView.findViewById(R.id.tag));
 
+                wordView.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        DialogFragment dialog = new ListViewDialog();
+                        Bundle bundle = new Bundle();
+                        bundle.putStringArrayList("ITEMS", Data.getTagItems(word));
+                        dialog.setArguments(bundle);
+                        dialog.show(getFragmentManager(), "");
+                    }
+                });
+
                 Calendar itemDate = Calendar.getInstance();
                 itemDate.setTime(item.date);
+
+                String returnWord = word;
 
                 if(IO.getInstance().getBoolean(IO.DATES_AS_DAY, true))
                 {
@@ -543,12 +598,12 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
                     if(itemDate.before(tomorrow) && itemDate.after(Calendar.getInstance()))
                     {
                         //if it's today say today
-                        word = "Tomorrow";
+                        returnWord = "Tomorrow";
                     }
                     else if(itemDate.after(yesterday) && itemDate.before(Calendar.getInstance()))
                     {
                         //if it's today say today
-                        word = "Today";
+                        returnWord = "Today";
                     }
                     else if(itemDate.after(yesterday) && itemDate.before(week))
                     {
@@ -556,39 +611,39 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
                         switch (itemDate.get(Calendar.DAY_OF_WEEK))
                         {
                             case 0:
-                                word = "Saturday";
+                                returnWord = "Saturday";
                                 break;
                             case 1:
-                                word = "Sunday";
+                                returnWord = "Sunday";
                                 break;
                             case 2:
-                                word = "Monday";
+                                returnWord = "Monday";
                                 break;
                             case 3:
-                                word = "Tuesday";
+                                returnWord = "Tuesday";
                                 break;
                             case 4:
-                                word = "Wednesday";
+                                returnWord = "Wednesday";
                                 break;
                             case 5:
-                                word = "Thursday";
+                                returnWord = "Thursday";
                                 break;
                             case 6:
-                                word = "Friday";
+                                returnWord = "Friday";
                                 break;
                         }
                     }
                     else if(itemDate.after(week) && IO.getInstance().getBoolean(IO.DATES_AS_DAYS_UNTIL, false))
                     {
-                        word = (itemDate.get(Calendar.DAY_OF_YEAR) - Calendar.getInstance().get(Calendar.DAY_OF_YEAR)) + " days";
+                        returnWord = (itemDate.get(Calendar.DAY_OF_YEAR) - Calendar.getInstance().get(Calendar.DAY_OF_YEAR)) + " days";
                     }
                 }
                 else if(IO.getInstance().getBoolean(IO.DATES_AS_DAYS_UNTIL, false))
                 {
-                    word = (itemDate.get(Calendar.DAY_OF_YEAR) - Calendar.getInstance().get(Calendar.DAY_OF_YEAR)) + " days";
+                    returnWord = (itemDate.get(Calendar.DAY_OF_YEAR) - Calendar.getInstance().get(Calendar.DAY_OF_YEAR)) + " days";
                 }
 
-                wordTextView.setText(word);
+                wordTextView.setText(returnWord);
                 wordTextView.setTextColor(Color.parseColor(item.color));
                 tags.addView(wordView);
             }
