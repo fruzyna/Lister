@@ -97,18 +97,23 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
      */
     public void loadActivity()
     {
-        inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        if(Data.getLists().size() > 0)
+        if(Data.getLists().size() == 0)
         {
+            Intent intent = new Intent(this, SplashActivity.class);
+            startActivity(intent);
+        }
+        else
+        {
+            inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
             setupSpinner();
 
             loadList();
 
             setupButtons();
-        }
 
-        setupFab();
+            setupFab();
+        }
     }
 
     /**
