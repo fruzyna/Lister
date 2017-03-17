@@ -54,9 +54,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/reset"
-        android:layout_below="@+id/days"
+        android:layout_below="@+id/deleteDone"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true" />
 
     <CheckBox
         android:id="@+id/deleteDone"
@@ -64,7 +64,25 @@
         android:layout_height="wrap_content"
         android:text="Delete Done"
         android:layout_below="@+id/days"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <CheckBox
+        android:id="@+id/sortDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sort by Date"
+        android:layout_below="@+id/sortChecked"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true" />
+
+    <CheckBox
+        android:id="@+id/sortChecked"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sort by Done"
+        android:layout_below="@+id/days"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

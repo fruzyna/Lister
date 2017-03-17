@@ -46,6 +46,8 @@ public class IO
     public static final String ARCHIVED_OBJ = "archived";
     public static final String AUTO_OBJ = "auto";
     public static final String SHOW_DONE_OBJ = "showDone";
+    public static final String SORT_CHECKED_OBJ = "sortChecked";
+    public static final String SORT_DATE_OBJ = "sortDate";
     public static final String DAYS_TO_DELETE_OBJ = "daysToDelete";
     public static final String CRITERIA_OBJ = "criteria";
     public static final String ITEM_OBJ = "item";
@@ -143,13 +145,13 @@ public class IO
         return toJSONObject(list).toString();
     }
 
-    public boolean getBoolean(String name, JSONObject container) throws JSONException
+    public boolean getBoolean(String name, JSONObject container, boolean defaultValue) throws JSONException
     {
         if (container.has(name))
         {
             return container.getBoolean(name);
         }
-        return false;
+        return defaultValue;
     }
 
     public int getInt(String name, JSONObject container) throws JSONException
@@ -167,15 +169,17 @@ public class IO
         JSONObject jlist = new JSONObject(json);
         List<Item> items = new ArrayList<>();
         List<String> criteria = new ArrayList<>();
-        boolean auto = getBoolean(AUTO_OBJ, jlist);
+        boolean auto = getBoolean(AUTO_OBJ, jlist, false);
         List<String> tags = new ArrayList<>();
         JSONArray jtags = jlist.getJSONArray(TAGS_OBJ);
         for (int j = 0; j < jtags.length(); j++)
         {
             tags.add(jtags.getString(j));
         }
-        boolean archived = getBoolean(ARCHIVED_OBJ, jlist);
-        boolean showDone = getBoolean(SHOW_DONE_OBJ, jlist);
+        boolean archived = getBoolean(ARCHIVED_OBJ, jlist, false);
+        boolean showDone = getBoolean(SHOW_DONE_OBJ, jlist, true);
+        boolean sortChecked = getBoolean(SORT_CHECKED_OBJ, jlist, true);
+        boolean sortDone = getBoolean(SORT_DATE_OBJ, jlist, true);
         int daysToDelete = getInt(DAYS_TO_DELETE_OBJ, jlist);
         if (auto)
         {
@@ -193,7 +197,7 @@ public class IO
                 Item item = new Item(jitems.getJSONObject(j).getString(ITEM_OBJ), jitems.getJSONObject(j).getBoolean(DONE_OBJ));
                 items.add(item);
             }
-            return new ListObj(jlist.getString(NAME_OBJ), items, tags, archived, showDone, daysToDelete);
+            return new ListObj(jlist.getString(NAME_OBJ), items, tags, archived, showDone, daysToDelete, sortChecked, sortDone);
         }
     }
 

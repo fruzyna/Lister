@@ -870,28 +870,32 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
      */
     public List<Item> sortByChecked(List<Item> items)
     {
-        List<Item> sorted = new ArrayList<>();
-        for(Item item : items)
+        if(Data.getCurrentList().sortChecked)
         {
-            //First add all unchecked items
-            if(!item.done)
-            {
-                sorted.add(item);
-            }
-        }
-        if(Data.getCurrentList().showDone)
-        {
-            //If we are showing completed items
+            List<Item> sorted = new ArrayList<>();
             for(Item item : items)
             {
-                //Second add all checked items
-                if(item.done)
+                //First add all unchecked items
+                if(!item.done)
                 {
                     sorted.add(item);
                 }
             }
+            if(Data.getCurrentList().showDone)
+            {
+                //If we are showing completed items
+                for(Item item : items)
+                {
+                    //Second add all checked items
+                    if(item.done)
+                    {
+                        sorted.add(item);
+                    }
+                }
+            }
+            return sorted;
         }
-        return sorted;
+        return items;
     }
 
     /**
@@ -901,34 +905,38 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
      */
     public List<Item> sortByDate(List<Item> items)
     {
-        List<Item> sorted = new ArrayList<>();
-        for(Item item : items)
+        if(Data.getCurrentList().sortDate)
         {
-            if(sorted.size() > 0)
+            List<Item> sorted = new ArrayList<>();
+            for(Item item : items)
             {
-                System.out.println("Sorted: " + sorted.size());
-                for(int i = 0; i < sorted.size(); i++)
+                if(sorted.size() > 0)
                 {
-                    Item sItem = sorted.get(i);
-                    System.out.println(item.date.toString() + " vs " + sItem.date.toString());
-                    if(item.date.before(sItem.date))
+                    System.out.println("Sorted: " + sorted.size());
+                    for(int i = 0; i < sorted.size(); i++)
                     {
-                        sorted.add(i, item);
-                        break;
-                    }
-                    else if(i == sorted.size() - 1)
-                    {
-                        sorted.add(item);
-                        break;
+                        Item sItem = sorted.get(i);
+                        System.out.println(item.date.toString() + " vs " + sItem.date.toString());
+                        if(item.date.before(sItem.date))
+                        {
+                            sorted.add(i, item);
+                            break;
+                        }
+                        else if(i == sorted.size() - 1)
+                        {
+                            sorted.add(item);
+                            break;
+                        }
                     }
                 }
+                else
+                {
+                    sorted.add(item);
+                }
             }
-            else
-            {
-                sorted.add(item);
-            }
+            return sorted;
         }
-        return sorted;
+        return items;
     }
 
     @Override

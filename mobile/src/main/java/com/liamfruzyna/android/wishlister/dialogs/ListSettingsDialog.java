@@ -33,6 +33,8 @@ public class ListSettingsDialog extends DialogFragment
     EditText days;
     CheckBox reset;
     CheckBox deleteDone;
+    CheckBox sortChecked;
+    CheckBox sortDate;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState)
@@ -49,6 +51,10 @@ public class ListSettingsDialog extends DialogFragment
         reset.setChecked(false);
         deleteDone = (CheckBox) v.findViewById(R.id.deleteDone);
         deleteDone.setChecked(false);
+        sortChecked = (CheckBox) v.findViewById(R.id.sortChecked);
+        sortChecked.setChecked(list.sortChecked);
+        sortDate = (CheckBox) v.findViewById(R.id.sortDate);
+        sortDate.setChecked(list.sortDate);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(list.name)
@@ -79,11 +85,13 @@ public class ListSettingsDialog extends DialogFragment
                                 done = found;
                             }
                         }
+
                         String daysString = days.getText().toString();
                         if(!daysString.equals(""))
                         {
                             list.daysToDelete = Integer.parseInt(daysString);
                         }
+
                         String nameString = name.getText().toString();
                         if(!nameString.equals(list.name))
                         {
@@ -104,6 +112,9 @@ public class ListSettingsDialog extends DialogFragment
                                 ((ListerActivity) getActivity()).saveCurrent(Data.getUnArchived().size() - 1);
                             }
                         }
+
+                        list.sortDate = sortDate.isChecked();
+                        list.sortChecked = sortChecked.isChecked();
 
                         IO.getInstance().saveAndSync();
                         ((ListerActivity) getActivity()).loadActivity();
