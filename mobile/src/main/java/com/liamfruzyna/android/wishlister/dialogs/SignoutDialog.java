@@ -41,7 +41,6 @@ public class SignoutDialog extends DialogFragment
                         edit.putString(IO.SERVER_ADDRESS_PREF, "");
                         edit.putString(IO.SERVER_USER_PREF, "");
                         edit.putString(IO.SERVER_PASSWORD_PREF, "");
-                        edit.putBoolean(IO.FIRST_PREF, true);
                         edit.commit();
 
                         for(ListObj list : Data.getLists())
@@ -63,7 +62,6 @@ public class SignoutDialog extends DialogFragment
                         edit.putString(IO.SERVER_ADDRESS_PREF, "");
                         edit.putString(IO.SERVER_USER_PREF, "");
                         edit.putString(IO.SERVER_PASSWORD_PREF, "");
-                        edit.putBoolean(IO.FIRST_PREF, true);
                         edit.commit();
                     }
                 })
