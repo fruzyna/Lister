@@ -656,10 +656,9 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
             else
             {
                 //Place word in view
-                TextView wordView = new TextView(this);
-                wordView.setText(word);
-                wordView.setTextColor(Color.parseColor(item.color));
-                wordView.setPadding(0, 4, 0, 4);
+                View wordView = inflater.inflate(R.layout.word_list_item, null);
+                TextView wordTextView = ((TextView) wordView.findViewById(R.id.word));
+                wordTextView.setText(word);
                 tags.addView(wordView);
             }
             //Add space after every word
