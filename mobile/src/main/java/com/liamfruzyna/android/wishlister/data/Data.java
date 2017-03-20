@@ -1,6 +1,7 @@
 package com.liamfruzyna.android.wishlister.data;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +19,7 @@ public class Data {
         {
             current = 0;
         }
-        return getUnArchived().get(current);
+        return getListFromName(getNames().get(current));
     }
 
     //returns the name of the current selected list
@@ -63,6 +64,7 @@ public class Data {
         {
             names.add(list.name);
         }
+        Collections.sort(names);
         return names;
     }
 
