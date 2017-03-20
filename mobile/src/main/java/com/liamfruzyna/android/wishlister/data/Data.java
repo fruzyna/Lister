@@ -15,7 +15,11 @@ public class Data {
 
     //returns the list currently viewable on screen
     public static ListObj getCurrentList() {
-        if(current == -1)
+        if(getNames().size() <= 0)
+        {
+            return null;
+        }
+        if(current == -1 || current >= getNames().size())
         {
             current = 0;
         }

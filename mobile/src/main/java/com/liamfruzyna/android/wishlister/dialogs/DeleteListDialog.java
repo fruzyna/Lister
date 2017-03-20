@@ -33,6 +33,7 @@ public class DeleteListDialog extends DialogFragment
                     {
                         Data.getLists().remove(list);
                         IO.getInstance().deleteList(list.name);
+                        ((ListerActivity) getActivity()).saveCurrent(Data.getCurrent() - 1);
                         ((ListerActivity) getActivity()).loadActivity();
                     }
                 })

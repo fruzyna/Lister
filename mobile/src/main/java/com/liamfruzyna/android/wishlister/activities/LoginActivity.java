@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.liamfruzyna.android.wishlister.data.Data;
 import com.liamfruzyna.android.wishlister.data.IO;
 import com.liamfruzyna.android.wishlister.R;
 
@@ -56,6 +57,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 edit.putString(IO.SERVER_ADDRESS_PREF, serv);
                 edit.putBoolean(IO.FIRST_PREF, false);
                 edit.commit();
+
+                if(Data.getLists().size() > 0)
+                {
+                    IO.getInstance().saveAndSync();
+                }
+
                 Intent intent = new Intent(this, SplashActivity.class);
                 startActivity(intent);
             }
@@ -78,6 +85,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 edit.putString(IO.SERVER_ADDRESS_PREF, serv);
                 edit.putBoolean(IO.FIRST_PREF, false);
                 edit.commit();
+
+                if(Data.getLists().size() > 0)
+                {
+                    IO.getInstance().saveAndSync();
+                }
+
                 Intent intent = new Intent(this, SplashActivity.class);
                 startActivity(intent);
             }

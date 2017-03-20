@@ -338,11 +338,14 @@ public class IO
 
     public void deleteList(String name)
     {
-        DeleteListTask task = new DeleteListTask();
-        task.execute(name);
+        if(checkNetwork())
+        {
+            DeleteListTask task = new DeleteListTask();
+            task.execute(name);
+            while(!task.done);
+        }
         File file = new File(fileDir, name + ".json");
         file.delete();
-        while(!task.done);
     }
 
     private class UploadListTask extends AsyncTask<String, Integer, String>
@@ -360,6 +363,7 @@ public class IO
 
         protected void onPostExecute(String result)
         {
+            System.out.println("Done Syncing");
         }
     }
 
@@ -497,9 +501,12 @@ public class IO
                         {
                             urlString = "http://" + server + "/get/?user=" + user + "&password=" + password + "&list=" + name;
                             String output = webRequest(urlString);
-                            ListObj wl = readString(output);
-                            lists.add(wl);
-                            Data.replaceList(wl);
+                            if(!output.equals("LIST_NOT_FOUND"))
+                            {
+                                ListObj wl = readString(output);
+                                lists.add(wl);
+                                Data.replaceList(wl);
+                            }
                         } else
                         {
                         }

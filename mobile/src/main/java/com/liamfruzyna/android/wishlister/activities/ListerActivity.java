@@ -40,7 +40,6 @@ import com.liamfruzyna.android.wishlister.R;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,8 +79,6 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lister);
-
-        loadActivity();
     }
 
 
@@ -98,7 +95,7 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
      */
     public void loadActivity()
     {
-        if(Data.getLists().size() == 0)
+        if(Data.getLists().size() == 0 || Data.getCurrentList() == null)
         {
             Intent intent = new Intent(this, SplashActivity.class);
             startActivity(intent);
@@ -147,7 +144,6 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
         {
             tagContainer.addView(createTagView());
         }
-
     }
 
     /**
@@ -369,7 +365,8 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
     {
         //Iterates through all items
         int i = 0;
-        for(Item item : sortByChecked(sortByDate(Data.getItems())))
+        List<Item> sorted = sortByChecked(sortByDate(Data.getItems()));
+        for(Item item : sorted)
         {
             //Sets text color of item according to proximity of due date
             if(!item.done && IO.getInstance().getBoolean(IO.HIGHLIGHT_DATE_PREF, true))
@@ -747,6 +744,7 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
     @Override
     public void onClick(View v)
     {
+        System.out.println("Click");
         if(v == showDone)
         {
             //Set showDone, save, and reload
@@ -822,6 +820,7 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
     @Override
     public boolean onLongClick(View v)
     {
+        System.out.println("Long click");
         //Parse all items
         for (Map.Entry<Integer, View> entry : listViews.entrySet())
         {
@@ -838,6 +837,7 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
     {
+        System.out.println("Item selected");
         if(parent == listSpinner)
         {
             //Save the selected item and reload
@@ -855,13 +855,21 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
      */
     public void saveCurrent(int current)
     {
-        //Set it in data manager
-        Data.setCurrent(current);
+        if(current < 0)
+        {
+            Intent intent = new Intent(this, SplashActivity.class);
+            startActivity(intent);
+        }
+        else
+        {
+            //Set it in data manager
+            Data.setCurrent(current);
 
-        //Save it to shared prefs
-        SharedPreferences.Editor edit = IO.getInstance().getEditor();
-        edit.putInt(IO.CURRENT_LIST_PREF, current);
-        edit.commit();
+            //Save it to shared prefs
+            SharedPreferences.Editor edit = IO.getInstance().getEditor();
+            edit.putInt(IO.CURRENT_LIST_PREF, current);
+            edit.commit();
+        }
     }
 
     /**
@@ -913,11 +921,9 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
             {
                 if(sorted.size() > 0)
                 {
-                    System.out.println("Sorted: " + sorted.size());
                     for(int i = 0; i < sorted.size(); i++)
                     {
                         Item sItem = sorted.get(i);
-                        System.out.println(item.date.toString() + " vs " + sItem.date.toString());
                         if(item.date.before(sItem.date))
                         {
                             sorted.add(i, item);
@@ -963,7 +969,6 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
                     if(tag.length() >= currentWord.length())
                     {
                         String reducedTag = tag.substring(0, currentWord.length());
-                        System.out.println(currentWord + " vs " + reducedTag);
                         if(reducedTag.equalsIgnoreCase(currentWord))
                         {
                             Button sugBut = new Button(this);
@@ -999,14 +1004,16 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
      */
     public void save()
     {
-        if(IO.getInstance().checkNetwork())
+        /*if(IO.getInstance().checkNetwork())
         {
-        }
+        }*/
         IO.getInstance().saveAndSync();
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        System.out.println("Options selected");
         switch (item.getItemId()) {
             case R.id.action_settings:
                 Intent intent = new Intent(this, SettingsActivity.class);
@@ -1021,7 +1028,8 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
         return true;
