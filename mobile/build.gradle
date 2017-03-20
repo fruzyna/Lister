@@ -7,7 +7,7 @@ android {
         applicationId "com.liamfruzyna.android.wishlister"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 41
+        versionCode 42
         versionName "5.0.0b3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

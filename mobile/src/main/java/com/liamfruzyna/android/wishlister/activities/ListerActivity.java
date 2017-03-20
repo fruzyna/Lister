@@ -40,6 +40,7 @@ import com.liamfruzyna.android.wishlister.R;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -279,7 +280,7 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
         listSpinner.setOnItemSelectedListener(this);
 
         //Fill out spinner
-        ArrayAdapter<String> sadapter = new ArrayAdapter<>(this, R.layout.spinner_item, Data.getNames());
+        ArrayAdapter<String> sadapter = new ArrayAdapter<>(this, R.layout.spinner_item, sortStringsAlpha(Data.getNames()));
         sadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         listSpinner.setAdapter(sadapter);
 
@@ -287,6 +288,17 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
         int current = IO.getInstance().getInt(IO.CURRENT_LIST_PREF);
         listSpinner.setSelection(current);
         saveCurrent(current);
+    }
+
+    /**
+     * Sorts a given lists of strings alphabetically, primarily for sorting lists
+     * @param strings Strings to sort
+     * @return Sorted strings
+     */
+    public List<String> sortStringsAlpha(List<String> strings)
+    {
+        Collections.sort(strings);
+        return strings;
     }
 
     /**
