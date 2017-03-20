@@ -49,6 +49,7 @@ public class SplashActivity extends AppCompatActivity
                 System.out.println("First Launch");
                 Intent intent = new Intent(c[0], LoginActivity.class);
                 startActivity(intent);
+                finish();
             }
             else
             {
@@ -77,6 +78,7 @@ public class SplashActivity extends AppCompatActivity
 
                 Intent intent = new Intent(c[0], ListerActivity.class);
                 startActivity(intent);
+                finish();
             }
 
             return c[0];
