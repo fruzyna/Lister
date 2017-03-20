@@ -65,6 +65,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                 Intent intent = new Intent(this, SplashActivity.class);
                 startActivity(intent);
+                finish();
             }
             else if(result.equals("USER_NOT_FOUND")) {
                 Toast.makeText(this, "User Not Found", Toast.LENGTH_SHORT).show();
@@ -93,6 +94,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                 Intent intent = new Intent(this, SplashActivity.class);
                 startActivity(intent);
+                finish();
             }
             else if(result.equals("USER_EXISTS")) {
                 Toast.makeText(this, "User Exists", Toast.LENGTH_SHORT).show();
@@ -107,6 +109,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             edit.commit();
             Intent intent = new Intent(this, SplashActivity.class);
             startActivity(intent);
+            finish();
         }
     }
 }
