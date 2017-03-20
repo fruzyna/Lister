@@ -613,12 +613,10 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
                     }
                     else if(itemDate.after(yesterday) && itemDate.before(week))
                     {
+                        System.out.println("Date of " + item.item + " is " + itemDate.get(Calendar.DAY_OF_WEEK));
                         //if it's within the next week say the day
                         switch (itemDate.get(Calendar.DAY_OF_WEEK))
                         {
-                            case 0:
-                                returnWord = "Saturday";
-                                break;
                             case 1:
                                 returnWord = "Sunday";
                                 break;
@@ -636,6 +634,9 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
                                 break;
                             case 6:
                                 returnWord = "Friday";
+                                break;
+                            case 7:
+                                returnWord = "Saturday";
                                 break;
                         }
                     }
