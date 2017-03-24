@@ -463,6 +463,7 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
                 else
                 {
                     listItems.get(editItem).item = itemEdit.getText().toString();
+                    listItems.get(editItem).parseItem();
                 }
                 save();
 
