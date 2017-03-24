@@ -30,7 +30,7 @@ import com.liamfruzyna.android.wishlister.dialogs.ArchiveListDialog;
 import com.liamfruzyna.android.wishlister.data.AutoList;
 import com.liamfruzyna.android.wishlister.data.Data;
 import com.liamfruzyna.android.wishlister.dialogs.DeleteListDialog;
-import com.liamfruzyna.android.wishlister.dialogs.ListViewDialog;
+import com.liamfruzyna.android.wishlister.dialogs.TagViewDialog;
 import com.liamfruzyna.android.wishlister.views.FlowLayout;
 import com.liamfruzyna.android.wishlister.data.IO;
 import com.liamfruzyna.android.wishlister.data.Item;
@@ -531,9 +531,10 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
                     @Override
                     public void onClick(View v)
                     {
-                        DialogFragment dialog = new ListViewDialog();
+                        DialogFragment dialog = new TagViewDialog();
                         Bundle bundle = new Bundle();
                         bundle.putStringArrayList("ITEMS", Data.getTagItems(word));
+                        bundle.putString("TAG", word);
                         dialog.setArguments(bundle);
                         dialog.show(getFragmentManager(), "");
                     }
@@ -554,9 +555,10 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
                     @Override
                     public void onClick(View v)
                     {
-                        DialogFragment dialog = new ListViewDialog();
+                        DialogFragment dialog = new TagViewDialog();
                         Bundle bundle = new Bundle();
                         bundle.putStringArrayList("ITEMS", Data.getTagItems(word));
+                        bundle.putString("TAG", word);
                         dialog.setArguments(bundle);
                         dialog.show(getFragmentManager(), "");
                     }
@@ -577,9 +579,10 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
                     @Override
                     public void onClick(View v)
                     {
-                        DialogFragment dialog = new ListViewDialog();
+                        DialogFragment dialog = new TagViewDialog();
                         Bundle bundle = new Bundle();
                         bundle.putStringArrayList("ITEMS", Data.getTagItems(word));
+                        bundle.putString("TAG", word);
                         dialog.setArguments(bundle);
                         dialog.show(getFragmentManager(), "");
                     }

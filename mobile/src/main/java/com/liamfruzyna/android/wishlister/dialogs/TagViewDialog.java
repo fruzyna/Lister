@@ -26,15 +26,17 @@ import java.util.List;
  * Created by mail929 on 3/10/17.
  */
 
-public class ListViewDialog extends DialogFragment
+public class TagViewDialog extends DialogFragment
 {
     List<String> itemNames;
+    String tag;
     View v;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState)
     {
         itemNames = getArguments().getStringArrayList("ITEMS");
+        tag = getArguments().getString("TAG");
 
         // Use the Builder class for convenient dialog construction
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
@@ -58,28 +60,9 @@ public class ListViewDialog extends DialogFragment
             }
         });
 
-        //listen for list chosen
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-            {
-                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-                sharingIntent.setType("text/plain");
-                String shareBody = null;
-                try {
-                    shareBody = IO.getInstance().getListString(Data.getLists().get(position));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "New List");
-                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-                startActivity(Intent.createChooser(sharingIntent, "Share via"));
-            }
-        });
-
         //setup dialog
-        builder.setMessage("Choose a list to share")
-                .setTitle("Share a List")
+        builder.setMessage("Items containing " + tag)
+                .setTitle(tag)
                 .setView(v)
                 .setNegativeButton("BACK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
