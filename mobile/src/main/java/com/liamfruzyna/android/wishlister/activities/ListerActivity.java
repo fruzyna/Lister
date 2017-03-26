@@ -660,6 +660,10 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
                 //Place word in view
                 View wordView = inflater.inflate(R.layout.word_list_item, null);
                 TextView wordTextView = ((TextView) wordView.findViewById(R.id.word));
+                if(IO.getInstance().getBoolean(IO.HIGHLIGHT_WHOLE_ITEM_PREF, true))
+                {
+                    wordTextView.setTextColor(Color.parseColor(item.color));
+                }
                 wordTextView.setText(word);
                 tags.addView(wordView);
             }

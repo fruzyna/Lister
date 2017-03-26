@@ -35,6 +35,7 @@ public class IO
     public static final String DATES_AS_DAYS_UNTIL = "DATES_AS_DAYS_UNTIL";
     public static final String US_DATE_FORMAT_PREF = "US_DATE_FORMAT_PREF";
     public static final String HIGHLIGHT_DATE_PREF = "HIGHLIGHT_DATE_PREF";
+    public static final String HIGHLIGHT_WHOLE_ITEM_PREF = "HIGHLIGHT_WHOLE_ITEM_PREF";
     public static final String CURRENT_LIST_PREF = "CURRENT_LIST_PREF";
     public static final String FIRST_PREF = "FIRST_PREF";
     public static final String SERVER_PREF = "SERVER_PREF";

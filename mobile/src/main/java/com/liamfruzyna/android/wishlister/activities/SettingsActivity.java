@@ -147,6 +147,24 @@ public class SettingsActivity extends AppCompatActivity
             });
             item.addPreference(highlight);
 
+            //Whether or not to highlight whole items
+            Preference highlightWhole = new CheckBoxPreference(getActivity());
+            highlightWhole.setTitle("Highlight Whole Items");
+            highlightWhole.setSummary("Highlight entire item instead of just tag");
+            ((CheckBoxPreference) highlightWhole).setChecked(IO.getInstance().getBoolean(IO.HIGHLIGHT_WHOLE_ITEM_PREF, true));
+            highlightWhole.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
+            {
+                @Override
+                public boolean onPreferenceClick(Preference preference)
+                {
+                    SharedPreferences.Editor editor = IO.getInstance().getEditor();
+                    editor.putBoolean(IO.HIGHLIGHT_WHOLE_ITEM_PREF, ((CheckBoxPreference) preference).isChecked());
+                    editor.commit();
+                    return false;
+                }
+            });
+            item.addPreference(highlightWhole);
+
             //Use US date format
             Preference dateFormat = new CheckBoxPreference(getActivity());
             dateFormat.setTitle("Use US date format");
