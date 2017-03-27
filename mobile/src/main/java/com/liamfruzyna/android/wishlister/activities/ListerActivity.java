@@ -573,12 +573,12 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
             {
                 //Surround date with box
                 View wordView = inflater.inflate(R.layout.tag_list_item, null);
-                TextView wordTextView = ((TextView) wordView.findViewById(R.id.tag));
+                final TextView wordTextView = ((TextView) wordView.findViewById(R.id.tag));
 
-                wordView.setOnClickListener(new View.OnClickListener()
+                wordView.setOnLongClickListener(new View.OnLongClickListener()
                 {
                     @Override
-                    public void onClick(View v)
+                    public boolean onLongClick(View v)
                     {
                         DialogFragment dialog = new TagViewDialog();
                         Bundle bundle = new Bundle();
@@ -586,11 +586,58 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
                         bundle.putString("TAG", word);
                         dialog.setArguments(bundle);
                         dialog.show(getFragmentManager(), "");
+                        return true;
                     }
                 });
 
-                Calendar itemDate = Calendar.getInstance();
+                final Calendar itemDate = Calendar.getInstance();
                 itemDate.setTime(item.date);
+                
+                wordView.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        String current = wordTextView.getText().toString();
+                        String newWord = current;
+                        if(current.contains("/"))
+                        {
+                            newWord = (itemDate.get(Calendar.DAY_OF_YEAR) - Calendar.getInstance().get(Calendar.DAY_OF_YEAR)) + " Days";
+                        }
+                        else if(current.contains("Days"))
+                        {
+                            switch (itemDate.get(Calendar.DAY_OF_WEEK))
+                            {
+                                case 1:
+                                    newWord = "Sunday";
+                                    break;
+                                case 2:
+                                    newWord = "Monday";
+                                    break;
+                                case 3:
+                                    newWord = "Tuesday";
+                                    break;
+                                case 4:
+                                    newWord = "Wednesday";
+                                    break;
+                                case 5:
+                                    newWord = "Thursday";
+                                    break;
+                                case 6:
+                                    newWord = "Friday";
+                                    break;
+                                case 7:
+                                    newWord = "Saturday";
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            newWord = word;
+                        }
+                        wordTextView.setText(newWord);
+                    }
+                });
 
                 String returnWord = word;
 
@@ -643,12 +690,12 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
                     }
                     else if(itemDate.after(week) && IO.getInstance().getBoolean(IO.DATES_AS_DAYS_UNTIL, false))
                     {
-                        returnWord = (itemDate.get(Calendar.DAY_OF_YEAR) - Calendar.getInstance().get(Calendar.DAY_OF_YEAR)) + " days";
+                        returnWord = (itemDate.get(Calendar.DAY_OF_YEAR) - Calendar.getInstance().get(Calendar.DAY_OF_YEAR)) + " Days";
                     }
                 }
                 else if(IO.getInstance().getBoolean(IO.DATES_AS_DAYS_UNTIL, false))
                 {
-                    returnWord = (itemDate.get(Calendar.DAY_OF_YEAR) - Calendar.getInstance().get(Calendar.DAY_OF_YEAR)) + " days";
+                    returnWord = (itemDate.get(Calendar.DAY_OF_YEAR) - Calendar.getInstance().get(Calendar.DAY_OF_YEAR)) + " Days";
                 }
 
                 wordTextView.setText(returnWord);
