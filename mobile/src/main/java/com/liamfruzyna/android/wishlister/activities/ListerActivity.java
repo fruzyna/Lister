@@ -592,6 +592,8 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
 
                 final Calendar itemDate = Calendar.getInstance();
                 itemDate.setTime(item.date);
+                final int days = (itemDate.get(Calendar.DAY_OF_YEAR) - Calendar.getInstance().get(Calendar.DAY_OF_YEAR));
+
                 
                 wordView.setOnClickListener(new View.OnClickListener()
                 {
@@ -599,106 +601,16 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
                     public void onClick(View v)
                     {
                         String current = wordTextView.getText().toString();
+
+                        wordTextView.setText(makeDateWord(current.contains("/"), current.contains("Days"), itemDate, word, days));
                         String newWord = current;
-                        if(current.contains("/"))
-                        {
-                            newWord = (itemDate.get(Calendar.DAY_OF_YEAR) - Calendar.getInstance().get(Calendar.DAY_OF_YEAR)) + " Days";
-                        }
-                        else if(current.contains("Days"))
-                        {
-                            switch (itemDate.get(Calendar.DAY_OF_WEEK))
-                            {
-                                case 1:
-                                    newWord = "Sunday";
-                                    break;
-                                case 2:
-                                    newWord = "Monday";
-                                    break;
-                                case 3:
-                                    newWord = "Tuesday";
-                                    break;
-                                case 4:
-                                    newWord = "Wednesday";
-                                    break;
-                                case 5:
-                                    newWord = "Thursday";
-                                    break;
-                                case 6:
-                                    newWord = "Friday";
-                                    break;
-                                case 7:
-                                    newWord = "Saturday";
-                                    break;
-                            }
-                        }
-                        else
-                        {
-                            newWord = word;
-                        }
-                        wordTextView.setText(newWord);
                     }
                 });
 
-                String returnWord = word;
+                boolean showAsName = IO.getInstance().getBoolean(IO.DATES_AS_DAY, true) && days >= -1 && days <= 7;
+                boolean showAsDays = IO.getInstance().getBoolean(IO.DATES_AS_DAYS_UNTIL, false) && days >= 0;
+                wordTextView.setText(makeDateWord(showAsDays, showAsName, itemDate, word, days));
 
-                if(IO.getInstance().getBoolean(IO.DATES_AS_DAY, true))
-                {
-                    Calendar week = Calendar.getInstance();
-                    week.add(Calendar.DAY_OF_YEAR, 7);
-                    Calendar yesterday = Calendar.getInstance();
-                    yesterday.add(Calendar.DAY_OF_YEAR, -1);
-                    Calendar tomorrow = Calendar.getInstance();
-                    tomorrow.add(Calendar.DAY_OF_YEAR, 1);
-                    if(itemDate.before(tomorrow) && itemDate.after(Calendar.getInstance()))
-                    {
-                        //if it's today say today
-                        returnWord = "Tomorrow";
-                    }
-                    else if(itemDate.after(yesterday) && itemDate.before(Calendar.getInstance()))
-                    {
-                        //if it's today say today
-                        returnWord = "Today";
-                    }
-                    else if(itemDate.after(yesterday) && itemDate.before(week))
-                    {
-                        System.out.println("Date of " + item.item + " is " + itemDate.get(Calendar.DAY_OF_WEEK));
-                        //if it's within the next week say the day
-                        switch (itemDate.get(Calendar.DAY_OF_WEEK))
-                        {
-                            case 1:
-                                returnWord = "Sunday";
-                                break;
-                            case 2:
-                                returnWord = "Monday";
-                                break;
-                            case 3:
-                                returnWord = "Tuesday";
-                                break;
-                            case 4:
-                                returnWord = "Wednesday";
-                                break;
-                            case 5:
-                                returnWord = "Thursday";
-                                break;
-                            case 6:
-                                returnWord = "Friday";
-                                break;
-                            case 7:
-                                returnWord = "Saturday";
-                                break;
-                        }
-                    }
-                    else if(itemDate.after(week) && IO.getInstance().getBoolean(IO.DATES_AS_DAYS_UNTIL, false))
-                    {
-                        returnWord = (itemDate.get(Calendar.DAY_OF_YEAR) - Calendar.getInstance().get(Calendar.DAY_OF_YEAR)) + " Days";
-                    }
-                }
-                else if(IO.getInstance().getBoolean(IO.DATES_AS_DAYS_UNTIL, false))
-                {
-                    returnWord = (itemDate.get(Calendar.DAY_OF_YEAR) - Calendar.getInstance().get(Calendar.DAY_OF_YEAR)) + " Days";
-                }
-
-                wordTextView.setText(returnWord);
                 wordTextView.setTextColor(Color.parseColor(item.color));
                 tags.addView(wordView);
             }
@@ -719,6 +631,86 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
             spaceView.setText(" ");
             tags.addView(spaceView);
         }
+    }
+
+    public String makeDateWord(boolean showAsDays, boolean showAsName, Calendar itemDate, String word, int days)
+    {
+        String newWord = "";
+        if(showAsName)
+        {
+            if(days == 1)
+            {
+                //if it's today say today
+                newWord = "Tomorrow";
+            }
+            else if(days == 0)
+            {
+                //if it's today say today
+                newWord = "Today";
+            }
+            else if(days == -1)
+            {
+                //if it's yesterday say yesterday
+                newWord = "Yesterday";
+            }
+            else
+            {
+                switch (itemDate.get(Calendar.DAY_OF_WEEK))
+                {
+                    case 1:
+                        newWord = "Sunday";
+                        break;
+                    case 2:
+                        newWord = "Monday";
+                        break;
+                    case 3:
+                        newWord = "Tuesday";
+                        break;
+                    case 4:
+                        newWord = "Wednesday";
+                        break;
+                    case 5:
+                        newWord = "Thursday";
+                        break;
+                    case 6:
+                        newWord = "Friday";
+                        break;
+                    case 7:
+                        newWord = "Saturday";
+                        break;
+                }
+                if(days > 7 || days < 0)
+                {
+                    int weeks = days/7;
+                    if(weeks <= 0)
+                    {
+                        weeks--;
+                    }
+                    if(weeks == 1)
+                    {
+                        newWord += " (" + weeks + " Week)";
+                    }
+                    else
+                    {
+                        newWord += " (" + weeks + " Weeks)";
+                    }
+                }
+                else if(days == 0)
+                {
+                    newWord += "(Today)";
+                }
+            }
+        }
+        else if(showAsDays)
+        {
+            newWord = days + " Days";
+        }
+        else
+        {
+            newWord = word;
+        }
+
+        return newWord;
     }
 
     /**
