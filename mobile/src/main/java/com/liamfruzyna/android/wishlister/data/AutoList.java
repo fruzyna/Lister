@@ -12,9 +12,9 @@ public class AutoList extends ListObj
 {
     java.util.List<String> criteria = new ArrayList<>();
 
-    public AutoList(String name, java.util.List<String> tags, boolean archived, java.util.List<String> criteria, boolean showDone, int daysToDelete)
+    public AutoList(String name, java.util.List<String> tags, boolean archived, java.util.List<String> criteria, boolean showDone, int daysToDelete, boolean sortChecked, boolean sortDate)
     {
-        super(name, tags, archived, showDone, daysToDelete);
+        super(name, tags, archived, showDone, daysToDelete, sortChecked, sortDate);
         auto = true;
         this.criteria = criteria;
         this.showDone = showDone;

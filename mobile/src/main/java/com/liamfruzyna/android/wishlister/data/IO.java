@@ -107,6 +107,8 @@ public class IO
         jlist.put(AUTO_OBJ, list.auto);
         jlist.put(SHOW_DONE_OBJ, list.showDone);
         jlist.put(DAYS_TO_DELETE_OBJ, list.daysToDelete);
+        jlist.put(SORT_CHECKED_OBJ, list.sortChecked);
+        jlist.put(SORT_DATE_OBJ, list.sortDate);
         if (list.auto)
         {
             AutoList alist = (AutoList) list;
@@ -189,7 +191,7 @@ public class IO
             {
                 criteria.add((String) jcriteria.get(j));
             }
-            return new AutoList(jlist.getString(NAME_OBJ), tags, archived, criteria, showDone, daysToDelete);
+            return new AutoList(jlist.getString(NAME_OBJ), tags, archived, criteria, showDone, daysToDelete, sortChecked, sortDone);
         } else
         {
             JSONArray jitems = jlist.getJSONArray(ITEMS_OBJ);
