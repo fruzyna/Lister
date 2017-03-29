@@ -19,9 +19,9 @@ public class ListObj
     public boolean auto = false;
     public int daysToDelete = 0;
     public boolean archived = false;
-    public boolean showDone;
-    public boolean sortDate;
-    public boolean sortChecked;
+    public boolean showDone = true;
+    public boolean sortDate = true;
+    public boolean sortChecked= true;
 
     public ListObj(String name, java.util.List<Item> items, java.util.List<String> tags)
     {
@@ -53,13 +53,15 @@ public class ListObj
         deleteItems();
     }
 
-    public ListObj(String name, java.util.List<String> tags, boolean archived, boolean showDone, int daysToDelete)
+    public ListObj(String name, java.util.List<String> tags, boolean archived, boolean showDone, int daysToDelete, boolean sortChecked, boolean sortDate)
     {
         this.name = name;
         this.tags = tags;
         this.archived = archived;
         this.showDone = showDone;
         this.daysToDelete = daysToDelete;
+        this.sortChecked = sortChecked;
+        this.sortDate = sortDate;
         findPeople();
         findDate();
         deleteItems();
