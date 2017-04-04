@@ -383,11 +383,18 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
 
                 if(item.date.before(yesterday.getTime()))
                 {
+                    //RED if past due
                     item.color = "#FF0000";
                 }
                 else if(item.date.before(today.getTime()))
                 {
+                    //YELLOW/ORANGE if due today
                     item.color = "#FFA500";
+                }
+                else
+                {
+                    //Otherwise BLACK
+                    item.color = "#000000";
                 }
             }
 
