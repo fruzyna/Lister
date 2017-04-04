@@ -325,6 +325,7 @@ public class IO
                 String listString = getListString(current);
                 System.out.println("Saving " + listString);
                 writeToFile(current.name, listString);
+
                 if(checkNetwork())
                 {
                     (new UploadListTask()).execute(listString);
@@ -721,6 +722,24 @@ public class IO
         ConnectivityManager cm = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
-        return !getString(SERVER_ADDRESS_PREF).equals("") && isConnected;
+
+        if(getString(SERVER_ADDRESS_PREF).equals("") || !isConnected)
+        {
+            return false;
+        }
+
+        try {
+            HttpURLConnection.setFollowRedirects(false);
+            HttpURLConnection con = (HttpURLConnection) new URL(getString(SERVER_ADDRESS_PREF)).openConnection();
+            con.setRequestMethod("HEAD");
+
+            con.setConnectTimeout(5000); //set timeout to 5 seconds
+
+            return (con.getResponseCode() == HttpURLConnection.HTTP_OK);
+        } catch (java.net.SocketTimeoutException e) {
+            return false;
+        } catch (java.io.IOException e) {
+            return false;
+        }
     }
 }

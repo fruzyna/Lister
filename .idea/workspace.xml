@@ -12,13 +12,13 @@
     </shared>
   </component>
   <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="Syncing" />
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="No Filters" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8e383d82-ec7e-49db-af88-1e7855750840" name="Default" comment="Fixed #37 Issue was reading autolists did not account for change">
+    <list default="true" id="8e383d82-ec7e-49db-af88-1e7855750840" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build.gradle" afterPath="$PROJECT_DIR$/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobile/src/main/java/com/liamfruzyna/android/wishlister/activities/ListerActivity.java" afterPath="$PROJECT_DIR$/mobile/src/main/java/com/liamfruzyna/android/wishlister/activities/ListerActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobile/src/main/java/com/liamfruzyna/android/wishlister/data/IO.java" afterPath="$PROJECT_DIR$/mobile/src/main/java/com/liamfruzyna/android/wishlister/data/IO.java" />
     </list>
     <ignored path="Lister.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -50,11 +50,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="ListerActivity.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ListerActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mobile/src/main/java/com/liamfruzyna/android/wishlister/activities/ListerActivity.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="547">
               <caret line="395" column="37" selection-start-line="395" selection-start-column="37" selection-end-line="395" selection-end-column="37" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SplashActivity.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/mobile/src/main/java/com/liamfruzyna/android/wishlister/activities/SplashActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="232">
+              <caret line="58" column="43" selection-start-line="58" selection-start-column="43" selection-end-line="58" selection-end-column="43" />
               <folding />
             </state>
           </provider>
@@ -73,8 +83,8 @@
       <file leaf-file-name="IO.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mobile/src/main/java/com/liamfruzyna/android/wishlister/data/IO.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="217">
-              <caret line="203" column="9" selection-start-line="203" selection-start-column="9" selection-end-line="203" selection-end-column="9" />
+            <state relative-caret-position="91">
+              <caret line="481" column="16" selection-start-line="481" selection-start-column="16" selection-end-line="481" selection-end-column="16" />
               <folding />
             </state>
           </provider>
@@ -85,9 +95,7 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="315">
               <caret line="23" column="37" selection-start-line="23" selection-start-column="37" selection-end-line="23" selection-end-column="37" />
-              <folding>
-                <element signature="imports" expanded="false" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -2795,11 +2803,11 @@
         <option value="$PROJECT_DIR$/mobile/src/main/java/com/liamfruzyna/android/wishlister/activities/LoginActivity.java" />
         <option value="$PROJECT_DIR$/mobile/src/main/java/com/liamfruzyna/android/wishlister/dialogs/TagViewDialog.java" />
         <option value="$PROJECT_DIR$/mobile/src/main/java/com/liamfruzyna/android/wishlister/activities/SettingsActivity.java" />
-        <option value="$PROJECT_DIR$/mobile/src/main/java/com/liamfruzyna/android/wishlister/data/IO.java" />
         <option value="$PROJECT_DIR$/mobile/src/main/java/com/liamfruzyna/android/wishlister/data/AutoList.java" />
         <option value="$PROJECT_DIR$/mobile/src/main/java/com/liamfruzyna/android/wishlister/data/ListObj.java" />
         <option value="$PROJECT_DIR$/mobile/build.gradle" />
         <option value="$PROJECT_DIR$/mobile/src/main/java/com/liamfruzyna/android/wishlister/activities/ListerActivity.java" />
+        <option value="$PROJECT_DIR$/mobile/src/main/java/com/liamfruzyna/android/wishlister/data/IO.java" />
       </list>
     </option>
   </component>
@@ -3604,7 +3612,14 @@
       <option name="project" value="LOCAL" />
       <updated>1490639974912</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="Fixed bug where editing highlighted dates doesn't remove highlight">
+      <created>1491348538710</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1491348538710</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -3677,7 +3692,8 @@
     <MESSAGE value="Improved date management" />
     <MESSAGE value="Screw it, lets make this the 5.0 release" />
     <MESSAGE value="[5.0.0 Release] Screw it, lets make this the 5.0 release" />
-    <option name="LAST_COMMIT_MESSAGE" value="[5.0.0 Release] Screw it, lets make this the 5.0 release" />
+    <MESSAGE value="Fixed bug where editing highlighted dates doesn't remove highlight" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed bug where editing highlighted dates doesn't remove highlight" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -3992,13 +4008,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mobile/src/main/java/com/liamfruzyna/android/wishlister/activities/SplashActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="855">
-          <caret line="75" column="40" selection-start-line="75" selection-start-column="40" selection-end-line="75" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mobile/src/main/java/com/liamfruzyna/android/wishlister/data/Data.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="705">
@@ -4059,16 +4068,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mobile/src/main/java/com/liamfruzyna/android/wishlister/data/ListObj.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="23" column="37" selection-start-line="23" selection-start-column="37" selection-end-line="23" selection-end-column="37" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mobile/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
@@ -4077,18 +4076,34 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mobile/src/main/java/com/liamfruzyna/android/wishlister/data/IO.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="217">
-          <caret line="203" column="9" selection-start-line="203" selection-start-column="9" selection-end-line="203" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mobile/src/main/java/com/liamfruzyna/android/wishlister/activities/ListerActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="547">
           <caret line="395" column="37" selection-start-line="395" selection-start-column="37" selection-end-line="395" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mobile/src/main/java/com/liamfruzyna/android/wishlister/data/ListObj.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="23" column="37" selection-start-line="23" selection-start-column="37" selection-end-line="23" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mobile/src/main/java/com/liamfruzyna/android/wishlister/data/IO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="91">
+          <caret line="481" column="16" selection-start-line="481" selection-start-column="16" selection-end-line="481" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mobile/src/main/java/com/liamfruzyna/android/wishlister/activities/SplashActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="232">
+          <caret line="58" column="43" selection-start-line="58" selection-start-column="43" selection-end-line="58" selection-end-column="43" />
           <folding />
         </state>
       </provider>
