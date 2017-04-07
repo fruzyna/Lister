@@ -17,26 +17,23 @@
         android:layout_height="wrap_content"
         android:id="@+id/spinner"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/mandatory"
-        android:layout_toEndOf="@+id/exclude" />
+        android:layout_toEndOf="@+id/exclude"
+        android:layout_toRightOf="@+id/exclude" />
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/exclude"
-        android:layout_toRightOf="@id/mandatory"
         android:id="@+id/container">
     </LinearLayout>
 
-    <CheckBox
+    <Button
+        android:id="@+id/addGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Mandatory"
-        android:id="@+id/mandatory"
-        android:layout_below="@+id/spinner"
-        android:layout_alignBottom="@+id/container"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/container"
+        android:layout_centerHorizontal="true"
+        android:text="New Group" />
 
 </RelativeLayout>
