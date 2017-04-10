@@ -37,28 +37,22 @@
         android:layout_toEndOf="@+id/checked"/>
 
     <ScrollView
+        android:id="@+id/autoScroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/scrollView2"
         android:layout_below="@+id/auto">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/container"
-            android:orientation="vertical"/>
 
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add Criterion"
-            android:id="@+id/add"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center_horizontal"/>
+            <LinearLayout
+                android:id="@+id/container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
         </LinearLayout>
     </ScrollView>
 

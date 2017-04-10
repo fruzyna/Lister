@@ -28,6 +28,8 @@ public class Criterion
         this.criteria = criteria;
         this.data = data;
         this.not = not;
+
+        System.out.println(toString());
     }
 
     public String toString()
@@ -52,6 +54,8 @@ public class Criterion
         {
             output += c.toString();
         }
+        output += "\n";
+
         return output;
     }
 

@@ -586,7 +586,7 @@ public class IO
         String status = task.status;
         while (status.equals("RUNNING"))
         {
-            System.out.println("status: " + task.status);
+            System.out.print("status: " + task.status);
             status = task.status;
         }
         System.out.println(status);

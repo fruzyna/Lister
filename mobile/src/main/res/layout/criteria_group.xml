@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="4dp"
+    android:background="@drawable/border"
+    android:id="@+id/criteriaGroupContainer">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -54,14 +57,33 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/linearLayout"
-        android:orientation="horizontal"></LinearLayout>
+        android:orientation="vertical">
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/groupCriteria"
+        android:layout_centerHorizontal="true">
     <Button
         android:id="@+id/addCriterion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Add Criterion"
         android:layout_below="@+id/groupCriteria"
-        android:layout_centerHorizontal="true"
-        android:text="Add Criterion" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:id="@+id/addGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Group"
+        android:layout_below="@+id/groupCriteria"
+        android:layout_toRightOf="@+id/addCriterion"
+        android:layout_toEndOf="@+id/addCriterion" />
+    </LinearLayout>
 
 </RelativeLayout>

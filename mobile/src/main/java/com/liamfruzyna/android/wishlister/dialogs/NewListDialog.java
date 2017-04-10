@@ -7,21 +7,29 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.ScrollView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.liamfruzyna.android.wishlister.data.AutoList;
+import com.liamfruzyna.android.wishlister.data.CriteriaTypes;
+import com.liamfruzyna.android.wishlister.data.Criterion;
 import com.liamfruzyna.android.wishlister.data.Data;
 import com.liamfruzyna.android.wishlister.data.IO;
 import com.liamfruzyna.android.wishlister.data.ListObj;
 import com.liamfruzyna.android.wishlister.R;
 import com.liamfruzyna.android.wishlister.activities.ListerActivity;
+
+import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -33,174 +41,78 @@ import java.util.List;
  * Created by mail929 on 11/25/14.
  */
 
-public class NewListDialog extends DialogFragment
+public class NewListDialog extends DialogFragment implements View.OnClickListener
 {
-    List<View> views = new ArrayList<>();
-    LinearLayout container;
-    String[] types = {"Tag", "Person", "Date Range", "Time", "Day"};
+    String[] types = {"Tag", "Person", "Date Range", "Days", "Day of Week", "Date"};
     String[] days = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
-    CheckBox cb;
+    LayoutInflater inflater;
+
+    View root;
+    EditText nameView;
+    EditText tagsView;
+    EditText daysView;
+    CheckBox deleteView;
+    CheckBox showView;
+    CheckBox autoView;
+    ScrollView scroll;
+    LinearLayout container;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState)
     {
         // Use the Builder class for convenient dialog construction
-        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
-        final View v = inflater.inflate(R.layout.dialog_new_list, null);
+        inflater = (LayoutInflater) getActivity().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
+        root = inflater.inflate(R.layout.dialog_new_list, null);
 
-        container = (LinearLayout) v.findViewById(R.id.container);
-        final LayoutInflater linflater = LayoutInflater.from(getActivity());
-        View view = linflater.inflate(R.layout.criteria_item, container, false);
-        setupSpinner(view);
-        views.add(view);
+        //view initialization
+        nameView = (EditText) root.findViewById(R.id.name);
+        tagsView = (EditText) root.findViewById(R.id.tags);
+        daysView = (EditText) root.findViewById(R.id.days);
+        deleteView = (CheckBox) root.findViewById(R.id.delete);
+        showView = (CheckBox) root.findViewById(R.id.checked);
+        autoView = (CheckBox) root.findViewById(R.id.auto);
+        scroll = (ScrollView) root.findViewById(R.id.autoScroll);
+        container = (LinearLayout) root.findViewById(R.id.container);
 
-        v.findViewById(R.id.scrollView2).setVisibility(View.GONE);
-        cb = (CheckBox) v.findViewById(R.id.auto);
-        cb.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v2)
-            {
-                if(cb.isChecked())
-                {
-                    v.findViewById(R.id.scrollView2).setVisibility(View.VISIBLE);
-                    v.findViewById(R.id.daysContainer).setVisibility(View.GONE);
-                }
-                else
-                {
-                    v.findViewById(R.id.scrollView2).setVisibility(View.GONE);
-                    v.findViewById(R.id.daysContainer).setVisibility(View.VISIBLE);
-                }
-            }
-        });
+        makeView(container, true);
+        autoView.setOnClickListener(this);
+        scroll.setVisibility(View.GONE);
 
-        repopulate();
-        Button add = (Button) v.findViewById(R.id.add);
-        add.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                View newView = linflater.inflate(R.layout.criteria_item, container, false);
-                setupSpinner(newView);
-                views.add(newView);
-                repopulate();
-            }
-        });
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage("Type the new list's name and click create to make a new list.")
                 .setTitle("New List")
-                .setView(v)
+                .setView(root)
                 .setPositiveButton("CREATE", new DialogInterface.OnClickListener()
                 {
                     public void onClick(DialogInterface dialog, int id)
                     {
-                        EditText name = (EditText) v.findViewById(R.id.name);
-                        EditText tags = (EditText) v.findViewById(R.id.tags);
-                        EditText day = (EditText) v.findViewById(R.id.days);
-                        CheckBox done = (CheckBox) v.findViewById(R.id.checked);
-                        CheckBox exclude = (CheckBox) v.findViewById(R.id.exclude);
-                        CheckBox delete = (CheckBox) v.findViewById(R.id.delete);
-
-                        int daysToDelete = 0;
-                        if (delete.isChecked() && !cb.isChecked())
+                        List<String> tags = new ArrayList<>();
+                        for(String s : tagsView.getText().toString().split(" "))
                         {
-                            if (day.getText().toString().equals(""))
-                            {
-                                daysToDelete = 365;
-                            }
-                            else
-                            {
-                                daysToDelete = Integer.parseInt(day.getText().toString());
-                            }
+                            tags.add(s);
                         }
 
-                        ListObj newList;
-                        if (cb.isChecked())
-                        {
-                            List<String> criteria = new ArrayList<>();
-                            for (View view : views)
-                            {
-                                Spinner spinner = (Spinner) view.findViewById(R.id.spinner);
-                                LinearLayout container = (LinearLayout) view.findViewById(R.id.container);
-                                CheckBox mandatory = (CheckBox) view.findViewById(R.id.mandatory);
-                                StringBuilder sb = new StringBuilder();
-                                if (mandatory.isChecked())
-                                {
-                                    sb.append("mandatory ");
-                                } else
-                                {
-                                    sb.append("optional ");
-                                }
-                                if (exclude.isChecked())
-                                {
-                                    sb.append("exclude ");
-                                } else
-                                {
-                                    sb.append("include ");
-                                }
-
-                                String data = "";
-                                switch (spinner.getSelectedItemPosition())
-                                {
-                                    case 0:
-                                        //tag
-                                        sb.append("tag ");
-                                        data = ((EditText) container.findViewById(R.id.editText)).getText().toString();
-                                        break;
-                                    case 1:
-                                        //person
-                                        sb.append("person ");
-                                        data = ((EditText) container.findViewById(R.id.editText)).getText().toString();
-                                        break;
-                                    case 2:
-                                        //date range
-                                        sb.append("date_range ");
-                                        String start = ((EditText) container.findViewById(R.id.editText1)).getText().toString();
-                                        String end = ((EditText) container.findViewById(R.id.editText2)).getText().toString();
-                                        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy");
-                                        try {
-                                            sdf.parse(start);
-                                            sdf.parse(end);
-                                            data = start + " " + end;
-                                        } catch (ParseException e) {
-                                            data = "BAD_DATE";
-                                        }
-                                        break;
-                                    case 3:
-                                        //time
-                                        sb.append("time ");
-                                        data = ((EditText) container.findViewById(R.id.editText)).getText().toString();
-                                        break;
-                                    case 4:
-                                        //day
-                                        sb.append("day ");
-                                        data = days[((Spinner) container.findViewById(R.id.spinner)).getSelectedItemPosition()];
-                                        break;
-                                }
-                                sb.append(data);
-                                System.out.println("Data: " + data);
-                                if(data.equals(""))
-                                {
-                                    Toast.makeText(getActivity(), "Empty field ignored", Toast.LENGTH_SHORT).show();
-                                }
-                                else if(data.equals("BAD_DATE"))
-                                {
-                                    Toast.makeText(getActivity(), "Bad date used in Date Range field. Use format MM/dd/yy", Toast.LENGTH_LONG).show();
-                                }
-                                else
-                                {
-                                    System.out.println("Adding criteria: " + sb.toString());
-                                    criteria.add(sb.toString());
-                                }
-                            }
-                            newList = new AutoList(name.getText().toString(), new ArrayList<>(Arrays.asList(tags.getText().toString().split(" "))), criteria, done.isChecked(), daysToDelete);
-                        } else
-                        {
-                            newList = new ListObj(name.getText().toString(), new ArrayList<>(Arrays.asList(tags.getText().toString().split(" "))), done.isChecked(), daysToDelete);
+                        int days = 0;
+                        try {
+                            days = Integer.parseInt(daysView.getText().toString());
                         }
-                        ((ListerActivity) getActivity()).saveCurrent(Data.getUnArchived().size());
-                        Data.getLists().add(newList);
+                        catch (NumberFormatException e) {
+                            days = 0;
+                        }
+
+                        if(autoView.isChecked())
+                        {
+                            Criterion criterion = makeCriteria(container);
+                            AutoList list = new AutoList(nameView.getText().toString(), tags, criterion, showView.isChecked(), days);
+                            Data.replaceList(list);
+                        }
+                        else
+                        {
+                            ListObj list = new ListObj(nameView.getText().toString(), tags, showView.isChecked(), days);
+                            Data.replaceList(list);
+                        }
+
                         IO.getInstance().saveAndSync();
                         ((ListerActivity) getActivity()).loadActivity();
                     }
@@ -212,6 +124,219 @@ public class NewListDialog extends DialogFragment
                     }
                 });
         return builder.create();
+    }
+
+    public Criterion makeCriteria(ViewGroup group)
+    {
+        List<Criterion> criteria = new ArrayList<>();
+        for(int i = 0; i < group.getChildCount(); i++)
+        {
+            View child = group.getChildAt(i);
+            if (child.getId() == R.id.criteriaGroupContainer)
+            {
+                criteria.add(makeCriteria((ViewGroup) child));
+            }
+            else if (child.getId() == R.id.criteriaItemContainer)
+            {
+                boolean not = ((CheckBox) child.findViewById(R.id.exclude)).isChecked();
+                Spinner spinner = ((Spinner) child.findViewById(R.id.spinner));
+                CriteriaTypes type = CriteriaTypes.TAG;
+                String data = "";
+                switch (spinner.getSelectedItemPosition())
+                {
+                    case 0:
+                        data = ((EditText) child.findViewById(R.id.editText)).getText().toString();
+                        break;
+                    case 1:
+                        type = CriteriaTypes.PERSON;
+                        data = ((EditText) child.findViewById(R.id.editText)).getText().toString();
+                        break;
+                    case 2:
+                        type = CriteriaTypes.DATE_RANGE;
+                        data = ((EditText) child.findViewById(R.id.editText1)).getText().toString();
+                        data += "," + ((EditText) child.findViewById(R.id.editText2)).getText().toString();
+                        break;
+                    case 3:
+                        type = CriteriaTypes.WITHIN_DAYS;
+                        data = ((EditText) child.findViewById(R.id.editText)).getText().toString();
+                        break;
+                    case 4:
+                        type = CriteriaTypes.DAY_OF_WEEK;
+                        data = ((Spinner) child.findViewById(R.id.daySpinner)).getSelectedItemPosition() + "";
+                        break;
+                    case 5:
+                        type = CriteriaTypes.DATE;
+                        data = ((EditText) child.findViewById(R.id.editText)).getText().toString();
+                        break;
+                }
+                criteria.add(new Criterion(type, 0, not, data, new ArrayList<Criterion>()));
+            }
+        }
+        CriteriaTypes type;
+        if(((RadioButton) group.findViewById(R.id.oneButton)).isSelected())
+        {
+            type = CriteriaTypes.PASS_ONE;
+        }
+        else
+        {
+            type = CriteriaTypes.PASS_ALL;
+        }
+        boolean not = ((CheckBox) group.findViewById(R.id.groupExclude)).isChecked();
+        return new Criterion(type, 0, not, "", criteria);
+    }
+
+    public void makeView(LinearLayout parent, boolean isGroup)
+    {
+        if(isGroup)
+        {
+            View group = inflater.inflate(R.layout.criteria_group, null);
+            group.findViewById(R.id.addCriterion).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v)
+                {
+                    ViewGroup parent = (ViewGroup) v.getParent().getParent();
+                    makeView(((LinearLayout) parent.findViewById(R.id.groupCriteria)), false);
+                }
+            });
+            group.findViewById(R.id.addGroup).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v)
+                {
+                    ViewGroup parent = (ViewGroup) v.getParent().getParent();
+                    makeView(((LinearLayout) parent.findViewById(R.id.groupCriteria)), true);
+                }
+            });
+            parent.addView(group);
+        }
+        else
+        {
+            View item = inflater.inflate(R.layout.criteria_item, null);
+            Spinner typeSpinner = (Spinner) item.findViewById(R.id.spinner);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, types);
+            typeSpinner.setAdapter(adapter);
+
+            typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+            {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+                {
+                    View itemView;
+                    switch (position)
+                    {
+                        default:
+                        case 0:
+                        case 1:
+                        case 5:
+                            itemView = inflater.inflate(R.layout.criteria_item_string, null);
+                            break;
+                        case 2:
+                            itemView = inflater.inflate(R.layout.criteria_item_dates, null);
+                            break;
+                        case 3:
+                            itemView = inflater.inflate(R.layout.criteria_item_int, null);
+                            break;
+                        case 4:
+                            itemView = inflater.inflate(R.layout.criteria_item_day, null);
+                            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, days);
+                            ((Spinner) itemView.findViewById(R.id.daySpinner)).setAdapter(adapter);
+                            break;
+                    }
+
+                    LinearLayout container =  (LinearLayout) ((ViewGroup) parent.getParent()).findViewById(R.id.container);
+                    container.removeAllViews();
+                    container.addView(itemView);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {}
+            });
+            parent.addView(item);
+        }
+    }
+
+    @Override
+    public void onClick(View v)
+    {
+        if(v.equals(autoView))
+        {
+            if(autoView.isChecked())
+            {
+                scroll.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                scroll.setVisibility(View.GONE);
+            }
+        }/*
+        else if(v.equals(addView))
+        {
+            View group = inflater.inflate(R.layout.criteria_group, null);
+            group.findViewById(R.id.addCriterion).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View groupButton)
+                {
+                    for(View group : groups)
+                    {
+                        System.out.println("searching");
+                        if(group.findViewById(R.id.addCriterion).equals(groupButton))
+                        {
+                            System.out.println("Adding criterion");
+                            View criterion = inflater.inflate(R.layout.criteria_item, null);
+
+                            Spinner typeSpinner = ((Spinner) criterion.findViewById(R.id.spinner));
+                            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, types);
+                            typeSpinner.setAdapter(adapter);
+
+                            typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+                            {
+                                @Override
+                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+                                {
+                                    View itemView;
+                                    switch (position)
+                                    {
+                                        default:
+                                        case 0:
+                                        case 1:
+                                        case 5:
+                                            itemView = inflater.inflate(R.layout.criteria_item_string, null);
+                                            break;
+                                        case 2:
+                                            itemView = inflater.inflate(R.layout.criteria_item_dates, null);
+                                            break;
+                                        case 3:
+                                            itemView = inflater.inflate(R.layout.criteria_item_int, null);
+                                            break;
+                                        case 4:
+                                            itemView = inflater.inflate(R.layout.criteria_item_day, null);
+                                            break;
+                                    }
+
+                                    for(View criterion : items)
+                                    {
+                                        if(criterion.findViewById(R.id.spinner).equals(parent))
+                                        {
+                                            LinearLayout container = ((LinearLayout) criterion.findViewById(R.id.container));
+                                            container.removeAllViews();
+                                            container.addView(itemView);
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onNothingSelected(AdapterView<?> parent) {
+
+                                }
+                            });
+                            items.add(criterion);
+                            ((LinearLayout) group.findViewById(R.id.groupCriteria)).addView(criterion);
+                        }
+                    }
+                }
+            });
+            groups.add(group);
+            container.addView(group);
+        }*/
     }
 
     public void setupSpinner(View view)
@@ -295,15 +420,5 @@ public class NewListDialog extends DialogFragment
 
             }
         });
-    }
-
-    public void repopulate()
-    {
-        //populates the list with the items
-        container.removeAllViews();
-        for (int i = 0; i < views.size(); i++)
-        {
-            container.addView(views.get(i));
-        }
     }
 }
