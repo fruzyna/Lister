@@ -10,15 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.ScrollView;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.liamfruzyna.android.wishlister.data.AutoList;
 import com.liamfruzyna.android.wishlister.data.CriteriaTypes;
@@ -29,12 +26,7 @@ import com.liamfruzyna.android.wishlister.data.ListObj;
 import com.liamfruzyna.android.wishlister.R;
 import com.liamfruzyna.android.wishlister.activities.ListerActivity;
 
-import org.w3c.dom.Text;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -47,6 +39,8 @@ public class NewListDialog extends DialogFragment implements View.OnClickListene
     String[] days = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
     LayoutInflater inflater;
 
+    List<ViewContainer> groups;
+
     View root;
     EditText nameView;
     EditText tagsView;
@@ -56,6 +50,7 @@ public class NewListDialog extends DialogFragment implements View.OnClickListene
     CheckBox autoView;
     ScrollView scroll;
     LinearLayout container;
+    LinearLayout daysContainer;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState)
@@ -73,11 +68,15 @@ public class NewListDialog extends DialogFragment implements View.OnClickListene
         autoView = (CheckBox) root.findViewById(R.id.auto);
         scroll = (ScrollView) root.findViewById(R.id.autoScroll);
         container = (LinearLayout) root.findViewById(R.id.container);
+        daysContainer = (LinearLayout) root.findViewById(R.id.daysContainer);
 
-        makeView(container, true);
+        groups = new ArrayList<>();
+
+        View head = makeView(container, true);
+        groups.add(new ViewContainer(head));
+
         autoView.setOnClickListener(this);
         scroll.setVisibility(View.GONE);
-
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage("Type the new list's name and click create to make a new list.")
@@ -103,7 +102,7 @@ public class NewListDialog extends DialogFragment implements View.OnClickListene
 
                         if(autoView.isChecked())
                         {
-                            Criterion criterion = makeCriteria(container);
+                            Criterion criterion = makeCriteria(groups.get(0));
                             AutoList list = new AutoList(nameView.getText().toString(), tags, criterion, showView.isChecked(), days);
                             Data.replaceList(list);
                         }
@@ -126,18 +125,20 @@ public class NewListDialog extends DialogFragment implements View.OnClickListene
         return builder.create();
     }
 
-    public Criterion makeCriteria(ViewGroup group)
+    public Criterion makeCriteria(ViewContainer group)
     {
         List<Criterion> criteria = new ArrayList<>();
-        for(int i = 0; i < group.getChildCount(); i++)
+        for(View child : group.children)
         {
-            View child = group.getChildAt(i);
-            if (child.getId() == R.id.criteriaGroupContainer)
+            ViewContainer container = findContainer(child);
+            if (container != null) //view is a group
             {
-                criteria.add(makeCriteria((ViewGroup) child));
+                System.out.println("Group Container");
+                criteria.add(makeCriteria(container));
             }
-            else if (child.getId() == R.id.criteriaItemContainer)
+            else //view is an item
             {
+                System.out.println("Item Container");
                 boolean not = ((CheckBox) child.findViewById(R.id.exclude)).isChecked();
                 Spinner spinner = ((Spinner) child.findViewById(R.id.spinner));
                 CriteriaTypes type = CriteriaTypes.TAG;
@@ -169,11 +170,12 @@ public class NewListDialog extends DialogFragment implements View.OnClickListene
                         data = ((EditText) child.findViewById(R.id.editText)).getText().toString();
                         break;
                 }
-                criteria.add(new Criterion(type, 0, not, data, new ArrayList<Criterion>()));
+                criteria.add(new Criterion(type, groups.indexOf(group), not, data, new ArrayList<Criterion>()));
             }
         }
+
         CriteriaTypes type;
-        if(((RadioButton) group.findViewById(R.id.oneButton)).isSelected())
+        if(((RadioButton) group.parent.findViewById(R.id.buttonContainer).findViewById(R.id.oneButton)).isChecked())
         {
             type = CriteriaTypes.PASS_ONE;
         }
@@ -181,11 +183,11 @@ public class NewListDialog extends DialogFragment implements View.OnClickListene
         {
             type = CriteriaTypes.PASS_ALL;
         }
-        boolean not = ((CheckBox) group.findViewById(R.id.groupExclude)).isChecked();
-        return new Criterion(type, 0, not, "", criteria);
+        boolean not = ((CheckBox) group.parent.findViewById(R.id.buttonContainer).findViewById(R.id.groupExclude)).isChecked();
+        return new Criterion(type, groups.indexOf(group), not, "", criteria);
     }
 
-    public void makeView(LinearLayout parent, boolean isGroup)
+    public View makeView(LinearLayout parent, boolean isGroup)
     {
         if(isGroup)
         {
@@ -194,19 +196,23 @@ public class NewListDialog extends DialogFragment implements View.OnClickListene
                 @Override
                 public void onClick(View v)
                 {
-                    ViewGroup parent = (ViewGroup) v.getParent().getParent();
-                    makeView(((LinearLayout) parent.findViewById(R.id.groupCriteria)), false);
+                    View parent = (View) v.getParent().getParent();
+                    View newItem = makeView(((LinearLayout) parent.findViewById(R.id.groupCriteria)), false);
+                    findContainer(parent).children.add(newItem);
                 }
             });
             group.findViewById(R.id.addGroup).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v)
                 {
-                    ViewGroup parent = (ViewGroup) v.getParent().getParent();
-                    makeView(((LinearLayout) parent.findViewById(R.id.groupCriteria)), true);
+                    View parent = (View) v.getParent().getParent();
+                    View newGroup = makeView(((LinearLayout) parent.findViewById(R.id.groupCriteria)), true);
+                    groups.add(new ViewContainer(newGroup));
+                    findContainer(parent).children.add(newGroup);
                 }
             });
             parent.addView(group);
+            return group;
         }
         else
         {
@@ -251,6 +257,7 @@ public class NewListDialog extends DialogFragment implements View.OnClickListene
                 public void onNothingSelected(AdapterView<?> parent) {}
             });
             parent.addView(item);
+            return item;
         }
     }
 
@@ -262,10 +269,12 @@ public class NewListDialog extends DialogFragment implements View.OnClickListene
             if(autoView.isChecked())
             {
                 scroll.setVisibility(View.VISIBLE);
+                daysContainer.setVisibility(View.GONE);
             }
             else
             {
                 scroll.setVisibility(View.GONE);
+                daysContainer.setVisibility(View.VISIBLE);
             }
         }/*
         else if(v.equals(addView))
@@ -420,5 +429,29 @@ public class NewListDialog extends DialogFragment implements View.OnClickListene
 
             }
         });
+    }
+
+    public class ViewContainer
+    {
+        View parent;
+        List<View> children;
+
+        public ViewContainer(View parent)
+        {
+            this.parent = parent;
+            children = new ArrayList<>();
+        }
+    }
+
+    public ViewContainer findContainer(View parent)
+    {
+        for(ViewContainer v : groups)
+        {
+            if(v.parent.equals(parent))
+            {
+                return v;
+            }
+        }
+        return null;
     }
 }
