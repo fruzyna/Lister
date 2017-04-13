@@ -357,7 +357,7 @@ public class IO
         protected String doInBackground(String... urls)
         {
             String data = urls[0].replace("#", "[^]");
-            String urlString = "http://" + getString(SERVER_ADDRESS_PREF) + "/sync/?user=" + getString(SERVER_USER_PREF) + "&password=" + getString(SERVER_PASSWORD_PREF) + "&data=" + data;
+            String urlString = getString(SERVER_ADDRESS_PREF) + "/sync/?user=" + getString(SERVER_USER_PREF) + "&password=" + getString(SERVER_PASSWORD_PREF) + "&data=" + data;
             return webRequest(urlString);
         }
 
@@ -376,7 +376,7 @@ public class IO
         boolean done = false;
         protected String doInBackground(String... urls)
         {
-            String urlString = "http://" + prefs.getString(SERVER_ADDRESS_PREF, "") + "/remove/?user=" + prefs.getString(SERVER_USER_PREF, "") + "&password=" + prefs.getString(SERVER_PASSWORD_PREF, "") + "&list=" + urls[0];
+            String urlString = prefs.getString(SERVER_ADDRESS_PREF, "") + "/remove/?user=" + prefs.getString(SERVER_USER_PREF, "") + "&password=" + prefs.getString(SERVER_PASSWORD_PREF, "") + "&list=" + urls[0];
             done = true;
             return webRequest(urlString);
         }
@@ -418,7 +418,7 @@ public class IO
                 String server = getString(SERVER_ADDRESS_PREF);
                 String user = getString(SERVER_USER_PREF);
                 String password = getString(SERVER_PASSWORD_PREF);
-                String urlString = "http://" + server + "/getLists/?user=" + user + "&password=" + password;
+                String urlString = server + "/getLists/?user=" + user + "&password=" + password;
                 String result = webRequest(urlString);
                 if (result != null)
                 {
@@ -434,7 +434,7 @@ public class IO
                             String name = jlist.getString("name");
                             if (Long.parseLong(jlist.getString("time")) > getLong(TIME_PREF) || Data.getListFromName(name) == null)
                             {
-                                urlString = "http://" + server + "/get/?user=" + server + "&password=" + password + "&list=" + name;
+                                urlString = server + "/get/?user=" + server + "&password=" + password + "&list=" + name;
                                 String output = webRequest(urlString);
                                 System.out.println(jlist.getString("name") + ": " + output);
                                 ListObj wl = readString(output);
@@ -485,7 +485,7 @@ public class IO
         String server = getString(SERVER_ADDRESS_PREF);
         String user = getString(SERVER_USER_PREF);
         String password = getString(SERVER_PASSWORD_PREF);
-        String urlString = "http://" + server + "/getLists/?user=" + user + "&password=" + password;
+        String urlString = server + "/getLists/?user=" + user + "&password=" + password;
         String result = webRequest(urlString);
         if (result != null)
         {
@@ -503,7 +503,7 @@ public class IO
                         String name = jlist.getString("name");
                         if (Long.parseLong(jlist.getString("time")) > getLong(TIME_PREF) || Data.getListFromName(name) == null)
                         {
-                            urlString = "http://" + server + "/get/?user=" + user + "&password=" + password + "&list=" + name;
+                            urlString = server + "/get/?user=" + user + "&password=" + password + "&list=" + name;
                             String output = webRequest(urlString);
                             if(!output.equals("LIST_NOT_FOUND"))
                             {
@@ -538,7 +538,7 @@ public class IO
         String status = task.status;
         while (status.equals("RUNNING"))
         {
-            System.out.println("status: " + task.status);
+            //System.out.println("status: " + task.status);
             status = task.status;
         }
         System.out.println(status);
@@ -553,7 +553,7 @@ public class IO
         {
             try
             {
-                URL url = new URL("http://" + urls[0] + "/createUser/?user=" + urls[1] + "&password=" + urls[2]);
+                URL url = new URL(urls[0] + "/createUser/?user=" + urls[1] + "&password=" + urls[2]);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 try
                 {
@@ -599,7 +599,7 @@ public class IO
         String status = task.status;
         while (status.equals("RUNNING"))
         {
-            System.out.println("status: " + task.status);
+            //System.out.println("status: " + task.status);
             status = task.status;
         }
         System.out.println(status);
@@ -614,7 +614,7 @@ public class IO
         {
             try
             {
-                URL url = new URL("http://" + urls[0] + "/auth/?user=" + urls[1] + "&password=" + urls[2]);
+                URL url = new URL(urls[0] + "/auth/?user=" + urls[1] + "&password=" + urls[2]);
                 System.out.println(url);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 try
@@ -719,27 +719,79 @@ public class IO
 
     public boolean checkNetwork()
     {
+        System.out.print("Checking network: ");
         ConnectivityManager cm = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
 
-        if(getString(SERVER_ADDRESS_PREF).equals("") || !isConnected)
+        if(getString(SERVER_ADDRESS_PREF).equals(""))
         {
+            System.out.println("Bad address");
             return false;
         }
 
-        try {
-            HttpURLConnection.setFollowRedirects(false);
-            HttpURLConnection con = (HttpURLConnection) new URL(getString(SERVER_ADDRESS_PREF)).openConnection();
-            con.setRequestMethod("HEAD");
-
-            con.setConnectTimeout(5000); //set timeout to 5 seconds
-
-            return (con.getResponseCode() == HttpURLConnection.HTTP_OK);
-        } catch (java.net.SocketTimeoutException e) {
+        if(activeNetwork == null)
+        {
+            System.out.println("No network");
             return false;
-        } catch (java.io.IOException e) {
+        }
+
+        if(!activeNetwork.isConnectedOrConnecting())
+        {
+            System.out.println("Not connected");
             return false;
+        }
+
+        return true;
+    }
+
+    private class TimeTask extends AsyncTask<String, Integer, Boolean>
+    {
+        String status = "RUNNING";
+        boolean good = false;
+
+        protected Boolean doInBackground(String... urls)
+        {
+
+            try {
+                HttpURLConnection.setFollowRedirects(false);
+                HttpURLConnection con = (HttpURLConnection) new URL(getString(SERVER_ADDRESS_PREF)).openConnection();
+                con.setRequestMethod("HEAD");
+
+                con.setConnectTimeout(5000); //set timeout to 5 seconds
+
+                if((con.getResponseCode() != HttpURLConnection.HTTP_OK))
+                {
+                    System.out.println("Bad response, ignoring for now (4/11/17)");
+                    //return false;
+                }
+                System.out.println("We gucci");
+                return true;
+            } catch (java.net.SocketTimeoutException e) {
+                System.out.println("Timeout trying to sync");
+                return false;
+            } catch (java.io.IOException e) {
+                System.out.println("IO Exception");
+                e.printStackTrace();
+                if(!getString(SERVER_ADDRESS_PREF).contains("http"))
+                {
+                    //no http can cause this, fix and try again
+                    SharedPreferences.Editor edit = getEditor();
+                    edit.putString(SERVER_ADDRESS_PREF, "http://" + getString(SERVER_ADDRESS_PREF));
+                    edit.commit();
+                    return checkNetwork();
+                }
+                return false;
+            }
+        }
+
+        protected void onProgressUpdate(Integer... progress)
+        {
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            good = result;
+            status = "DONE";
         }
     }
 }
