@@ -35,3 +35,7 @@ local.properties
 .Trashes
 ehthumbs.db
 Thumbs.db
+build/
+mobile/mobile-release.apk
+mobile/wear-release.apk
+.idea/copyright/
