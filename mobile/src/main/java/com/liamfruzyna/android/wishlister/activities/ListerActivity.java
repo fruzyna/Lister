@@ -26,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.liamfruzyna.android.wishlister.data.Criterion;
 import com.liamfruzyna.android.wishlister.dialogs.ArchiveListDialog;
 import com.liamfruzyna.android.wishlister.data.AutoList;
 import com.liamfruzyna.android.wishlister.data.Data;
@@ -331,10 +332,10 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
         criterionView.removeAllViews();
 
         //Add each item as a new textview below the last
-        for(String criterion : ((AutoList) Data.getCurrentList()).getCriteria())
+        for(Criterion criterion : ((AutoList) Data.getCurrentList()).getCriteria().getCriteria())
         {
             TextView criteriaText = new TextView(this);
-            criteriaText.setText(criterion);
+            criteriaText.setText(criterion.toString());
             criterionView.addView(criteriaText);
         }
     }

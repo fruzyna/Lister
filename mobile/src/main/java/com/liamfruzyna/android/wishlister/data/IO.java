@@ -55,6 +55,11 @@ public class IO
     public static final String DONE_OBJ = "done";
     public static final String ITEMS_OBJ = "items";
     public static final String TAGS_OBJ = "tags";
+    public static final String CRITERIA_NOT_OBJ = "criteriaNot";
+    public static final String CRITERIA_GROUP_OBJ = "criteriaGroup";
+    public static final String CRITERIA_TYPE_OBJ = "criteriaType";
+    public static final String CRITERIA_DATA_OBJ = "criteriaData";
+    public static final String CRITERIA_CHILDREN_OBJ = "criteriaChildren";
 
     public static final String fileDir = Environment.getExternalStoragePublicDirectory("Lists").toString();
 
@@ -98,6 +103,49 @@ public class IO
         System.out.println("Warning creating IO w/o context");
     }
 
+    public JSONObject criteriaToJSON(Criterion c)
+    {
+        try {
+            JSONObject json = new JSONObject();
+            json.put(CRITERIA_NOT_OBJ, c.not);
+            json.put(CRITERIA_TYPE_OBJ, c.type.name());
+            json.put(CRITERIA_GROUP_OBJ, c.group);
+            json.put(CRITERIA_DATA_OBJ, c.data);
+            JSONArray criteria = new JSONArray();
+            if(c.getCriteria().size() > 0)
+            {
+                for(Criterion child : c.getCriteria()) {
+                    criteria.put(criteriaToJSON(child));
+                }
+            }
+            json.put(CRITERIA_CHILDREN_OBJ, criteria);
+            return json;
+        } catch(JSONException e) {
+            return null;
+        }
+    }
+
+    public Criterion JSONtoCriteria(JSONObject json)
+    {
+        try {
+            boolean not = json.getBoolean(CRITERIA_NOT_OBJ);
+            String type = json.getString(CRITERIA_TYPE_OBJ);
+            int group = json.getInt(CRITERIA_GROUP_OBJ);
+            String data = json.getString(CRITERIA_DATA_OBJ);
+            List<Criterion> children = new ArrayList<>();
+            JSONArray criteria = json.getJSONArray(CRITERIA_CHILDREN_OBJ);
+            for(int i = 0; i < criteria.length(); i++)
+            {
+                JSONObject c = criteria.getJSONObject(i);
+                children.add(JSONtoCriteria(c));
+            }
+
+            return new Criterion(CriteriaTypes.valueOf(type), group, not, data, children);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     public JSONObject toJSONObject(ListObj list) throws JSONException
     {
@@ -112,14 +160,9 @@ public class IO
         if (list.auto)
         {
             AutoList alist = (AutoList) list;
-            JSONArray jcriteria = new JSONArray();
-            List<String> criteria = alist.criteria;
-            for (String c : criteria)
-            {
-                jcriteria.put(c);
-            }
-            jlist.put(CRITERIA_OBJ, jcriteria);
-        } else
+            jlist.put(CRITERIA_OBJ, criteriaToJSON(alist.getCriteria()));
+        }
+        else
         {
             JSONArray jitems = new JSONArray();
             List<Item> items = list.items;
@@ -166,6 +209,15 @@ public class IO
         return 0;
     }
 
+    public String getString(String name, JSONObject container) throws JSONException
+    {
+        if (container.has(name))
+        {
+            return container.getString(name);
+        }
+        return "";
+    }
+
     //creates a single list from a json string
     public ListObj readString(String json) throws JSONException
     {
@@ -186,13 +238,9 @@ public class IO
         int daysToDelete = getInt(DAYS_TO_DELETE_OBJ, jlist);
         if (auto)
         {
-            JSONArray jcriteria = jlist.getJSONArray(CRITERIA_OBJ);
-            for (int j = 0; j < jcriteria.length(); j++)
-            {
-                criteria.add((String) jcriteria.get(j));
-            }
-            return new AutoList(jlist.getString(NAME_OBJ), tags, archived, criteria, showDone, daysToDelete, sortChecked, sortDone);
-        } else
+            return new AutoList(jlist.getString(NAME_OBJ), tags, archived, JSONtoCriteria(jlist.getJSONObject(CRITERIA_OBJ)), showDone, daysToDelete, sortChecked, sortDone);
+        }
+        else
         {
             JSONArray jitems = jlist.getJSONArray(ITEMS_OBJ);
             for (int j = 0; j < jitems.length(); j++)
