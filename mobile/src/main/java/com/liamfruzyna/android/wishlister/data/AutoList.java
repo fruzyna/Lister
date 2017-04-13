@@ -30,6 +30,8 @@ public class AutoList extends ListObj
 
     public void findItems()
     {
+        System.out.println(criteria.toString());
+        items = new ArrayList<>();
         for(ListObj list : Data.getUnArchived())
         {
             if(!list.auto)

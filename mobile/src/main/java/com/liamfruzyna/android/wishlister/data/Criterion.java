@@ -43,7 +43,7 @@ public class Criterion
 
         if(type == PASS_ALL || type == PASS_ONE)
         {
-            output = "Parent of group " + group + " must " + should + type.name() + " in group.\n";
+            output = "Parent of group " + group + " must " + should + type.name() + " in group\n";
         }
         else
         {
@@ -54,7 +54,6 @@ public class Criterion
         {
             output += c.toString();
         }
-        output += "\n";
 
         return output;
     }
