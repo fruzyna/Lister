@@ -48,6 +48,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         String user = username.getText().toString();
         String pass = password.getText().toString();
         String serv = server.getText().toString();
+        if(!serv.contains("http"))
+        {
+            serv = "http://" + serv;
+        }
+        System.out.println("Connecting to " + serv);
         if(v == login) {
             String result = IO.getInstance().auth(user, pass, serv);
             if(result.equals("AUTH_SUCCESSFUL")) {
