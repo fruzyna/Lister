@@ -16,8 +16,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8e383d82-ec7e-49db-af88-1e7855750840" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Lister.iws" />
@@ -3709,12 +3707,19 @@
       <option name="project" value="LOCAL" />
       <updated>1491800495092</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="New git ignore that has the damn workspace.xml because that causes so many problems">
+      <created>1492057181362</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1492057181362</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1" y="0" width="1922" height="1083" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32903227" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
@@ -3757,7 +3762,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Sorts lists alphabetically" />
     <MESSAGE value="Did it the right way... oops" />
     <MESSAGE value="Properly leveled words and tags" />
     <MESSAGE value="[5.0.0b4] App is feeling final, would like to get in wear app before non-beta release but that is not essential" />
@@ -3782,7 +3786,8 @@
     <MESSAGE value="I/O should be done, now to rewrite making lists" />
     <MESSAGE value="New layouts for group based criteria" />
     <MESSAGE value="Should be done but doesn't work" />
-    <option name="LAST_COMMIT_MESSAGE" value="Should be done but doesn't work" />
+    <MESSAGE value="New git ignore that has the damn workspace.xml because that causes so many problems" />
+    <option name="LAST_COMMIT_MESSAGE" value="New git ignore that has the damn workspace.xml because that causes so many problems" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
