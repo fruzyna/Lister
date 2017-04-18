@@ -102,15 +102,21 @@ public class Criterion
                 }
                 break;
             case DATE_RANGE:
-                SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy");
+                SimpleDateFormat sdf = new SimpleDateFormat("MM/dd");
                 String[] dates = data.split(",");
                 try
                 {
                     Calendar toCal = Calendar.getInstance();
                     toCal.setTime(sdf.parse(dates[1]));
                     toCal.add(Calendar.DAY_OF_YEAR, 1);
+                    toCal.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR));
                     Date to = toCal.getTime();
-                    Date from = sdf.parse(dates[0]);
+                    Calendar fromCal = Calendar.getInstance();
+                    fromCal.setTime(sdf.parse(dates[0]));
+                    fromCal.add(Calendar.DAY_OF_YEAR, -1);
+                    fromCal.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR));
+                    Date from = fromCal.getTime();
+
                     if((item.date.after(from) && item.date.before(to)) || (list.date.after(from) && list.date.before(to)))
                     {
                         state = true;
