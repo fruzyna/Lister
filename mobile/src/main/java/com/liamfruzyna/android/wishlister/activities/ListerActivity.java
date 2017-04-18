@@ -331,13 +331,9 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
         LinearLayout criterionView = (LinearLayout) findViewById(R.id.criterion);
         criterionView.removeAllViews();
 
-        //Add each item as a new textview below the last
-        for(Criterion criterion : ((AutoList) Data.getCurrentList()).getCriteria().getCriteria())
-        {
-            TextView criteriaText = new TextView(this);
-            criteriaText.setText(criterion.toString());
-            criterionView.addView(criteriaText);
-        }
+        TextView criteriaText = new TextView(this);
+        criteriaText.setText(((AutoList) Data.getCurrentList()).getCriteria().toString());
+        criterionView.addView(criteriaText);
     }
 
     /**

@@ -3,6 +3,7 @@ package com.liamfruzyna.android.wishlister.data;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by mail929 on 2/24/17.
@@ -10,9 +11,9 @@ import java.util.Date;
 
 public class ListObj
 {
-    public java.util.List<Item> items = new ArrayList<>();
-    public java.util.List<String> tags = new ArrayList<>();
-    public java.util.List<String> people = new ArrayList<>();
+    public List<Item> items = new ArrayList<>();
+    public List<String> tags = new ArrayList<>();
+    public List<String> people = new ArrayList<>();
     public Date date = new Date(1097, 3, 24);
     public String formattedDate = "NONE";
     public String name;
@@ -23,7 +24,7 @@ public class ListObj
     public boolean sortDate = true;
     public boolean sortChecked= true;
 
-    public ListObj(String name, java.util.List<Item> items, java.util.List<String> tags)
+    public ListObj(String name, List<Item> items, List<String> tags)
     {
         this.name = name;
         this.items = items;
@@ -38,7 +39,7 @@ public class ListObj
         deleteItems();
     }
 
-    public ListObj(String name, java.util.List<Item> items, java.util.List<String> tags, boolean archived, boolean showDone, int daysToDelete, boolean sortChecked, boolean sortDate)
+    public ListObj(String name, List<Item> items, List<String> tags, boolean archived, boolean showDone, int daysToDelete, boolean sortChecked, boolean sortDate)
     {
         this.name = name;
         this.items = items;
@@ -53,7 +54,7 @@ public class ListObj
         deleteItems();
     }
 
-    public ListObj(String name, java.util.List<String> tags, boolean archived, boolean showDone, int daysToDelete, boolean sortChecked, boolean sortDate)
+    public ListObj(String name, List<String> tags, boolean archived, boolean showDone, int daysToDelete, boolean sortChecked, boolean sortDate)
     {
         this.name = name;
         this.tags = tags;
@@ -67,7 +68,7 @@ public class ListObj
         deleteItems();
     }
 
-    public ListObj(String name, java.util.List<String> tags, boolean showDone, int daysToDelete)
+    public ListObj(String name, List<String> tags, boolean showDone, int daysToDelete)
     {
         this.name = name;
         this.tags = tags;
@@ -80,7 +81,7 @@ public class ListObj
 
     public void deleteItems()
     {
-        java.util.List<Item> toRemove = new ArrayList<>();
+        List<Item> toRemove = new ArrayList<>();
         for(Item item : items)
         {
             if(item.deleteItem(daysToDelete))
