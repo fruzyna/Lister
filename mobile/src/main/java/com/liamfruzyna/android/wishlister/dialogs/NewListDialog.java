@@ -100,19 +100,22 @@ public class NewListDialog extends DialogFragment implements View.OnClickListene
                             days = 0;
                         }
 
+                        String name = nameView.getText().toString();
+
                         if(autoView.isChecked())
                         {
                             Criterion criterion = makeCriteria(groups.get(0));
-                            AutoList list = new AutoList(nameView.getText().toString(), tags, criterion, showView.isChecked(), days);
+                            AutoList list = new AutoList(name, tags, criterion, showView.isChecked(), days);
                             Data.replaceList(list);
                         }
                         else
                         {
-                            ListObj list = new ListObj(nameView.getText().toString(), tags, showView.isChecked(), days);
+                            ListObj list = new ListObj(name, tags, showView.isChecked(), days);
                             Data.replaceList(list);
                         }
 
                         IO.getInstance().saveAndSync();
+                        ((ListerActivity) getActivity()).saveCurrent(Data.getNames().indexOf(name));
                         ((ListerActivity) getActivity()).loadActivity();
                     }
                 })
