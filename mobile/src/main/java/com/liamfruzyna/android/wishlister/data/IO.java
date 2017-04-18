@@ -16,6 +16,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -559,7 +560,8 @@ public class IO
                                 lists.add(wl);
                                 Data.replaceList(wl);
                             }
-                        } else
+                        }
+                        else
                         {
                         }
                     } catch (Exception e)
@@ -731,6 +733,10 @@ public class IO
         } catch (Exception e)
         {
             e.printStackTrace();
+            if(e instanceof FileNotFoundException)
+            {
+                return "LIST_NOT_FOUND";
+            }
         }
         return "ERROR";
     }
