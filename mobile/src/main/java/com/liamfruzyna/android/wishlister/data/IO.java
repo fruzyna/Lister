@@ -427,7 +427,8 @@ public class IO
         {
             String urlString = prefs.getString(SERVER_ADDRESS_PREF, "") + "/remove/?user=" + prefs.getString(SERVER_USER_PREF, "") + "&password=" + prefs.getString(SERVER_PASSWORD_PREF, "") + "&list=" + urls[0];
             done = true;
-            return webRequest(urlString);
+            String output = webRequest(urlString);
+            return output;
         }
 
         protected void onProgressUpdate(Integer... progress)
@@ -436,7 +437,8 @@ public class IO
 
         protected void onPostExecute(String result)
         {
-            System.out.println(result);
+            System.out.println("THIS IS NECESSARY");
+            System.out.println("Deleting ended: " + result);
             done = true;
         }
     }
@@ -711,25 +713,25 @@ public class IO
             System.out.println(urlString);
             URL url = new URL(urlString);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            String result = "";
             try
             {
                 BufferedInputStream in = new BufferedInputStream(urlConnection.getInputStream());
                 byte[] contents = new byte[1024];
 
                 int bytesRead = 0;
-                String result = "";
                 while ((bytesRead = in.read(contents)) != -1)
                 {
                     result += new String(contents, 0, bytesRead);
                 }
                 in.close();
                 System.out.println("Returning: " + result);
-                return result;
 
             } finally
             {
                 urlConnection.disconnect();
             }
+            return result;
         } catch (Exception e)
         {
             e.printStackTrace();
