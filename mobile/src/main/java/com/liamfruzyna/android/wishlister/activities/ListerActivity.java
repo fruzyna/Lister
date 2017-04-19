@@ -109,8 +109,6 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
 
             loadList();
 
-            setupButtons();
-
             setupFab();
         }
     }
@@ -125,6 +123,8 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
         setupList();
 
         setupTags();
+
+        setupButtons();
     }
 
     /**
@@ -930,9 +930,9 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
      */
     public List<Item> sortByChecked(List<Item> items)
     {
+        List<Item> sorted = new ArrayList<>();
         if(Data.getCurrentList().sortChecked)
         {
-            List<Item> sorted = new ArrayList<>();
             for(Item item : items)
             {
                 //First add all unchecked items
@@ -953,9 +953,20 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
                     }
                 }
             }
-            return sorted;
         }
-        return items;
+        else
+        {
+            //Add all items
+            for(Item item : items)
+            {
+                //Unless they are done and we aren't showing those
+                if(!item.done || Data.getCurrentList().showDone)
+                {
+                    sorted.add(item);
+                }
+            }
+        }
+        return sorted;
     }
 
     /**
