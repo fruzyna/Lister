@@ -32,7 +32,7 @@ public class ArchiveListDialog extends DialogFragment
                     public void onClick(DialogInterface dialog, int id)
                     {
                         list.archived = true;
-                        IO.getInstance().saveAndSync();
+                        IO.getInstance().saveAndSync(list.name);
                         ((ListerActivity) getActivity()).loadActivity();
                     }
                 })

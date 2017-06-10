@@ -14,7 +14,8 @@ public class Data {
     private static List<ListObj> lists = new ArrayList<>();
 
     //returns the list currently viewable on screen
-    public static ListObj getCurrentList() {
+    public static ListObj getCurrentList()
+    {
         if(getNames().size() <= 0)
         {
             return null;

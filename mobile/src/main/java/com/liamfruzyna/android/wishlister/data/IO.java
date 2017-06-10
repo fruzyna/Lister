@@ -358,7 +358,16 @@ public class IO
 
     public void saveAndSync()
     {
-        ListObj current = Data.getCurrentList();
+        saveAndSync(Data.getCurrentList());
+    }
+
+    public void saveAndSync(String name)
+    {
+        saveAndSync(Data.getListFromName(name));
+    }
+
+    public void saveAndSync(ListObj current)
+    {
         if(current.auto)
         {
             saveToFile();
