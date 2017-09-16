@@ -478,7 +478,7 @@ public class ListerActivity extends AppCompatActivity implements AdapterView.OnI
         });
 
         //Setup remove button to remove current item
-        Button remove = ((Button) editBox.findViewById(R.id.remove));
+        Button remove = ((Button) editBox.findViewById(R.id.removeItem));
         remove.setOnClickListener(new View.OnClickListener()
         {
             @Override
