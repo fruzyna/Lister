@@ -20,7 +20,7 @@ import okhttp3.Response;
 
 public class DbConnection
 {
-	public static final String baseUrl = "localhost:8080/api/";
+	public static final String baseUrl = "http://192.168.1.25:8080/api/";
 
 	public static Object runQuery(String queryExt)
 	{
