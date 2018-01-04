@@ -17,6 +17,7 @@ import com.liamfruzyna.android.wishlister.data.IO;
 import com.liamfruzyna.android.wishlister.R;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -77,8 +78,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private class LoginTask extends AsyncTask<String, Void, Object>
     {
+        String login[];
+
         protected Object doInBackground(String... login)
         {
+            this.login = login;
             String query = "login/?user=" + login[0] + "&pass=" + login[1];
             return DbConnection.runQuery(query);
         }
@@ -96,6 +100,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 else if(response.equals("Success"))
                 {
                     System.out.println("Successful Login");
+
+                    IO.getInstance().put(IO.SERVER_USER_PREF, login[0]);
+                    IO.getInstance().put(IO.SERVER_PASS_PREF, login[1]);
+
                     Intent intent = new Intent(c, SplashActivity.class);
                     startActivity(intent);
                     finish();
@@ -112,7 +120,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
             else
             {
-                Map<String, Object> data = (HashMap<String, Object>) result;
+                List<Map<String, Object>> data = (List<Map<String, Object>>) result;
                 System.out.println("Table of length " + data.size() + " returned");
                 Toast.makeText(c, "Unknown Error", Toast.LENGTH_SHORT).show();
             }
@@ -156,7 +164,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
             else
             {
-                Map<String, Object> data = (HashMap<String, Object>) result;
+                List<Map<String, Object>> data = (List<Map<String, Object>>) result;
                 System.out.println("Table of length " + data.size() + " returned");
                 Toast.makeText(c, "Unknown Error", Toast.LENGTH_SHORT).show();
             }

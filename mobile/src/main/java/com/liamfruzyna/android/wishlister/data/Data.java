@@ -29,12 +29,12 @@ public class Data {
 
     //returns the name of the current selected list
     public static String getCurrentName() {
-        return getCurrentList().name;
+        return getCurrentList().getName();
     }
 
     //returns the items currently displayed on screen
     public static List<Item> getItems() {
-        return getCurrentList().items;
+        return getCurrentList().getItems();
     }
 
     //returns all the lists
@@ -47,7 +47,7 @@ public class Data {
         List<ListObj> unar = new ArrayList<>();
         for(ListObj list : lists)
         {
-            if(!list.archived)
+            if(!list.isArchived())
             {
                 unar.add(list);
             }
@@ -67,7 +67,7 @@ public class Data {
         List<String> names = new ArrayList<>();
         for(ListObj list : getUnArchived())
         {
-            names.add(list.name);
+            names.add(list.getName());
         }
         Collections.sort(names);
         return names;
@@ -76,10 +76,10 @@ public class Data {
     public static void setLists(List<ListObj> lists) {
         Data.lists = lists;
     }
-
+/*
     public static Item findItem(String itemValue)
     {
-        List<Item> items = getCurrentList().items;
+        List<Item> items = getCurrentList().getItems();
         for(Item item : items)
         {
             if(item.item.equals(itemValue))
@@ -92,19 +92,28 @@ public class Data {
 
     public static void setItems(List<Item> items) {
         Data.getCurrentList().items = items;
-    }
+    }*/
 
     //takes the name of a list and returns the list object
     public static ListObj getListFromName(String name) {
         for (ListObj list : lists) {
-            if (list.name.equals(name)) {
+            if (list.getName().equals(name)) {
                 return list;
             }
         }
         return null;
     }
 
-
+    //returns the list object
+    public static ListObj getList(int id) {
+        for (ListObj list : lists) {
+            if (list.getId() == id) {
+                return list;
+            }
+        }
+        return null;
+    }
+/*
     public static List<String> getTags() {
         List<String> tags = new ArrayList<>();
         for (ListObj list : lists) {
@@ -170,14 +179,14 @@ public class Data {
             }
         }
         return people;
-    }
+    }*/
 
     public static void replaceList(ListObj list)
     {
         boolean found = false;
         for(int i = 0; i < lists.size(); i++)
         {
-            if(lists.get(i).name.equals(list.name))
+            if(lists.get(i).getName().equals(list.getName()))
             {
                 found = true;
                 lists.set(i, list);
@@ -189,7 +198,7 @@ public class Data {
             lists.add(list);
         }
     }
-
+/*
     public static ArrayList<String> getTagItems(String tag)
     {
         ArrayList<String> items = new ArrayList<>();
@@ -207,23 +216,5 @@ public class Data {
             }
         }
         return items;
-    }
-
-    public static long calcHash(Item item)
-    {
-        long value = 0;
-        if(item.done)
-        {
-            value = 1;
-        }
-
-        int i = 1;
-        for(char c : item.item.toCharArray())
-        {
-            value += Math.pow(2*c, i);
-            i++;
-        }
-
-        return value;
-    }
+    }*/
 }

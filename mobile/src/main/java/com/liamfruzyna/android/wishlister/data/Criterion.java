@@ -31,7 +31,7 @@ public class Criterion
 
         System.out.println(toString());
     }
-
+/*
     public String toString()
     {
         String output = "";
@@ -84,19 +84,19 @@ public class Criterion
                 }
                 break;
             case TAG:
-                if(item.item.contains("#" + data) || list.tags.contains(data))
+                if(item.getItem().contains("#" + data) || list.tags.contains(data))
                 {
                     state = true;
                 }
                 break;
             case PERSON:
-                if(item.item.contains("@" + data) || list.tags.contains(data))
+                if(item.getItem().contains("@" + data) || list.tags.contains(data))
                 {
                     state = true;
                 }
                 break;
             case DATE:
-                if(item.item.contains(data) || list.tags.contains(data))
+                if(item.getItem().contains(data) || list.tags.contains(data))
                 {
                     state = true;
                 }
@@ -200,5 +200,5 @@ public class Criterion
     public List<Criterion> getCriteria()
     {
         return criteria;
-    }
+    }*/
 }

@@ -14,10 +14,6 @@ import android.preference.PreferenceScreen;
 import android.support.v7.app.AppCompatActivity;
 
 import com.liamfruzyna.android.wishlister.data.IO;
-import com.liamfruzyna.android.wishlister.dialogs.ImportListDialog;
-import com.liamfruzyna.android.wishlister.dialogs.ShareListDialog;
-import com.liamfruzyna.android.wishlister.dialogs.SignoutDialog;
-import com.liamfruzyna.android.wishlister.dialogs.UnArchiveDialog;
 
 /**
  * Created by mail929 on 3/3/17.
@@ -53,8 +49,8 @@ public class SettingsActivity extends AppCompatActivity
                 @Override
                 public boolean onPreferenceClick(Preference preference)
                 {
-                    DialogFragment dialog = new ShareListDialog();
-                    dialog.show(getFragmentManager(), "");
+                    /*DialogFragment dialog = new ShareListDialog();
+                    dialog.show(getFragmentManager(), "");*/
                     return true;
                 }
             });
@@ -69,8 +65,8 @@ public class SettingsActivity extends AppCompatActivity
                 @Override
                 public boolean onPreferenceClick(Preference preference)
                 {
-                    DialogFragment dialog = new ImportListDialog();
-                    dialog.show(getFragmentManager(), "");
+                    /*DialogFragment dialog = new ImportListDialog();
+                    dialog.show(getFragmentManager(), "");*/
                     return true;
                 }
             });
@@ -85,8 +81,8 @@ public class SettingsActivity extends AppCompatActivity
                 @Override
                 public boolean onPreferenceClick(Preference preference)
                 {
-                    DialogFragment dialog = new UnArchiveDialog();
-                    dialog.show(getFragmentManager(), "");
+                    /*DialogFragment dialog = new UnArchiveDialog();
+                    dialog.show(getFragmentManager(), "");*/
                     return true;
                 }
             });
@@ -116,8 +112,8 @@ public class SettingsActivity extends AppCompatActivity
                     }
                     else
                     {
-                        DialogFragment dialog = new SignoutDialog();
-                        dialog.show(getFragmentManager(), "");
+                        /*DialogFragment dialog = new SignoutDialog();
+                        dialog.show(getFragmentManager(), "");*/
                         return true;
                     }
                     return true;

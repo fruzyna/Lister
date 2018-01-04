@@ -1,26 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-    android:background="@drawable/add_bg"
-    android:paddingTop="4dp"
-    android:paddingBottom="4dp"
-    android:id="@+id/k">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/background_gray"
+    android:padding="16dp"
+    android:gravity="center">
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="4dp"
-        android:id="@+id/imageView"
-        android:src="@drawable/ic_add"
-        android:layout_centerVertical="true"/>
+        android:src="@drawable/ic_add"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=" Add Item"
-        android:id="@+id/textView3"
-        android:textColor="@android:color/black"
-        android:layout_toRightOf="@+id/imageView"
-        android:layout_centerVertical="true"/>
-</RelativeLayout>
+        android:textColor="@android:color/black"/>
+</LinearLayout>

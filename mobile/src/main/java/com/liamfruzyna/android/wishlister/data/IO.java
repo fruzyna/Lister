@@ -5,25 +5,20 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Environment;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by mail929 on 2/24/17.
@@ -31,39 +26,18 @@ import java.util.List;
 
 public class IO
 {
-    public static final String PREFS = "Lister Prefs";
+    public static final String PREFS = "LISTER";
     public static final String DATES_AS_DAY = "DATES_AS_DAY";
     public static final String DATES_AS_DAYS_UNTIL = "DATES_AS_DAYS_UNTIL";
     public static final String US_DATE_FORMAT_PREF = "US_DATE_FORMAT_PREF";
     public static final String HIGHLIGHT_DATE_PREF = "HIGHLIGHT_DATE_PREF";
     public static final String HIGHLIGHT_WHOLE_ITEM_PREF = "HIGHLIGHT_WHOLE_ITEM_PREF";
-    public static final String CURRENT_LIST_PREF = "CURRENT_LIST_PREF";
-    public static final String FIRST_PREF = "FIRST_PREF";
-    public static final String SERVER_PREF = "SERVER_PREF";
-    public static final String LOGGED_IN_PREF = "LOGGED_IN_PREF";
     public static final String SERVER_ADDRESS_PREF = "SERVER_ADDRESS_PREF";
     public static final String SERVER_USER_PREF = "SERVER_USER_PREF";
-    public static final String SERVER_PASSWORD_PREF = "SERVER_PASSWORD_PREF";
-    public static final String TIME_PREF = "TIME_PREF";
-    public static final String NAME_OBJ = "name";
-    public static final String ARCHIVED_OBJ = "archived";
-    public static final String AUTO_OBJ = "auto";
-    public static final String SHOW_DONE_OBJ = "showDone";
-    public static final String SORT_CHECKED_OBJ = "sortChecked";
-    public static final String SORT_DATE_OBJ = "sortDate";
-    public static final String DAYS_TO_DELETE_OBJ = "daysToDelete";
-    public static final String CRITERIA_OBJ = "criteria";
-    public static final String ITEM_OBJ = "item";
-    public static final String DONE_OBJ = "done";
-    public static final String ITEMS_OBJ = "items";
-    public static final String TAGS_OBJ = "tags";
-    public static final String CRITERIA_NOT_OBJ = "criteriaNot";
-    public static final String CRITERIA_GROUP_OBJ = "criteriaGroup";
-    public static final String CRITERIA_TYPE_OBJ = "criteriaType";
-    public static final String CRITERIA_DATA_OBJ = "criteriaData";
-    public static final String CRITERIA_CHILDREN_OBJ = "criteriaChildren";
+    public static final String SERVER_PASS_PREF = "SERVER_PASS_PREF";
+    public static final String HEADER_PREF = "HEADER_PREF";
 
-    public static final String fileDir = Environment.getExternalStoragePublicDirectory("Lists").toString();
+    public static final String fileDir = Environment.getExternalStoragePublicDirectory("Lister").toString();
 
     public static IO instance;
 
@@ -188,6 +162,212 @@ public class IO
             }
         }
         return data;
+    }
+
+    public void checkItem(Item item)
+    {
+        Object result = DbConnection.runQuery("checkitem/?id=" + item.getId() + "&done=" + item.isDone());
+        if(result instanceof String)
+        {
+            String response = (String) result;
+            if(response.equals("Network Failure"))
+            {
+                System.out.println("Failed to connect to server");
+            }
+            else if(response.equals("Not logged in!"))
+            {
+                System.out.println("Not logged in");
+            }
+            else if(response.equals("Success"))
+            {
+                System.out.println("Updated");
+            }
+            else
+            {
+                System.out.println("Unknown result: " + response);
+            }
+        }
+        else
+        {
+            System.out.println("Unknown result: rows");
+        }
+    }
+
+    public void removeItem(Item item)
+    {
+        Object result = DbConnection.runQuery("deleteitem/?id=" + item.getId());
+        if(result instanceof String)
+        {
+            String response = (String) result;
+            if(response.equals("Network Failure"))
+            {
+                System.out.println("Failed to connect to server");
+            }
+            else if(response.equals("Not logged in!"))
+            {
+                System.out.println("Not logged in");
+            }
+            else if(response.equals("Success"))
+            {
+                System.out.println("Updated");
+            }
+            else
+            {
+                System.out.println("Unknown result: " + response);
+            }
+        }
+        else
+        {
+            System.out.println("Unknown result: rows");
+        }
+    }
+
+    public void editItem(Item item)
+    {
+        Object result = DbConnection.runQuery("edititem/?id=" + item.getId() + "&text=" + item.getItem());
+        if(result instanceof String)
+        {
+            String response = (String) result;
+            if(response.equals("Network Failure"))
+            {
+                System.out.println("Failed to connect to server");
+            }
+            else if(response.equals("Not logged in!"))
+            {
+                System.out.println("Not logged in");
+            }
+            else if(response.equals("Success"))
+            {
+                System.out.println("Updated");
+            }
+            else
+            {
+                System.out.println("Unknown result: " + response);
+            }
+        }
+        else
+        {
+            System.out.println("Unknown result: rows");
+        }
+    }
+
+    public void addItem(String item, ListObj list)
+    {
+        Object result = DbConnection.runQuery("additem/?lid=" + list.getId() + "&text=" + item);
+        if(result instanceof String)
+        {
+            String response = (String) result;
+            if(response.equals("Network Failure"))
+            {
+                System.out.println("Failed to connect to server");
+            }
+            else if(response.equals("Not logged in!"))
+            {
+                System.out.println("Not logged in");
+            }
+            else if(response.equals("Success"))
+            {
+                System.out.println("Updated");
+            }
+            else
+            {
+                System.out.println("Unknown result: " + response);
+            }
+        }
+        else
+        {
+            System.out.println("Unknown result: rows");
+        }
+    }
+
+
+    public void pullLists()
+    {
+        Object result = DbConnection.runQuery("getuserlists");
+        if(result instanceof String)
+        {
+            String response = (String) result;
+            if(response.equals("Network Failure"))
+            {
+                System.out.println("Failed to connect to server");
+            }
+            else if(response.equals("Not logged in!"))
+            {
+                System.out.println("Not logged in");
+            }
+            else
+            {
+                System.out.println("Unknown result: " + response);
+            }
+        }
+        else
+        {
+            List<Map<String, Object>> data = (List<Map<String, Object>>) result;
+            System.out.println("Table of length " + data.size() + " returned");
+            for(Map<String, Object> map : data)
+            {
+                String name = (String) map.get("name");
+                int id = Integer.parseInt((String) map.get("id"));
+                char perm = ((String) map.get("perm")).charAt(0);
+                boolean archived = Boolean.parseBoolean((String) map.get("archived"));
+                ListObj list = new ListObj(name, id, perm, archived);
+                Data.replaceList(list);
+            }
+        }
+    }
+
+    public void pullList(int lid)
+    {
+        Object result = DbConnection.runQuery("getlistitems/?lid=" + lid);
+        if(result instanceof String)
+        {
+            String response = (String) result;
+            if(response.equals("Network Failure"))
+            {
+                System.out.println("Failed to connect to server");
+            }
+            else if(response.equals("Not logged in!"))
+            {
+                System.out.println("Not logged in");
+            }
+            else
+            {
+                System.out.println("Unknown result: " + response);
+            }
+        }
+        else
+        {
+            List<Map<String, Object>> data = (List<Map<String, Object>>) result;
+            System.out.println("Table of length " + data.size() + " returned");
+            ListObj list = Data.getList(lid);
+            list.resetList();
+            for(Map<String, Object> map : data)
+            {
+                int id = Integer.parseInt((String) map.get("id"));
+                String text = (String) map.get("text");
+                boolean done = Integer.parseInt((String) map.get("done")) == 1;
+                Item item = new Item(text, id, done);
+                list.addItem(item);
+            }
+        }
+    }
+
+    public void put(String key, Object obj)
+    {
+        SharedPreferences.Editor edit = getEditor();
+        if(obj instanceof String)
+        {
+            edit.putString(key, (String) obj);
+        }
+        else if(obj instanceof Integer)
+        {
+            edit.putInt(key, (Integer) obj);
+        }
+        else if(obj instanceof Boolean)
+        {
+            edit.putBoolean(key, (Boolean) obj);
+        }
+        edit.commit();
     }
 
     public SharedPreferences getPrefs()

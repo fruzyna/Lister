@@ -11,10 +11,43 @@ import java.util.List;
 
 public class Item
 {
-    public Boolean done;
-    public String item;
-    public Boolean priority;
+    private boolean done;
+    private String item;
+    private int id;
 
+    public Item(String item, int id, boolean done)
+    {
+        this.item = item;
+        this.id = id;
+        this.done = done;
+    }
+
+    public String getItem()
+    {
+        return item;
+    }
+
+    public Boolean isDone()
+    {
+        return done;
+    }
+
+    public int getId()
+    {
+        return id;
+    }
+
+    public void setDone(boolean done)
+    {
+        this.done = done;
+    }
+
+    public void setItem(String item)
+    {
+        this.item = item;
+    }
+
+/*
     public String color = "#000000";
     public List<String> people = new ArrayList<>();
     public List<String> tags = new ArrayList<>();
@@ -211,5 +244,5 @@ public class Item
     public boolean equals(Item item)
     {
         return (item.done == done) && (item.item.equals(item));
-    }
+    } */
 }
