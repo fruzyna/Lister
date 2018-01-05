@@ -139,11 +139,6 @@ public class SplashActivity extends AppCompatActivity
         System.out.println("Syncing");
         IO.getInstance().pullLists();
 
-        for(ListObj list : Data.getLists())
-        {
-            IO.getInstance().pullList(list.getId());
-        }
-
         System.out.println("Starting with " + Data.getLists().size() + " list(s)");
         System.out.println("Confirming starting with " + Data.getNames().size() + " list(s)");
         System.out.println("Current list is " + Data.getCurrent());

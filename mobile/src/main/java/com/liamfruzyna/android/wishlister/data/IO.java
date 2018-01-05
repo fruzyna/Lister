@@ -280,6 +280,64 @@ public class IO
         }
     }
 
+    public void createList(String name, int days, boolean auto)
+    {
+        Object result = DbConnection.runQuery("createlist/?name=" + name + "&daysToDel=" + days + "&auto=" + auto);
+        if(result instanceof String)
+        {
+            String response = (String) result;
+            if(response.equals("Network Failure"))
+            {
+                System.out.println("Failed to connect to server");
+            }
+            else if(response.equals("Not logged in!"))
+            {
+                System.out.println("Not logged in");
+            }
+            else if(response.equals("Success"))
+            {
+                System.out.println("Updated");
+            }
+            else
+            {
+                System.out.println("Unknown result: " + response);
+            }
+        }
+        else
+        {
+            System.out.println("Unknown result: rows");
+        }
+    }
+
+    public void deleteList(ListObj list)
+    {
+        Object result = DbConnection.runQuery("deletelist/?lid=" + list.getId());
+        if(result instanceof String)
+        {
+            String response = (String) result;
+            if(response.equals("Network Failure"))
+            {
+                System.out.println("Failed to connect to server");
+            }
+            else if(response.equals("Not logged in!"))
+            {
+                System.out.println("Not logged in");
+            }
+            else if(response.equals("Success"))
+            {
+                System.out.println("Deleted");
+            }
+            else
+            {
+                System.out.println("Unknown result: " + response);
+            }
+        }
+        else
+        {
+            System.out.println("Unknown result: rows");
+        }
+    }
+
 
     public void pullLists()
     {
@@ -304,6 +362,7 @@ public class IO
         {
             List<Map<String, Object>> data = (List<Map<String, Object>>) result;
             System.out.println("Table of length " + data.size() + " returned");
+            Data.resetLists();
             for(Map<String, Object> map : data)
             {
                 String name = (String) map.get("name");
@@ -312,6 +371,11 @@ public class IO
                 boolean archived = Boolean.parseBoolean((String) map.get("archived"));
                 ListObj list = new ListObj(name, id, perm, archived);
                 Data.replaceList(list);
+            }
+
+            for(ListObj list : Data.getLists())
+            {
+                pullList(list.getId());
             }
         }
     }

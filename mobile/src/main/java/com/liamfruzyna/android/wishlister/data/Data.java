@@ -42,6 +42,11 @@ public class Data {
         return lists;
     }
 
+    public static void resetLists()
+    {
+        lists = new ArrayList<>();
+    }
+
     //returns all the unarchived lists
     public static List<ListObj> getUnArchived() {
         List<ListObj> unar = new ArrayList<>();

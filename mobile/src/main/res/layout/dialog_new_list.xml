@@ -1,93 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="24dp"
-                android:paddingRight="24dp">
-
-    <EditText
-        android:id="@+id/name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:ems="10"
-        android:hint="List Name"
-        android:inputType="textPersonName"/>
-
-    <EditText
-        android:id="@+id/tags"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/name"
-        android:hint="Tags"
-        android:inputType="textPersonName"/>
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="AutoList"
-        android:id="@+id/auto"
-        android:layout_below="@+id/daysContainer"
-        android:layout_toRightOf="@+id/checked"
-        android:layout_toEndOf="@+id/checked"/>
-
-    <ScrollView
-        android:id="@+id/autoScroll"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/auto">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:id="@+id/container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-
-        </LinearLayout>
-    </ScrollView>
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Show Checked"
-        android:id="@+id/checked"
-        android:checked="true"
-        android:layout_below="@+id/daysContainer"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
-<LinearLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:id="@+id/daysContainer"
-    android:layout_below="@+id/tags">
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Delete After"
-        android:id="@+id/delete"/>
+    android:orientation="vertical"
+    android:paddingLeft="24dp"
+    android:paddingRight="24dp">
 
     <EditText
-        android:layout_width="wrap_content"
+        android:id="@+id/newlist_edit_name"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="3"
-        android:id="@+id/days"/>
+        android:hint="List Name"
+        android:inputType="textPersonName" />
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
-        android:text="days"/>
+        android:layout_below="@+id/tags"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <CheckBox
+            android:id="@+id/newlist_check_auto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AutoList" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="5dp"
+            android:layout_weight="1"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:text="Delete After" />
+
+            <EditText
+                android:id="@+id/newlist_edit_days"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="3"
+                android:text="0"
+                android:inputType="number" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:text="days" />
+
+        </LinearLayout>
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

@@ -1,5 +1,6 @@
 package com.liamfruzyna.android.wishlister.activities;
 
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -24,6 +26,8 @@ import com.liamfruzyna.android.wishlister.data.Item;
 import com.liamfruzyna.android.wishlister.data.ListObj;
 import com.liamfruzyna.android.wishlister.views.EditItemView;
 import com.liamfruzyna.android.wishlister.views.ItemView;
+import com.liamfruzyna.android.wishlister.views.NewListDialog;
+import com.liamfruzyna.android.wishlister.views.RemoveListDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +40,8 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
 {
     //Views
     Spinner listSpinner;
+    ImageView remove;
+
     LinearLayout listLayout;
 
     List<ItemView> items;
@@ -64,20 +70,31 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
     public void setup()
     {
         isNewItem = false;
+        editId = -1;
 
         listSpinner = findViewById(R.id.list_spinner_lists);
         listLayout = findViewById(R.id.list_layout_items);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Data.getNames());
+        remove = findViewById(R.id.list_button_remove);
+        remove.setOnClickListener(this);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_item, Data.getNames());
         listSpinner.setAdapter(adapter);
         listSpinner.setOnItemSelectedListener(this);
+        if(Data.getNames().size() == 0)
+        {
+            listLayout.removeAllViews();
+        }
 
         fab = findViewById(R.id.fab);
+        fab.setImageResource(R.drawable.ic_add_white);
         fab.setOnClickListener(this);
     }
 
     public void buildList()
     {
+        System.out.println("Building list");
+
         ListObj list = getList();
         items = new ArrayList<>();
         listLayout.removeAllViews();
@@ -168,7 +185,23 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
         }
         else if(view.equals(fab))
         {
-
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            NewListDialog f = new NewListDialog();
+            f.show(ft, "dialog");
+            (new NewListTask()).execute();
+        }
+        else if(view.equals(remove))
+        {
+            if(getList() != null)
+            {
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                RemoveListDialog f = new RemoveListDialog();
+                Bundle bundle = new Bundle();
+                bundle.putString("list", getList().getName());
+                f.setArguments(bundle);
+                f.show(ft, "dialog");
+                (new NewListTask()).execute();
+            }
         }
         else
         {
@@ -190,7 +223,7 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
 
     public ListObj getList()
     {
-        return Data.getLists().get(listSpinner.getSelectedItemPosition());
+        return Data.getListFromName((String) listSpinner.getSelectedItem());
     }
 
     @Override
@@ -222,7 +255,10 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> adapterView){}
+    public void onNothingSelected(AdapterView<?> adapterView)
+    {
+        listLayout.removeAllViews();
+    }
 
     private class AddItemTask extends AsyncTask<Void, Void, Void>
     {
@@ -268,6 +304,21 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
         {
             editId = -1;
             buildList();
+        }
+    }
+
+    private class NewListTask extends AsyncTask<Void, Void, Void>
+    {
+        protected Void doInBackground(Void... na)
+        {
+            int len = Data.getLists().size();
+            while(len == Data.getLists().size());
+            return null;
+        }
+
+        protected void onPostExecute(Void na)
+        {
+            setup();
         }
     }
 }

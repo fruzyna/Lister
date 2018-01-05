@@ -29,7 +29,6 @@ public class DbConnection
 
 	private static void init()
 	{
-		System.out.println("Initing client");
 		client = new OkHttpClient();
 	}
 
@@ -60,8 +59,6 @@ public class DbConnection
 			{
 				headers = response.headers();
 			}
-
-			System.out.println("Got result!");
 
 			List<Map<String, Object>> rows = new ArrayList<>();
 			try
