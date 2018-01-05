@@ -6,6 +6,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.liamfruzyna.android.wishlister.R;
+import com.liamfruzyna.android.wishlister.data.Data;
 import com.liamfruzyna.android.wishlister.data.IO;
 import com.liamfruzyna.android.wishlister.data.Item;
 
@@ -17,6 +18,7 @@ public class ItemView implements View.OnClickListener
 {
 	Item item;
 	View listItem;
+	CheckBox box;
 
 	boolean edit;
 
@@ -37,27 +39,31 @@ public class ItemView implements View.OnClickListener
 
 	public void fillItem()
 	{
-		CheckBox box = listItem.findViewById(R.id.item_check_done);
+		box = listItem.findViewById(R.id.item_check_done);
 		TextView text = listItem.findViewById(R.id.item_text_item);
 		box.setChecked(item.isDone());
 		text.setText(item.getItem());
-		box.setOnClickListener(this);
+		box.setClickable(false);
+		listItem.setOnClickListener(this);
 	}
 
 	@Override
 	public void onClick(View view)
 	{
-		CheckBox box = (CheckBox) view;
-		item.setDone(box.isChecked());
-
-		(new Thread(new Runnable()
+		if(Data.getList(item.getParent()).getPerm() != 'r')
 		{
-			@Override
-			public void run()
+			box.setChecked(!box.isChecked());
+			item.setDone(box.isChecked());
+
+			(new Thread(new Runnable()
 			{
-				IO.getInstance().checkItem(item);
-			}
-		})).start();
+				@Override
+				public void run()
+				{
+					IO.getInstance().checkItem(item);
+				}
+			})).start();
+		}
 	}
 
 	@Override

@@ -497,7 +497,7 @@ public class IO
                 int id = Integer.parseInt((String) map.get("id"));
                 String text = (String) map.get("text");
                 boolean done = Integer.parseInt((String) map.get("done")) == 1;
-                Item item = new Item(text, id, done);
+                Item item = new Item(text, id, lid, done);
                 list.addItem(item);
             }
         }

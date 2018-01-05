@@ -14,11 +14,13 @@ public class Item
     private boolean done;
     private String item;
     private int id;
+    private int lid;
 
-    public Item(String item, int id, boolean done)
+    public Item(String item, int id, int lid, boolean done)
     {
         this.item = item;
         this.id = id;
+        this.lid = lid;
         this.done = done;
     }
 
@@ -35,6 +37,11 @@ public class Item
     public int getId()
     {
         return id;
+    }
+
+    public int getParent()
+    {
+        return lid;
     }
 
     public void setDone(boolean done)
