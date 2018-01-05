@@ -28,6 +28,7 @@
             android:orientation="horizontal"
             android:background="@android:color/white"
             android:gravity="center_vertical"
+            android:translationZ="3dp"
             android:padding="16dp">
 
             <Spinner
@@ -44,7 +45,19 @@
                 android:id="@+id/list_button_remove"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_remove" />
+                app:srcCompat="@drawable/ic_close_indigo_100_24dp" />
+
+            <ImageView
+                android:id="@+id/list_button_archive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_check_indigo_100_24dp" />
+
+            <ImageView
+                android:id="@+id/list_button_share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_add" />
 
         </LinearLayout>
 

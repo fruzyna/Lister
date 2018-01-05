@@ -74,4 +74,9 @@ public class ListObj
         }
         return null;
     }
+
+    public void setArchived(boolean archived)
+    {
+        this.archived = archived;
+    }
 }

@@ -141,7 +141,6 @@ public class SplashActivity extends AppCompatActivity
 
         System.out.println("Starting with " + Data.getLists().size() + " list(s)");
         System.out.println("Confirming starting with " + Data.getNames().size() + " list(s)");
-        System.out.println("Current list is " + Data.getCurrent());
 
         Intent intent = new Intent(c, ListerActivity.class);
         startActivity(intent);

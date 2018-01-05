@@ -338,6 +338,93 @@ public class IO
         }
     }
 
+    public void archiveList(ListObj list)
+    {
+        Object result = DbConnection.runQuery("archivelist/?lid=" + list.getId() + "&archived=" + list.isArchived());
+        if(result instanceof String)
+        {
+            String response = (String) result;
+            if(response.equals("Network Failure"))
+            {
+                System.out.println("Failed to connect to server");
+            }
+            else if(response.equals("Not logged in!"))
+            {
+                System.out.println("Not logged in");
+            }
+            else if(response.equals("Success"))
+            {
+                System.out.println("Deleted");
+            }
+            else
+            {
+                System.out.println("Unknown result: " + response);
+            }
+        }
+        else
+        {
+            System.out.println("Unknown result: rows");
+        }
+    }
+
+    public void shareList(ListObj list, String user, char permLevel)
+    {
+        Object result = DbConnection.runQuery("sharelist/?lid=" + list.getId() + "&level=" + permLevel + "&user=" + user);
+        if(result instanceof String)
+        {
+            String response = (String) result;
+            if(response.equals("Network Failure"))
+            {
+                System.out.println("Failed to connect to server");
+            }
+            else if(response.equals("Not logged in!"))
+            {
+                System.out.println("Not logged in");
+            }
+            else if(response.equals("Success"))
+            {
+                System.out.println("User Added");
+            }
+            else
+            {
+                System.out.println("Unknown result: " + response);
+            }
+        }
+        else
+        {
+            System.out.println("Unknown result: rows");
+        }
+    }
+
+    public void leaveList(ListObj list)
+    {
+        Object result = DbConnection.runQuery("leavelist/?lid=" + list.getId());
+        if(result instanceof String)
+        {
+            String response = (String) result;
+            if(response.equals("Network Failure"))
+            {
+                System.out.println("Failed to connect to server");
+            }
+            else if(response.equals("Not logged in!"))
+            {
+                System.out.println("Not logged in");
+            }
+            else if(response.equals("Success"))
+            {
+                System.out.println("List Removed");
+            }
+            else
+            {
+                System.out.println("Unknown result: " + response);
+            }
+        }
+        else
+        {
+            System.out.println("Unknown result: rows");
+        }
+    }
+
 
     public void pullLists()
     {

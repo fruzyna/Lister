@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingHorizontal="24dp">
 
-    <ListView
-        android:layout_width="match_parent"
+    <EditText
+        android:id="@+id/share_edit_user"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:id="@+id/listView"
-        android:padding="8dp"/>
+        android:layout_weight="1"
+        android:hint="Username"/>
+
+    <Spinner
+        android:id="@+id/share_spin_perm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:entries="@array/permissions"/>
+
 </LinearLayout>
