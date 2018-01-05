@@ -40,8 +40,8 @@ public class ShareListDialog extends DialogFragment
 		listName = getArguments().getString("list");
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setMessage("Type the new list's name and click create to make a new list.")
-				.setTitle("New List")
+		builder.setMessage("Allow another Lister user to view/edit the list")
+				.setTitle("Share List")
 				.setView(view)
 				.setPositiveButton("SHARE", new DialogInterface.OnClickListener()
 				{

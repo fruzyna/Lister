@@ -130,7 +130,7 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
             }
             listLayout.addView(itemView);
 
-            if(listItems.indexOf(item) != listItems.size() - 1)
+            if(listItems.indexOf(item) != listItems.size() - 1 || isNewItem)
             {
                 View divider = getLayoutInflater().inflate(R.layout.divider, listLayout, false);
                 listLayout.addView(divider);
@@ -150,7 +150,6 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
         }
         else
         {
-
             if(getList().getPerm() == 'r')
             {
             }
@@ -247,7 +246,7 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
                 ListObj list = getList();
                 list.setArchived(true);
                 (new ArchiveListTask()).execute();
-                Toast.makeText(this, list.getName() + " archived!", Toast.LENGTH_SHORT);
+                Toast.makeText(this, list.getName() + " archived!", Toast.LENGTH_SHORT).show();
             }
         }
         else if(view.equals(share))
@@ -290,7 +289,7 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
     {
         if(getList().getPerm() == 'r')
         {
-            Toast.makeText(this, "You cannot edit items on this list", Toast.LENGTH_LONG);
+            Toast.makeText(this, "You cannot edit items on this list", Toast.LENGTH_LONG).show();
         }
         else
         {
