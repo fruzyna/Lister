@@ -41,12 +41,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        username = (EditText) findViewById(R.id.username);
-        password = (EditText) findViewById(R.id.password);
-        server = (EditText) findViewById(R.id.server);
-        login = (Button) findViewById(R.id.login);
-        create = (Button) findViewById(R.id.create);
-        skip = (Button) findViewById(R.id.skip);
+        username = findViewById(R.id.username);
+        password = findViewById(R.id.password);
+        server = findViewById(R.id.server);
+        login = findViewById(R.id.login);
+        create = findViewById(R.id.create);
+        skip = findViewById(R.id.skip);
 
         login.setOnClickListener(this);
         create.setOnClickListener(this);
@@ -76,97 +76,46 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private class LoginTask extends AsyncTask<String, Void, Object>
+    private class LoginTask extends AsyncTask<String, Void, String>
     {
-        String login[];
-
-        protected Object doInBackground(String... login)
+        protected String doInBackground(String... login)
         {
-            this.login = login;
-            String query = "login/?user=" + login[0] + "&pass=" + login[1];
-            return DbConnection.runQuery(query);
+            return DbConnection.login(login[0], login[1]);
         }
 
-        protected void onPostExecute(Object result)
+        protected void onPostExecute(String result)
         {
-            if(result instanceof String)
+            if(result.equals("Successful Login"))
             {
-                String response = (String) result;
-                if(response.equals("Network Failure"))
-                {
-                    System.out.println("Failed to connect to server");
-                    Toast.makeText(c, "Network Error", Toast.LENGTH_SHORT).show();
-                }
-                else if(response.equals("Success"))
-                {
-                    System.out.println("Successful Login");
-
-                    IO.getInstance().put(IO.SERVER_USER_PREF, login[0]);
-                    IO.getInstance().put(IO.SERVER_PASS_PREF, login[1]);
-
-                    Intent intent = new Intent(c, SplashActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-                else if(response.equals("Failure"))
-                {
-                    Toast.makeText(c, "Incorrect Login", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
-                    System.out.println("Unknown result : " + response);
-                    Toast.makeText(c, "Unknown Error", Toast.LENGTH_SHORT).show();
-                }
+                Intent intent = new Intent(c, SplashActivity.class);
+                startActivity(intent);
+                finish();
             }
             else
             {
-                List<Map<String, Object>> data = (List<Map<String, Object>>) result;
-                System.out.println("Table of length " + data.size() + " returned");
-                Toast.makeText(c, "Unknown Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(c, result, Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    private class CreateTask extends AsyncTask<String, Void, Object>
+    private class CreateTask extends AsyncTask<String, Void, String>
     {
-        protected Object doInBackground(String... login)
+        protected String doInBackground(String... login)
         {
-            String query = "createuser/?user=" + login[0] + "&pass=" + login[1];
-            return DbConnection.runQuery(query);
+            return DbConnection.create(login[0], login[1]);
         }
 
-        protected void onPostExecute(Object result)
+        protected void onPostExecute(String result)
         {
-            if(result instanceof String)
+            if(result.equals("Successful Login"))
             {
-                String response = (String) result;
-                if(response.equals("Network Failure"))
-                {
-                    System.out.println("Failed to connect to server");
-                    Toast.makeText(c, "Network Error", Toast.LENGTH_SHORT).show();
-                }
-                else if(response.equals("Success"))
-                {
-                    System.out.println("Successful Login");
-                    Intent intent = new Intent(c, SplashActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-                else if(response.equals("User Already Exists!"))
-                {
-                    Toast.makeText(c, "User Already Exists!", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
-                    System.out.println("Unknown result : " + response);
-                    Toast.makeText(c, "Unknown Error", Toast.LENGTH_SHORT).show();
-                }
+                Intent intent = new Intent(c, SplashActivity.class);
+                startActivity(intent);
+                finish();
             }
             else
             {
-                List<Map<String, Object>> data = (List<Map<String, Object>>) result;
-                System.out.println("Table of length " + data.size() + " returned");
-                Toast.makeText(c, "Unknown Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(c, result, Toast.LENGTH_SHORT).show();
             }
         }
     }

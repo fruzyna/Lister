@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.liamfruzyna.android.wishlister.data.Data;
 import com.liamfruzyna.android.wishlister.R;
+import com.liamfruzyna.android.wishlister.data.DbConnection;
 import com.liamfruzyna.android.wishlister.data.IO;
 import com.liamfruzyna.android.wishlister.data.Item;
 import com.liamfruzyna.android.wishlister.data.ListObj;
@@ -322,8 +323,8 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
     {
         protected Void doInBackground(Void... na)
         {
-            IO.getInstance().addItem(text.getText().toString(), getList());
-            IO.getInstance().pullList(getList().getId());
+            DbConnection.addItem(text.getText().toString(), getList());
+            DbConnection.pullList(getList().getId());
             return null;
         }
 
@@ -338,8 +339,8 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
     {
         protected Void doInBackground(Void... na)
         {
-            IO.getInstance().removeItem(editItem.getItem());
-            IO.getInstance().pullList(getList().getId());
+            DbConnection.removeItem(editItem.getItem());
+            DbConnection.pullList(getList().getId());
             return null;
         }
 
@@ -353,7 +354,7 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
     {
         protected Void doInBackground(Void... na)
         {
-            IO.getInstance().pullLists();
+            DbConnection.pullLists();
             return null;
         }
 
@@ -367,7 +368,7 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
     {
         protected Void doInBackground(Void... na)
         {
-            IO.getInstance().archiveList(getList());
+            DbConnection.archiveList(getList());
             //IO.getInstance().pullList(getList().getId());
             return null;
         }

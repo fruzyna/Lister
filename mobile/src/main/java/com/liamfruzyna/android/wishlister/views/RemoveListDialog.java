@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import com.liamfruzyna.android.wishlister.activities.ListerActivity;
 import com.liamfruzyna.android.wishlister.data.Data;
+import com.liamfruzyna.android.wishlister.data.DbConnection;
 import com.liamfruzyna.android.wishlister.data.IO;
 import com.liamfruzyna.android.wishlister.data.ListObj;
 
@@ -41,13 +42,13 @@ public class RemoveListDialog extends DialogFragment
 								ListObj list = Data.getListFromName(listName);
 								if(list.getPerm() == 'o')
 								{
-									IO.getInstance().deleteList(list);
+									DbConnection.deleteList(list);
 								}
 								else
 								{
-									IO.getInstance().leaveList(list);
+									DbConnection.leaveList(list);
 								}
-								IO.getInstance().pullLists();
+								DbConnection.pullLists();
 							}
 						})).start();
 					}

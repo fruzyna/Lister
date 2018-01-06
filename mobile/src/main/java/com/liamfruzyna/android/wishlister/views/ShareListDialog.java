@@ -12,7 +12,7 @@ import android.widget.Spinner;
 
 import com.liamfruzyna.android.wishlister.R;
 import com.liamfruzyna.android.wishlister.data.Data;
-import com.liamfruzyna.android.wishlister.data.IO;
+import com.liamfruzyna.android.wishlister.data.DbConnection;
 
 /**
  * Created by mail929 on 1/5/18.
@@ -53,7 +53,7 @@ public class ShareListDialog extends DialogFragment
 							public void run()
 							{
 								String selected = ((String) perm.getSelectedItem()).toLowerCase();
-								IO.getInstance().shareList(Data.getListFromName(listName), user.getText().toString(), selected.charAt(0));
+								DbConnection.shareList(Data.getListFromName(listName), user.getText().toString(), selected.charAt(0));
 							}
 						})).start();
 					}

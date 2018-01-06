@@ -5,6 +5,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.liamfruzyna.android.wishlister.R;
+import com.liamfruzyna.android.wishlister.data.DbConnection;
 import com.liamfruzyna.android.wishlister.data.IO;
 import com.liamfruzyna.android.wishlister.data.Item;
 
@@ -38,6 +39,6 @@ public class EditItemView extends ItemView
 	public void save()
 	{
 		item.setItem(text.getText().toString());
-		IO.getInstance().editItem(item);
+		DbConnection.editItem(item);
 	}
 }

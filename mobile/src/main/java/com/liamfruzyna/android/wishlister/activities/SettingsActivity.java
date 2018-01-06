@@ -40,38 +40,6 @@ public class SettingsActivity extends AppCompatActivity
             gen.setTitle("Lists");
             ps.addPreference(gen);
 
-            //Shares a list's data with the android share menu
-            Preference share = new Preference(getActivity());
-            share.setTitle("Share List");
-            share.setSummary("Share list with someone else");
-            share.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
-            {
-                @Override
-                public boolean onPreferenceClick(Preference preference)
-                {
-                    /*DialogFragment dialog = new ShareListDialog();
-                    dialog.show(getFragmentManager(), "");*/
-                    return true;
-                }
-            });
-            gen.addPreference(share);
-
-            //Prompts for a list's data and saves that
-            Preference importList = new Preference(getActivity());
-            importList.setTitle("Import List");
-            importList.setSummary("Import list from someone else");
-            importList.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
-            {
-                @Override
-                public boolean onPreferenceClick(Preference preference)
-                {
-                    /*DialogFragment dialog = new ImportListDialog();
-                    dialog.show(getFragmentManager(), "");*/
-                    return true;
-                }
-            });
-            gen.addPreference(importList);
-
             //Prompts to choose a list to unarchive
             Preference unArchive = new Preference(getActivity());
             unArchive.setTitle("Unarchive List");

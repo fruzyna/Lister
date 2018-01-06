@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.liamfruzyna.android.wishlister.R;
 import com.liamfruzyna.android.wishlister.data.Data;
+import com.liamfruzyna.android.wishlister.data.DbConnection;
 import com.liamfruzyna.android.wishlister.data.IO;
 import com.liamfruzyna.android.wishlister.data.Item;
 
@@ -60,7 +61,7 @@ public class ItemView implements View.OnClickListener
 				@Override
 				public void run()
 				{
-					IO.getInstance().checkItem(item);
+					DbConnection.checkItem(item);
 				}
 			})).start();
 		}

@@ -48,43 +48,21 @@ public class SplashActivity extends AppCompatActivity
                 ActivityCompat.requestPermissions(c[0], new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
             }
 
-            if(checkLogin(c[0]))
+            if(DbConnection.loginStatus())
             {
                 onLogin(c[0]);
             }
             else if(!IO.getInstance().getString(IO.SERVER_USER_PREF).equals(""))
             {
-                String query = "login/?user=" + IO.getInstance().getString(IO.SERVER_USER_PREF) + "&pass=" + IO.getInstance().getString(IO.SERVER_PASS_PREF);
-                Object result = DbConnection.runQuery(query);
+                String result = DbConnection.login(IO.getInstance().getString(IO.SERVER_USER_PREF), IO.getInstance().getString(IO.SERVER_PASS_PREF));
 
-                if(result instanceof String)
+                if(result.equals("Successful Login") || result.equals("Network Error"))
                 {
-                    String response = (String) result;
-                    if(response.equals("Network Failure"))
-                    {
-                        System.out.println("Failed to connect to server");
-                        Toast.makeText(c[0], "Network Error", Toast.LENGTH_SHORT).show();
-                    }
-                    else if(response.equals("Success"))
-                    {
-                        System.out.println("Successful Login");
-                        onLogin(c[0]);
-                    }
-                    else if(response.equals("Failure"))
-                    {
-                        Toast.makeText(c[0], "Incorrect Login", Toast.LENGTH_SHORT).show();
-                    }
-                    else
-                    {
-                        System.out.println("Unknown result : " + response);
-                        Toast.makeText(c[0], "Unknown Error", Toast.LENGTH_SHORT).show();
-                    }
+                    onLogin(c[0]);
                 }
                 else
                 {
-                    List<Map<String, Object>> data = (List<Map<String, Object>>) result;
-                    System.out.println("Table of length " + data.size() + " returned");
-                    Toast.makeText(c[0], "Unknown Error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(c[0], result, Toast.LENGTH_SHORT).show();
                 }
             }
             else
@@ -102,42 +80,10 @@ public class SplashActivity extends AppCompatActivity
         protected void onPostExecute(Activity c) {}
     }
 
-    public boolean checkLogin(Context c)
-    {
-        Object result = DbConnection.runQuery("");
-        if(result instanceof String)
-        {
-            String response = (String) result;
-            if(response.equals("Network Failure"))
-            {
-                System.out.println("Failed to connect to server");
-            }
-            else if(response.equals("Not logged in!"))
-            {
-                System.out.println("Not logged in");
-            }
-            else if(response.contains("Lister API v2, Logged in as: "))
-            {
-                //Toast.makeText(c, "Welcome " + response.replace("Lister API v2, Logged in as: ", ""), Toast.LENGTH_SHORT).show();
-                return true;
-            }
-            else
-            {
-                System.out.println("Unknown result: " + response);
-            }
-        }
-        else
-        {
-            List<Map<String, Object>> data = (List<Map<String, Object>>) result;
-            System.out.println("Table of length " + data.size() + " returned");
-        }
-        return false;
-    }
-
     public void onLogin(Context c)
     {
         System.out.println("Syncing");
-        IO.getInstance().pullLists();
+        DbConnection.pullLists();
 
         System.out.println("Starting with " + Data.getLists().size() + " list(s)");
         System.out.println("Confirming starting with " + Data.getNames().size() + " list(s)");
