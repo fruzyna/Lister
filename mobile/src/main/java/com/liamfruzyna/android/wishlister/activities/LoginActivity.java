@@ -76,16 +76,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private class LoginTask extends AsyncTask<String, Void, String>
+    private class LoginTask extends AsyncTask<String, Void, Integer>
     {
-        protected String doInBackground(String... login)
+        protected Integer doInBackground(String... login)
         {
             return DbConnection.login(login[0], login[1]);
         }
 
-        protected void onPostExecute(String result)
+        protected void onPostExecute(Integer result)
         {
-            if(result.equals("Successful Login"))
+            if(result == 1)
             {
                 Intent intent = new Intent(c, SplashActivity.class);
                 startActivity(intent);
@@ -93,21 +93,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
             else
             {
-                Toast.makeText(c, result, Toast.LENGTH_SHORT).show();
+                Toast.makeText(c, DbConnection.responses[result], Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    private class CreateTask extends AsyncTask<String, Void, String>
+    private class CreateTask extends AsyncTask<String, Void, Integer>
     {
-        protected String doInBackground(String... login)
+        protected Integer doInBackground(String... login)
         {
             return DbConnection.create(login[0], login[1]);
         }
 
-        protected void onPostExecute(String result)
+        protected void onPostExecute(Integer result)
         {
-            if(result.equals("Successful Login"))
+            if(result == 1)
             {
                 Intent intent = new Intent(c, SplashActivity.class);
                 startActivity(intent);
@@ -115,7 +115,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
             else
             {
-                Toast.makeText(c, result, Toast.LENGTH_SHORT).show();
+                Toast.makeText(c, DbConnection.responses[result], Toast.LENGTH_SHORT).show();
             }
         }
     }

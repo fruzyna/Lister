@@ -37,6 +37,8 @@ public class DbConnection
 		client = new OkHttpClient();
 	}
 
+	public static String responses[] = {"Other", "Success", "Table", "Not Logged In", "Network Failure"};
+
 	private static String runQuery(String queryExt)
 	{
 		String url = baseUrl + queryExt;
@@ -81,294 +83,99 @@ public class DbConnection
 		return IO.parseJSON(runQuery(queryExt));
 	}
 
-	public static void checkItem(Item item)
+	public static int respond(Object result)
 	{
-		Object result = queryAndParse("checkitem/?id=" + item.getId() + "&done=" + item.isDone());
+		int msg;
 		if(result instanceof String)
 		{
 			String response = (String) result;
 			if(response.equals("Network Failure"))
 			{
-				System.out.println("Failed to connect to server");
+				msg = 4;
 			}
 			else if(response.equals("Not logged in!"))
 			{
-				System.out.println("Not logged in");
+				msg = 3;
 			}
 			else if(response.equals("Success"))
 			{
-				System.out.println("Updated");
+				msg = 1;
 			}
 			else
 			{
-				System.out.println("Unknown result: " + response);
+				msg = 0;
 			}
 		}
 		else
 		{
-			System.out.println("Unknown result: rows");
+			msg = 2;
 		}
+		
+		System.out.println(responses[msg]);
+		return msg;
+	}
+
+	public static void checkItem(Item item)
+	{
+		respond(queryAndParse("checkitem/?id=" + item.getId() + "&done=" + item.isDone()));
 	}
 
 	public static void removeItem(Item item)
 	{
-		Object result = queryAndParse("deleteitem/?id=" + item.getId());
-		if(result instanceof String)
-		{
-			String response = (String) result;
-			if(response.equals("Network Failure"))
-			{
-				System.out.println("Failed to connect to server");
-			}
-			else if(response.equals("Not logged in!"))
-			{
-				System.out.println("Not logged in");
-			}
-			else if(response.equals("Success"))
-			{
-				System.out.println("Updated");
-			}
-			else
-			{
-				System.out.println("Unknown result: " + response);
-			}
-		}
-		else
-		{
-			System.out.println("Unknown result: rows");
-		}
+		respond(queryAndParse("deleteitem/?id=" + item.getId()));
 	}
 
 	public static void editItem(Item item)
 	{
-		Object result = queryAndParse("edititem/?id=" + item.getId() + "&text=" + item.getItem());
-		if(result instanceof String)
-		{
-			String response = (String) result;
-			if(response.equals("Network Failure"))
-			{
-				System.out.println("Failed to connect to server");
-			}
-			else if(response.equals("Not logged in!"))
-			{
-				System.out.println("Not logged in");
-			}
-			else if(response.equals("Success"))
-			{
-				System.out.println("Updated");
-			}
-			else
-			{
-				System.out.println("Unknown result: " + response);
-			}
-		}
-		else
-		{
-			System.out.println("Unknown result: rows");
-		}
+		respond(queryAndParse("edititem/?id=" + item.getId() + "&text=" + item.getItem()));
 	}
 
 	public static void addItem(String item, ListObj list)
 	{
-		Object result = queryAndParse("additem/?lid=" + list.getId() + "&text=" + item);
-		if(result instanceof String)
-		{
-			String response = (String) result;
-			if(response.equals("Network Failure"))
-			{
-				System.out.println("Failed to connect to server");
-			}
-			else if(response.equals("Not logged in!"))
-			{
-				System.out.println("Not logged in");
-			}
-			else if(response.equals("Success"))
-			{
-				System.out.println("Updated");
-			}
-			else
-			{
-				System.out.println("Unknown result: " + response);
-			}
-		}
-		else
-		{
-			System.out.println("Unknown result: rows");
-		}
+		respond(queryAndParse("additem/?lid=" + list.getId() + "&text=" + item));
 	}
 
 	public static void createList(String name, int days, boolean auto)
 	{
-		Object result = queryAndParse("createlist/?name=" + name + "&daysToDel=" + days + "&auto=" + auto);
-		if(result instanceof String)
-		{
-			String response = (String) result;
-			if(response.equals("Network Failure"))
-			{
-				System.out.println("Failed to connect to server");
-			}
-			else if(response.equals("Not logged in!"))
-			{
-				System.out.println("Not logged in");
-			}
-			else if(response.equals("Success"))
-			{
-				System.out.println("Updated");
-			}
-			else
-			{
-				System.out.println("Unknown result: " + response);
-			}
-		}
-		else
-		{
-			System.out.println("Unknown result: rows");
-		}
+		respond(queryAndParse("createlist/?name=" + name + "&daysToDel=" + days + "&auto=" + auto));
 	}
 
 	public static void deleteList(ListObj list)
 	{
-		Object result = queryAndParse("deletelist/?lid=" + list.getId());
-		if(result instanceof String)
-		{
-			String response = (String) result;
-			if(response.equals("Network Failure"))
-			{
-				System.out.println("Failed to connect to server");
-			}
-			else if(response.equals("Not logged in!"))
-			{
-				System.out.println("Not logged in");
-			}
-			else if(response.equals("Success"))
-			{
-				System.out.println("Deleted");
-			}
-			else
-			{
-				System.out.println("Unknown result: " + response);
-			}
-		}
-		else
-		{
-			System.out.println("Unknown result: rows");
-		}
+		respond(queryAndParse("deletelist/?lid=" + list.getId()));
 	}
 
 	public static void archiveList(ListObj list)
 	{
-		Object result = queryAndParse("archivelist/?lid=" + list.getId() + "&archived=" + list.isArchived());
-		if(result instanceof String)
-		{
-			String response = (String) result;
-			if(response.equals("Network Failure"))
-			{
-				System.out.println("Failed to connect to server");
-			}
-			else if(response.equals("Not logged in!"))
-			{
-				System.out.println("Not logged in");
-			}
-			else if(response.equals("Success"))
-			{
-				System.out.println("Deleted");
-			}
-			else
-			{
-				System.out.println("Unknown result: " + response);
-			}
-		}
-		else
-		{
-			System.out.println("Unknown result: rows");
-		}
+		respond(queryAndParse("archivelist/?lid=" + list.getId() + "&archived=" + list.isArchived()));
 	}
 
 	public static void shareList(ListObj list, String user, char permLevel)
 	{
-		Object result = queryAndParse("sharelist/?lid=" + list.getId() + "&level=" + permLevel + "&user=" + user);
-		if(result instanceof String)
-		{
-			String response = (String) result;
-			if(response.equals("Network Failure"))
-			{
-				System.out.println("Failed to connect to server");
-			}
-			else if(response.equals("Not logged in!"))
-			{
-				System.out.println("Not logged in");
-			}
-			else if(response.equals("Success"))
-			{
-				System.out.println("User Added");
-			}
-			else
-			{
-				System.out.println("Unknown result: " + response);
-			}
-		}
-		else
-		{
-			System.out.println("Unknown result: rows");
-		}
+		respond(queryAndParse("sharelist/?lid=" + list.getId() + "&level=" + permLevel + "&user=" + user));
 	}
 
 	public static void leaveList(ListObj list)
 	{
-		Object result = queryAndParse("leavelist/?lid=" + list.getId());
-		if(result instanceof String)
-		{
-			String response = (String) result;
-			if(response.equals("Network Failure"))
-			{
-				System.out.println("Failed to connect to server");
-			}
-			else if(response.equals("Not logged in!"))
-			{
-				System.out.println("Not logged in");
-			}
-			else if(response.equals("Success"))
-			{
-				System.out.println("List Removed");
-			}
-			else
-			{
-				System.out.println("Unknown result: " + response);
-			}
-		}
-		else
-		{
-			System.out.println("Unknown result: rows");
-		}
+		respond(queryAndParse("leavelist/?lid=" + list.getId()));
 	}
-
-
+	
 	public static void pullLists()
 	{
-		String resultStr = DbConnection.runQuery("getuserlists");
+		String resultStr = runQuery("getuserlists");
 		Object result = IO.parseJSON(resultStr);
-		if(result instanceof String)
+
+		int response = respond(result);
+		switch(response)
 		{
-			String response = (String) result;
-			if(response.equals("Network Failure"))
-			{
-				System.out.println("Failed to connect to server");
+			case 4:
 				result = IO.parseJSON(IO.retrieveData("Lists"));
-			}
-			else if(response.equals("Not logged in!"))
-			{
-				System.out.println("Not logged in");
+				break;
+			case 2:
+				IO.storeData("Lists", resultStr);
+				break;
+			default:
 				return;
-			}
-			else
-			{
-				System.out.println("Unknown result: " + response);
-				return;
-			}
-		}
-		else
-		{
-			IO.storeData("Lists", resultStr);
 		}
 
 		IO.parseLists(result);
@@ -381,113 +188,53 @@ public class DbConnection
 
 	public static void pullList(int lid)
 	{
-		String resultStr = DbConnection.runQuery("getlistitems/?lid=" + lid);
+		String resultStr = runQuery("getlistitems/?lid=" + lid);
 		Object result = IO.parseJSON(resultStr);
-		if(result instanceof String)
+
+		int response = respond(result);
+		switch(response)
 		{
-			String response = (String) result;
-			if(response.equals("Network Failure"))
-			{
-				System.out.println("Failed to connect to server");
+			case 4:
 				result = IO.parseJSON(IO.retrieveData(Integer.toString(lid)));
-			}
-			else if(response.equals("Not logged in!"))
-			{
-				System.out.println("Not logged in");
+				break;
+			case 2:
+				IO.storeData(Integer.toString(lid), resultStr);
+				break;
+			default:
 				return;
-			}
-			else
-			{
-				System.out.println("Unknown result: " + response);
-				return;
-			}
-		}
-		else
-		{
-			IO.storeData(Integer.toString(lid), resultStr);
 		}
 
 		IO.parseListItems(lid, result);
 	}
 
-	public static String login(String user, String pass)
+	public static int login(String user, String pass)
 	{
 		String query = "login/?user=" + user + "&pass=" + pass;
 		Object result = queryAndParse(query);
 
-		if(result instanceof String)
+		int response = respond(result);
+		if(response == 1)
 		{
-			String response = (String) result;
-			if(response.equals("Network Failure"))
-			{
-				System.out.println("Failed to connect to server");
-				return "Network Error";
-			}
-			else if(response.equals("Success"))
-			{
-				System.out.println("Successful Login");
-
-				IO.getInstance().put(IO.SERVER_USER_PREF, user);
-				IO.getInstance().put(IO.SERVER_PASS_PREF, pass);
-
-				return "Successful Login";
-			}
-			else if(response.equals("Failure"))
-			{
-				return "Incorrect Login";
-			}
-			else
-			{
-				System.out.println("Unknown result : " + response);
-				return "Unknown Error";
-			}
+			IO.getInstance().put(IO.SERVER_USER_PREF, user);
+			IO.getInstance().put(IO.SERVER_PASS_PREF, pass);
 		}
-		else
-		{
-			List<Map<String, Object>> data = (List<Map<String, Object>>) result;
-			System.out.println("Table of length " + data.size() + " returned");
-			return "Unknown Error";
-		}
+
+		return response;
 	}
 
-	public static String create(String user, String pass)
+	public static int create(String user, String pass)
 	{
 		String query = "createuser/?user=" + user + "&pass=" + pass;
 		Object result = queryAndParse(query);
 
-		if(result instanceof String)
+		int response = respond(result);
+		if(response == 1)
 		{
-			String response = (String) result;
-			if(response.equals("Network Failure"))
-			{
-				System.out.println("Failed to connect to server");
-				return "Network Error";
-			}
-			else if(response.equals("Success"))
-			{
-				System.out.println("Successful Login");
-
-				IO.getInstance().put(IO.SERVER_USER_PREF, user);
-				IO.getInstance().put(IO.SERVER_PASS_PREF, pass);
-
-				return "Successful Login";
-			}
-			else if(response.equals("Failure"))
-			{
-				return "Incorrect Login";
-			}
-			else
-			{
-				System.out.println("Unknown result : " + response);
-				return "Unknown Error";
-			}
+			IO.getInstance().put(IO.SERVER_USER_PREF, user);
+			IO.getInstance().put(IO.SERVER_PASS_PREF, pass);
 		}
-		else
-		{
-			List<Map<String, Object>> data = (List<Map<String, Object>>) result;
-			System.out.println("Table of length " + data.size() + " returned");
-			return "Unknown Error";
-		}
+
+		return response;
 	}
 
 	public static boolean loginStatus()

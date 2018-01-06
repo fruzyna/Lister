@@ -54,9 +54,9 @@ public class SplashActivity extends AppCompatActivity
             }
             else if(!IO.getInstance().getString(IO.SERVER_USER_PREF).equals(""))
             {
-                String result = DbConnection.login(IO.getInstance().getString(IO.SERVER_USER_PREF), IO.getInstance().getString(IO.SERVER_PASS_PREF));
+                int result = DbConnection.login(IO.getInstance().getString(IO.SERVER_USER_PREF), IO.getInstance().getString(IO.SERVER_PASS_PREF));
 
-                if(result.equals("Successful Login") || result.equals("Network Error"))
+                if(result == 1 || result == 4)
                 {
                     onLogin(c[0]);
                 }
