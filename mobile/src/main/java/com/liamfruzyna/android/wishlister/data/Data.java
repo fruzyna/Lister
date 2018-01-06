@@ -37,6 +37,20 @@ public class Data {
         return unar;
     }
 
+    //returns all the archived lists
+    public static List<ListObj> getArchived()
+    {
+        List<ListObj> ar = new ArrayList<>();
+        for(ListObj list : lists)
+        {
+            if(list.isArchived())
+            {
+                ar.add(list);
+            }
+        }
+        return ar;
+    }
+
     public static List<String> getNames()
     {
         List<String> names = new ArrayList<>();

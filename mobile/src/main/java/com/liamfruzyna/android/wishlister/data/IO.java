@@ -14,7 +14,6 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -202,7 +201,7 @@ public class IO
             String name = (String) map.get("name");
             int id = Integer.parseInt((String) map.get("id"));
             char perm = ((String) map.get("perm")).charAt(0);
-            boolean archived = Boolean.parseBoolean((String) map.get("archived"));
+            boolean archived = Integer.parseInt((String) map.get("archived")) == 1;
             ListObj list = new ListObj(name, id, perm, archived);
             Data.replaceList(list);
         }
