@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.liamfruzyna.android.wishlister.data.Data;
 import com.liamfruzyna.android.wishlister.data.IO;
+import com.liamfruzyna.android.wishlister.views.SignoutDialog;
 import com.liamfruzyna.android.wishlister.views.UnarchiveListDialog;
 
 /**
@@ -59,15 +60,15 @@ public class SettingsActivity extends AppCompatActivity
             }
             else if(preference.equals(signout))
             {
-                if(IO.getInstance().getString(IO.SERVER_ADDRESS_PREF).equals("") || IO.getInstance().getString(IO.SERVER_USER_PREF).equals(""))
+                if(IO.getInstance().getString(IO.SERVER_USER_PREF).equals("") || IO.getInstance().getString(IO.SERVER_PASS_PREF).equals(""))
                 {
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);
                 }
                 else
                 {
-                    /*DialogFragment dialog = new SignoutDialog();
-                    dialog.show(getFragmentManager(), "");*/
+                    DialogFragment dialog = new SignoutDialog();
+                    dialog.show(getFragmentManager(), "");
                     return true;
                 }
             }
@@ -141,7 +142,7 @@ public class SettingsActivity extends AppCompatActivity
 
             //Prompts to signout
             signout = new Preference(getActivity());
-            if(IO.getInstance().getString(IO.SERVER_ADDRESS_PREF).equals("") || IO.getInstance().getString(IO.SERVER_USER_PREF).equals(""))
+            if(IO.getInstance().getString(IO.SERVER_PASS_PREF).equals("") || IO.getInstance().getString(IO.SERVER_USER_PREF).equals(""))
             {
                 signout.setTitle("Sign In");
                 signout.setSummary("No user currently logged in");

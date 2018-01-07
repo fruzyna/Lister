@@ -65,6 +65,11 @@ public class DbConnection
 		
 		return "Network Failure";
 	}
+
+	public static void resetHeaders()
+	{
+		headers = null;
+	}
 	
 	private static Object queryAndParse(String queryExt)
 	{
