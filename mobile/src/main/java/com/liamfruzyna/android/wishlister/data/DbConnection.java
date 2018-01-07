@@ -27,6 +27,11 @@ public class DbConnection
 
 	public static String responses[] = {"Other", "Success", "Table", "Not Logged In", "Network Failure"};
 
+	/**
+	 * Makes an API request given the end of the URL
+	 * @param queryExt End of the url for after baseUrl
+	 * @return String sent back from the server
+	 */
 	private static String runQuery(String queryExt)
 	{
 		String url = baseUrl + queryExt;
@@ -66,16 +71,29 @@ public class DbConnection
 		return "Network Failure";
 	}
 
+	/**
+	 * Resets headers if a logout is started
+	 */
 	public static void resetHeaders()
 	{
 		headers = null;
 	}
-	
+
+	/**
+	 * Makes a query then returns the parsed String
+	 * @param queryExt End of the url for after baseUrl
+	 * @return Parsed String returned from the server
+	 */
 	private static Object queryAndParse(String queryExt)
 	{
 		return IO.parseJSON(runQuery(queryExt));
 	}
 
+	/**
+	 * Goes through basic results from server as returns type as int
+	 * @param result Parsed result from server
+	 * @return Int value of response
+	 */
 	public static int respond(Object result)
 	{
 		int msg;

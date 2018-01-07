@@ -6,7 +6,6 @@ import android.widget.EditText;
 
 import com.liamfruzyna.android.wishlister.R;
 import com.liamfruzyna.android.wishlister.data.DbConnection;
-import com.liamfruzyna.android.wishlister.data.IO;
 import com.liamfruzyna.android.wishlister.data.Item;
 
 /**

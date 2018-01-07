@@ -14,14 +14,7 @@ import android.widget.Toast;
 import com.liamfruzyna.android.wishlister.data.Data;
 import com.liamfruzyna.android.wishlister.data.DbConnection;
 import com.liamfruzyna.android.wishlister.data.IO;
-import com.liamfruzyna.android.wishlister.data.Item;
-import com.liamfruzyna.android.wishlister.data.ListObj;
 import com.liamfruzyna.android.wishlister.R;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class SplashActivity extends AppCompatActivity
 {

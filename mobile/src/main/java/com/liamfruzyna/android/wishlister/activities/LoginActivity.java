@@ -2,7 +2,6 @@ package com.liamfruzyna.android.wishlister.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,14 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.liamfruzyna.android.wishlister.data.Data;
 import com.liamfruzyna.android.wishlister.data.DbConnection;
-import com.liamfruzyna.android.wishlister.data.IO;
 import com.liamfruzyna.android.wishlister.R;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by mail929 on 2/24/17.

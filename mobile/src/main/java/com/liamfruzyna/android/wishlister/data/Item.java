@@ -1,10 +1,5 @@
 package com.liamfruzyna.android.wishlister.data;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
 /**
  * Created by mail929 on 2/24/17.
  */

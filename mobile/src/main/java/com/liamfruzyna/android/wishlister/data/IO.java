@@ -1,10 +1,7 @@
 package com.liamfruzyna.android.wishlister.data;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Environment;
 
 import org.json.JSONArray;
@@ -35,7 +32,6 @@ public class IO
     public static final String US_DATE_FORMAT_PREF = "US_DATE_FORMAT_PREF";
     public static final String HIGHLIGHT_DATE_PREF = "HIGHLIGHT_DATE_PREF";
     public static final String HIGHLIGHT_WHOLE_ITEM_PREF = "HIGHLIGHT_WHOLE_ITEM_PREF";
-    public static final String SERVER_ADDRESS_PREF = "SERVER_ADDRESS_PREF";
     public static final String SERVER_USER_PREF = "SERVER_USER_PREF";
     public static final String SERVER_PASS_PREF = "SERVER_PASS_PREF";
 
@@ -43,7 +39,6 @@ public class IO
 
     public static IO instance;
 
-    private Activity c;
     private SharedPreferences prefs;
 
     /**
@@ -61,6 +56,10 @@ public class IO
         return instance;
     }
 
+    /**
+     * Used to retrieve the current instance of IO
+     * @return Current instance of IO
+     */
     public static IO getInstance()
     {
         if (instance == null)
@@ -72,20 +71,23 @@ public class IO
 
     public IO(Activity c)
     {
-        this.c = c;
         prefs = c.getSharedPreferences(PREFS, 0);
 
-        File dir = new File(fileDir);
-        if(!dir.exists())
-        {
-            dir.mkdirs();
-        }
+        checkDir();
     }
 
     public IO()
     {
         System.out.println("Warning creating IO w/o context");
 
+        checkDir();
+    }
+
+    /**
+     * Creates the Lister directory if it doesn't exist
+     */
+    public void checkDir()
+    {
         File dir = new File(fileDir);
         if(!dir.exists())
         {
@@ -93,33 +95,11 @@ public class IO
         }
     }
 
-    public boolean getBoolean(String name, JSONObject container, boolean defaultValue) throws JSONException
-    {
-        if (container.has(name))
-        {
-            return container.getBoolean(name);
-        }
-        return defaultValue;
-    }
-
-    public int getInt(String name, JSONObject container) throws JSONException
-    {
-        if (container.has(name))
-        {
-            return container.getInt(name);
-        }
-        return 0;
-    }
-
-    public String getString(String name, JSONObject container) throws JSONException
-    {
-        if (container.has(name))
-        {
-            return container.getString(name);
-        }
-        return "";
-    }
-
+    /**
+     * Saves a generic object to preferences
+     * @param key Key to use for saving
+     * @param obj Value to save
+     */
     public void put(String key, Object obj)
     {
         SharedPreferences.Editor edit = getEditor();
@@ -138,6 +118,11 @@ public class IO
         edit.commit();
     }
 
+    /**
+     * Stores a given String to file
+     * @param name Name to use for the file
+     * @param json Text to save in the file
+     */
     public static void storeData(String name, String json)
     {
         try
@@ -156,6 +141,11 @@ public class IO
         }
     }
 
+    /**
+     * Retrieves the saved data in a file
+     * @param name Name of the file where data is saved
+     * @return Text stored in the file
+     */
     public static String retrieveData(String name)
     {
         try
@@ -175,6 +165,11 @@ public class IO
         return "";
     }
 
+    /**
+     * Parse list items from a object (assuming it's a map)
+     * @param lid Id of the list
+     * @param listData Object containing the items
+     */
     public static void parseListItems(int lid, Object listData)
     {
         List<Map<String, Object>> data = (List<Map<String, Object>>) listData;
@@ -191,6 +186,10 @@ public class IO
         }
     }
 
+    /**
+     * Parse basic list data from a object (assuming it's a map)
+     * @param listData Object containing the list data
+     */
     public static void parseLists(Object listData)
     {
         List<Map<String, Object>> data = (List<Map<String, Object>>) listData;
@@ -207,6 +206,11 @@ public class IO
         }
     }
 
+    /**
+     * Parses retrieved data from API or back up file to appropriate object
+     * @param result String of data retrieved
+     * @return Data as a String or Map
+     */
     public static Object parseJSON(String result)
     {
         List<Map<String, Object>> rows = new ArrayList<>();
@@ -264,32 +268,5 @@ public class IO
     public boolean getBoolean(String key, boolean temp)
     {
         return prefs.getBoolean(key, temp);
-    }
-
-    public boolean checkNetwork()
-    {
-        System.out.print("Checking network: ");
-        ConnectivityManager cm = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-
-        if(getString(SERVER_ADDRESS_PREF).equals(""))
-        {
-            System.out.println("Bad address");
-            return false;
-        }
-
-        if(activeNetwork == null)
-        {
-            System.out.println("No network");
-            return false;
-        }
-
-        if(!activeNetwork.isConnectedOrConnecting())
-        {
-            System.out.println("Not connected");
-            return false;
-        }
-
-        return true;
     }
 }

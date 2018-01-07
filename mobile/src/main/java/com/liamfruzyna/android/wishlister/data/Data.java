@@ -3,7 +3,6 @@ package com.liamfruzyna.android.wishlister.data;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by mail929 on 2/24/17.

@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,6 @@ import android.widget.EditText;
 
 import com.liamfruzyna.android.wishlister.R;
 import com.liamfruzyna.android.wishlister.data.DbConnection;
-import com.liamfruzyna.android.wishlister.data.IO;
 
 /**
  * Created by mail929 on 1/5/18.
