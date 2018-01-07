@@ -30,6 +30,7 @@ public class SignoutDialog extends DialogFragment
 						IO.getInstance().put(IO.SERVER_USER_PREF, "");
 						IO.getInstance().put(IO.SERVER_PASS_PREF, "");
 						DbConnection.resetHeaders();
+						IO.wipeFiles();
 						Intent intent = new Intent(getActivity(), LoginActivity.class);
 						startActivity(intent);
 					}

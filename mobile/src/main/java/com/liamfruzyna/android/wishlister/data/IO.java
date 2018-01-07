@@ -165,6 +165,14 @@ public class IO
         return "";
     }
 
+    public static void wipeFiles()
+    {
+        for(File file : (new File(fileDir)).listFiles())
+        {
+            file.delete();
+        }
+    }
+
     /**
      * Parse list items from a object (assuming it's a map)
      * @param lid Id of the list

@@ -32,45 +32,58 @@ public class SplashActivity extends AppCompatActivity
         (new LoadTask()).execute(this);
     }
 
-    private class LoadTask extends AsyncTask<Activity, Integer, Activity>
+    private class LoadTask extends AsyncTask<Activity, Integer, Integer>
     {
-        protected Activity doInBackground(Activity... c)
+        Activity c;
+
+        protected Integer doInBackground(Activity... a)
         {
-            while(ContextCompat.checkSelfPermission(c[0], android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+            this.c = a[0];
+
+            while(ContextCompat.checkSelfPermission(c, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
             {
-                ActivityCompat.requestPermissions(c[0], new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+                ActivityCompat.requestPermissions(c, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
             }
 
             if(DbConnection.loginStatus())
             {
-                onLogin(c[0]);
+                onLogin(c);
+                return -1;
             }
-            else if(!IO.getInstance().getString(IO.SERVER_USER_PREF).equals(""))
+            else if(!IO.getInstance().getString(IO.SERVER_USER_PREF).equals("") && !IO.getInstance().getString(IO.SERVER_PASS_PREF).equals(""))
             {
                 int result = DbConnection.login(IO.getInstance().getString(IO.SERVER_USER_PREF), IO.getInstance().getString(IO.SERVER_PASS_PREF));
 
                 if(result == 1 || result == 4)
                 {
-                    onLogin(c[0]);
+                    onLogin(c);
+                    return result;
                 }
-                else
-                {
-                    Toast.makeText(c[0], result, Toast.LENGTH_SHORT).show();
-                }
-            }
-            else
-            {
-                Intent intent = new Intent(c[0], LoginActivity.class);
-                startActivity(intent);
-                finish();
             }
 
-            return c[0];
+            Intent intent = new Intent(c, LoginActivity.class);
+            startActivity(intent);
+            finish();
+
+            return -1;
         }
 
-        protected void onProgressUpdate(Integer... progress) {}
-
-        protected void onPostExecute(Activity c) {}
+        protected void onPostExecute(Integer result)
+        {
+            switch(result)
+            {
+                case 1:
+                    Toast.makeText(c, "Signed In", Toast.LENGTH_SHORT).show();
+                    break;
+                case 4:
+                    Toast.makeText(c, "Offline Mode", Toast.LENGTH_SHORT).show();
+                    break;
+                case -1:
+                    break;
+                default:
+                    Toast.makeText(c, DbConnection.responses[result], Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     public void onLogin(Context c)
