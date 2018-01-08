@@ -45,22 +45,28 @@ public class SplashActivity extends AppCompatActivity
                 ActivityCompat.requestPermissions(c, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
             }
 
-            if(DbConnection.loginStatus())
+            if(DbConnection.loginStatus() == 1) //attempt login with cookies
             {
                 onLogin(c);
-                return -1;
+                return 1;
             }
-            else if(!IO.getInstance().getString(IO.SERVER_USER_PREF).equals("") && !IO.getInstance().getString(IO.SERVER_PASS_PREF).equals(""))
+            else if(!IO.getInstance().getString(IO.SERVER_USER_PREF).equals("") && !IO.getInstance().getString(IO.SERVER_PASS_PREF).equals("")) //if there are saved credentials
             {
+                //attempt login with saved credentials
                 int result = DbConnection.login(IO.getInstance().getString(IO.SERVER_USER_PREF), IO.getInstance().getString(IO.SERVER_PASS_PREF));
 
                 if(result == 1 || result == 4)
                 {
+                    if(result == 1)
+                    {
+                        DbConnection.queryCache();
+                    }
                     onLogin(c);
                     return result;
                 }
             }
 
+            //if we make it this far request login
             Intent intent = new Intent(c, LoginActivity.class);
             startActivity(intent);
             finish();
@@ -88,11 +94,11 @@ public class SplashActivity extends AppCompatActivity
 
     public void onLogin(Context c)
     {
-        System.out.println("Syncing");
+        IO.log("Syncing");
         DbConnection.pullLists();
 
-        System.out.println("Starting with " + Data.getLists().size() + " list(s)");
-        System.out.println("Confirming starting with " + Data.getNames().size() + " list(s)");
+        IO.log("Starting with " + Data.getLists().size() + " list(s)");
+        IO.log("Confirming starting with " + Data.getNames().size() + " list(s)");
 
         Intent intent = new Intent(c, ListerActivity.class);
         startActivity(intent);

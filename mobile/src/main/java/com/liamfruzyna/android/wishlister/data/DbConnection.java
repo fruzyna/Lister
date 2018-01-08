@@ -1,8 +1,6 @@
 package com.liamfruzyna.android.wishlister.data;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
 import okhttp3.Headers;
 import okhttp3.OkHttpClient;
@@ -48,7 +46,7 @@ public class DbConnection
 		}
 		Request request = builder.get().build();
 
-		System.out.println("Making query: " + url);
+		IO.log("Making query: " + url);
 
 		try
 		{
@@ -64,10 +62,17 @@ public class DbConnection
 		}
 		catch(IOException e)
 		{
-			System.out.println("Could not complete request");
+			IO.log("Could not complete request");
 			e.printStackTrace();
 		}
-		
+
+		String root = queryExt.split("/")[0];
+		if(!root.equals("login") && !root.equals("getuserlists") && !root.equals("getlistitems"))
+		{
+			//save for later if not available
+			IO.storeData("cache", queryExt + "\n", true);
+		}
+
 		return "Network Failure";
 	}
 
@@ -122,7 +127,7 @@ public class DbConnection
 			msg = 2;
 		}
 		
-		System.out.println(responses[msg]);
+		IO.log(responses[msg]);
 		return msg;
 	}
 
@@ -248,35 +253,25 @@ public class DbConnection
 		return response;
 	}
 
-	public static boolean loginStatus()
+	public static int loginStatus()
 	{
 		Object result = queryAndParse("");
-		if(result instanceof String)
+		int response = respond(result);
+		if(response == 0 && ((String) result).contains("Lister API v2, Logged in as: "))
 		{
-			String response = (String) result;
-			if(response.equals("Network Failure"))
-			{
-				System.out.println("Failed to connect to server");
-				return true;
-			}
-			else if(response.equals("Not logged in!"))
-			{
-				System.out.println("Not logged in");
-			}
-			else if(response.contains("Lister API v2, Logged in as: "))
-			{
-				return true;
-			}
-			else
-			{
-				System.out.println("Unknown result: " + response);
-			}
+			return 1;
 		}
-		else
+
+		return response;
+	}
+
+	public static void queryCache()
+	{
+		String[] exts = IO.retrieveData("cache").split("\n");
+		IO.getFile("cache").delete();
+		for(String ext : exts)
 		{
-			List<Map<String, Object>> data = (List<Map<String, Object>>) result;
-			System.out.println("Table of length " + data.size() + " returned");
+			runQuery(ext);
 		}
-		return false;
 	}
 }

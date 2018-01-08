@@ -78,7 +78,7 @@ public class IO
 
     public IO()
     {
-        System.out.println("Warning creating IO w/o context");
+        log("Warning creating IO w/o context");
 
         checkDir();
     }
@@ -122,8 +122,9 @@ public class IO
      * Stores a given String to file
      * @param name Name to use for the file
      * @param json Text to save in the file
+     * @param append Append to existing file
      */
-    public static void storeData(String name, String json)
+    public static void storeData(String name, String json, boolean append)
     {
         try
         {
@@ -132,13 +133,23 @@ public class IO
             {
                 file.createNewFile();
             }
-            BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+            BufferedWriter bw = new BufferedWriter(new FileWriter(file, append));
             bw.write(json);
             bw.close();
         } catch (IOException e)
         {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Stores a given String to file
+     * @param name Name to use for the file
+     * @param json Text to save in the file
+     */
+    public static void storeData(String name, String json)
+    {
+        storeData(name, json, false);
     }
 
     /**
@@ -173,6 +184,11 @@ public class IO
         }
     }
 
+    public static File getFile(String name)
+    {
+        return new File(fileDir + File.separator + name);
+    }
+
     /**
      * Parse list items from a object (assuming it's a map)
      * @param lid Id of the list
@@ -181,7 +197,7 @@ public class IO
     public static void parseListItems(int lid, Object listData)
     {
         List<Map<String, Object>> data = (List<Map<String, Object>>) listData;
-        System.out.println("Table of length " + data.size() + " returned");
+        log("Table of length " + data.size() + " returned");
         ListObj list = Data.getList(lid);
         list.resetList();
         for(Map<String, Object> map : data)
@@ -201,7 +217,7 @@ public class IO
     public static void parseLists(Object listData)
     {
         List<Map<String, Object>> data = (List<Map<String, Object>>) listData;
-        System.out.println("Table of length " + data.size() + " returned");
+        log("Table of length " + data.size() + " returned");
         Data.resetLists();
         for(Map<String, Object> map : data)
         {
@@ -238,12 +254,12 @@ public class IO
                 }
                 rows.add(map);
             }
-            System.out.println("Returning rows");
+            log("Returning rows");
             return rows;
         }
         catch(JSONException e)
         {
-            System.out.println("Invalid JSON, returning String");
+            log("Invalid JSON, returning String");
             return result;
         }
     }
@@ -276,5 +292,21 @@ public class IO
     public boolean getBoolean(String key, boolean temp)
     {
         return prefs.getBoolean(key, temp);
+    }
+
+    public static void log(String output)
+    {
+        String className = Thread.currentThread().getStackTrace()[3].getClassName();
+        String methodName = Thread.currentThread().getStackTrace()[3].getMethodName();
+        int lineNumber = Thread.currentThread().getStackTrace()[3].getLineNumber();
+
+        //remove package from class name
+        if(className.contains("."))
+        {
+            className = className.substring(className.lastIndexOf(".") + 1);
+        }
+
+        //only print if debug mode is enabled
+        System.out.println("[" + className + "." + methodName + ":" + lineNumber + "] " + output);
     }
 }
