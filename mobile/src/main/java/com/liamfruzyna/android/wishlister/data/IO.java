@@ -34,6 +34,7 @@ public class IO
     public static final String HIGHLIGHT_WHOLE_ITEM_PREF = "HIGHLIGHT_WHOLE_ITEM_PREF";
     public static final String SERVER_USER_PREF = "SERVER_USER_PREF";
     public static final String SERVER_PASS_PREF = "SERVER_PASS_PREF";
+    public static final String CURRENT_LIST_PREF = "CURRENT_LIST_PREF";
 
     public static final String fileDir = Environment.getExternalStoragePublicDirectory("Lister").toString();
 
@@ -281,7 +282,7 @@ public class IO
 
     public int getInt(String key)
     {
-        return prefs.getInt(key, 0);
+        return prefs.getInt(key, -1);
     }
 
     public long getLong(String key)

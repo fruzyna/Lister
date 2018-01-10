@@ -8,7 +8,8 @@ import java.util.List;
  * Created by mail929 on 2/24/17.
  */
 
-public class Data {
+public class Data
+{
     private static List<ListObj> lists = new ArrayList<>();
 
     //returns all the lists
@@ -20,6 +21,37 @@ public class Data {
     public static void resetLists()
     {
         lists = new ArrayList<>();
+    }
+
+    private static int currentList = -1;
+
+    public static void setCurrentList(int id)
+    {
+        currentList = id;
+        IO.getInstance().put(IO.CURRENT_LIST_PREF , id);
+    }
+
+    public static int getCurrentListId()
+    {
+        if(currentList < 0)
+        {
+            setCurrentList(IO.getInstance().getInt(IO.CURRENT_LIST_PREF));
+        }
+        if(currentList < 0)
+        {
+            setCurrentList(lists.get(0).getId());
+        }
+        return currentList;
+    }
+
+    public static int getCurrentListPos()
+    {
+        return getNames().indexOf(getList(getCurrentListId()).getName());
+    }
+
+    public static ListObj getCurrentList()
+    {
+        return getList(getCurrentListId());
     }
 
     //returns all the unarchived lists

@@ -93,7 +93,9 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_item, Data.getNames());
         listSpinner.setAdapter(adapter);
+        listSpinner.setSelection(Data.getCurrentListPos());
         listSpinner.setOnItemSelectedListener(this);
+
         if(Data.getNames().size() == 0)
         {
             listLayout.removeAllViews();
@@ -108,7 +110,8 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
     {
         System.out.println("Building list");
 
-        ListObj list = getList();
+        Data.setCurrentList(Data.getListFromName((String) listSpinner.getSelectedItem()).getId());
+        ListObj list = Data.getCurrentList();
         items = new ArrayList<>();
         listLayout.removeAllViews();
 
@@ -150,7 +153,7 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
         }
         else
         {
-            if(getList().getPerm() == 'r')
+            if(list.getPerm() == 'r')
             {
             }
             else
@@ -160,11 +163,11 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
                 listLayout.addView(addItem);
             }
 
-            if(getList().getPerm() == 'w')
+            if(list.getPerm() == 'w')
             {
             }
 
-            if(getList().getPerm() == 'o')
+            if(list.getPerm() == 'o')
             {
                 //remove.setVisibility(View.VISIBLE);
                 archive.setVisibility(View.VISIBLE);
@@ -228,12 +231,12 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
         }
         else if(view.equals(remove))
         {
-            if(getList() != null)
+            if(Data.getCurrentList() != null)
             {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 RemoveListDialog f = new RemoveListDialog();
                 Bundle bundle = new Bundle();
-                bundle.putString("list", getList().getName());
+                bundle.putString("list", Data.getCurrentList().getName());
                 f.setArguments(bundle);
                 f.show(ft, "dialog");
                 (new NewListTask()).execute();
@@ -241,9 +244,9 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
         }
         else if(view.equals(archive))
         {
-            if(getList() != null)
+            if(Data.getCurrentList() != null)
             {
-                ListObj list = getList();
+                ListObj list = Data.getCurrentList();
                 list.setArchived(true);
                 (new ArchiveListTask()).execute();
                 Toast.makeText(this, list.getName() + " archived!", Toast.LENGTH_SHORT).show();
@@ -251,12 +254,12 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
         }
         else if(view.equals(share))
         {
-            if(getList() != null)
+            if(Data.getCurrentList() != null)
             {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ShareListDialog f = new ShareListDialog();
                 Bundle bundle = new Bundle();
-                bundle.putString("list", getList().getName());
+                bundle.putString("list", Data.getCurrentList().getName());
                 f.setArguments(bundle);
                 f.show(ft, "dialog");
             }
@@ -279,15 +282,10 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    public ListObj getList()
-    {
-        return Data.getListFromName((String) listSpinner.getSelectedItem());
-    }
-
     @Override
     public boolean onLongClick(View view)
     {
-        if(getList().getPerm() == 'r')
+        if(Data.getCurrentList().getPerm() == 'r')
         {
             Toast.makeText(this, "You cannot edit items on this list", Toast.LENGTH_LONG).show();
         }
@@ -318,12 +316,16 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
         listLayout.removeAllViews();
     }
 
+    /*
+        AsyncTasks
+     */
+
     private class AddItemTask extends AsyncTask<Void, Void, Void>
     {
         protected Void doInBackground(Void... na)
         {
-            DbConnection.addItem(text.getText().toString(), getList());
-            DbConnection.pullList(getList().getId());
+            DbConnection.addItem(text.getText().toString(), Data.getCurrentList());
+            DbConnection.pullList(Data.getCurrentList().getId());
             return null;
         }
 
@@ -339,7 +341,7 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
         protected Void doInBackground(Void... na)
         {
             DbConnection.removeItem(editItem.getItem());
-            DbConnection.pullList(getList().getId());
+            DbConnection.pullList(Data.getCurrentList().getId());
             return null;
         }
 
@@ -367,7 +369,7 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
     {
         protected Void doInBackground(Void... na)
         {
-            DbConnection.archiveList(getList());
+            DbConnection.archiveList(Data.getCurrentList());
             //IO.getInstance().pullList(getList().getId());
             return null;
         }
