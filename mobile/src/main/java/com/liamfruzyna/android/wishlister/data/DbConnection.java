@@ -175,6 +175,21 @@ public class DbConnection
 	{
 		respond(queryAndParse("leavelist/?lid=" + list.getId()));
 	}
+
+	public static void resetList(ListObj list)
+	{
+		respond(queryAndParse("resetlist/?lid=" + list.getId()));
+	}
+
+	public static void deleteDone(ListObj list)
+	{
+		respond(queryAndParse("deletedone/?lid=" + list.getId()));
+	}
+
+	public static void listSettings(int lid, String name, int days, boolean sortDone, boolean sortDate, boolean showDone)
+	{
+		respond(queryAndParse("listsettings/?lid=" + lid + "&name=" + name + "&daysToDel=" + days + "&sortDone=" + sortDone + "&sortDate=" + sortDate + "&showDone=" + showDone));
+	}
 	
 	public static void pullLists()
 	{

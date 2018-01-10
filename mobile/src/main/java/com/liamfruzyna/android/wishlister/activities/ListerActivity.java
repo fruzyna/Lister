@@ -22,10 +22,12 @@ import android.widget.Toast;
 import com.liamfruzyna.android.wishlister.data.Data;
 import com.liamfruzyna.android.wishlister.R;
 import com.liamfruzyna.android.wishlister.data.DbConnection;
+import com.liamfruzyna.android.wishlister.data.IO;
 import com.liamfruzyna.android.wishlister.data.Item;
 import com.liamfruzyna.android.wishlister.data.ListObj;
 import com.liamfruzyna.android.wishlister.views.EditItemView;
 import com.liamfruzyna.android.wishlister.views.ItemView;
+import com.liamfruzyna.android.wishlister.views.ListSettingsDialog;
 import com.liamfruzyna.android.wishlister.views.NewListDialog;
 import com.liamfruzyna.android.wishlister.views.RemoveListDialog;
 import com.liamfruzyna.android.wishlister.views.ShareListDialog;
@@ -41,6 +43,7 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
 {
     //Views
     Spinner listSpinner;
+    ImageView settings;
     ImageView remove;
     ImageView archive;
     ImageView share;
@@ -90,6 +93,8 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
         archive.setOnClickListener(this);
         share = findViewById(R.id.list_button_share);
         share.setOnClickListener(this);
+        settings = findViewById(R.id.list_button_settings);
+        settings.setOnClickListener(this);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_item, Data.getNames());
         listSpinner.setAdapter(adapter);
@@ -155,12 +160,14 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
         {
             if(list.getPerm() == 'r')
             {
+                settings.setVisibility(View.GONE);
             }
             else
             {
                 addItem = getLayoutInflater().inflate(R.layout.button_add_item, listLayout, false);
                 addItem.setOnClickListener(this);
                 listLayout.addView(addItem);
+                settings.setVisibility(View.VISIBLE);
             }
 
             if(list.getPerm() == 'w')
@@ -207,31 +214,18 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View view)
     {
-        if(view.equals(addItem))
-        {
-            editId = -1;
-            isNewItem = true;
-            buildList();
-        }
-        else if(view.equals(cancel))
-        {
-            isNewItem = false;
-            buildList();
-        }
-        else if(view.equals(add))
-        {
-            (new AddItemTask()).execute();
-        }
-        else if(view.equals(fab))
+        ListObj list = Data.getCurrentList();
+        if(view.equals(fab))
         {
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             NewListDialog f = new NewListDialog();
             f.show(ft, "dialog");
+            IO.ready = false;
             (new NewListTask()).execute();
         }
-        else if(view.equals(remove))
+        else if(list != null)
         {
-            if(Data.getCurrentList() != null)
+            if(view.equals(remove))
             {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 RemoveListDialog f = new RemoveListDialog();
@@ -241,20 +235,13 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
                 f.show(ft, "dialog");
                 (new NewListTask()).execute();
             }
-        }
-        else if(view.equals(archive))
-        {
-            if(Data.getCurrentList() != null)
+            else if(view.equals(archive))
             {
-                ListObj list = Data.getCurrentList();
                 list.setArchived(true);
                 (new ArchiveListTask()).execute();
                 Toast.makeText(this, list.getName() + " archived!", Toast.LENGTH_SHORT).show();
             }
-        }
-        else if(view.equals(share))
-        {
-            if(Data.getCurrentList() != null)
+            else if(view.equals(share))
             {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ShareListDialog f = new ShareListDialog();
@@ -263,21 +250,47 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
                 f.setArguments(bundle);
                 f.show(ft, "dialog");
             }
-        }
-        else
-        {
-            switch(view.getId())
+            else if(view.equals(settings))
             {
-                case R.id.edit_button_cancel:
-                    editId = -1;
-                    buildList();
-                    break;
-                case R.id.edit_button_remove:
-                    (new RemoveItemTask()).execute();
-                    break;
-                case R.id.edit_button_save:
-                    (new EditItemTask()).execute();
-                    break;
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ListSettingsDialog f = new ListSettingsDialog();
+                Bundle bundle = new Bundle();
+                bundle.putString("list", Data.getCurrentList().getName());
+                f.setArguments(bundle);
+                f.show(ft, "dialog");
+                IO.ready = false;
+                (new ListSettingsTask()).execute();
+            }
+            else if(view.equals(add))
+            {
+                (new AddItemTask()).execute();
+            }
+            else if(view.equals(addItem))
+            {
+                editId = -1;
+                isNewItem = true;
+                buildList();
+            }
+            else if(view.equals(cancel))
+            {
+                isNewItem = false;
+                buildList();
+            }
+            else
+            {
+                switch(view.getId())
+                {
+                    case R.id.edit_button_cancel:
+                        editId = -1;
+                        buildList();
+                        break;
+                    case R.id.edit_button_remove:
+                        (new RemoveItemTask()).execute();
+                        break;
+                    case R.id.edit_button_save:
+                        (new EditItemTask()).execute();
+                        break;
+                }
             }
         }
     }
@@ -399,8 +412,21 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
     {
         protected Void doInBackground(Void... na)
         {
-            int len = Data.getLists().size();
-            while(len == Data.getLists().size());
+            while(!IO.ready);
+            return null;
+        }
+
+        protected void onPostExecute(Void na)
+        {
+            setup();
+        }
+    }
+
+    private class ListSettingsTask extends AsyncTask<Void, Void, Void>
+    {
+        protected Void doInBackground(Void... na)
+        {
+            while(!IO.ready);
             return null;
         }
 

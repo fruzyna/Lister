@@ -1,88 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
                 android:paddingLeft="24dp"
-                android:paddingRight="24dp">
+                android:paddingRight="24dp"
+                android:orientation="vertical">
 
-    <EditText
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:id="@+id/name"
-        android:layout_alignLeft="@+id/days"
-        android:layout_alignStart="@+id/days"/>
+        android:orientation="horizontal">
 
-    <TextView
-        android:text="List Name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView"
-        android:layout_alignBaseline="@+id/name"
-        android:layout_alignBottom="@+id/name"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        <TextView
+            android:text="List Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:layout_below="@+id/textView"
-        android:layout_marginTop="6dp"
-        android:id="@+id/days"
-        android:layout_toRightOf="@+id/textView2"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:layout_weight="1"
+            android:id="@+id/list_edit_name"/>
+    </LinearLayout>
 
-    <TextView
-        android:text="Days to Delete (0 = never)"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textView2"
-        android:layout_alignBaseline="@+id/days"
-        android:layout_alignBottom="@+id/days"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:orientation="horizontal">
+
+        <TextView
+            android:text="Days to Delete (0 = never)"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:id="@+id/list_edit_days"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <CheckBox
+            android:text="Reset List"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:id="@+id/list_check_reset"/>
+
+        <CheckBox
+            android:id="@+id/list_check_sortdate"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Sort by Date" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <CheckBox
+            android:id="@+id/list_check_deldone"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Delete Done"/>
+
+        <CheckBox
+            android:id="@+id/list_check_sortdone"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Sort by Done" />
+    </LinearLayout>
 
     <CheckBox
-        android:text="Reset List"
+        android:id="@+id/list_check_showdone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/reset"
-        android:layout_below="@+id/deleteDone"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:text="Show Done" />
 
-    <CheckBox
-        android:id="@+id/deleteDone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Delete Done"
-        android:layout_below="@+id/days"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <CheckBox
-        android:id="@+id/sortDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sort by Date"
-        android:layout_below="@+id/sortChecked"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-    <CheckBox
-        android:id="@+id/sortChecked"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sort by Done"
-        android:layout_below="@+id/days"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-</RelativeLayout>
+</LinearLayout>

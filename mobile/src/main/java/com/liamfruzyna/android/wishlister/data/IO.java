@@ -42,6 +42,8 @@ public class IO
 
     private SharedPreferences prefs;
 
+    public static boolean ready;
+
     /**
      * Used to establish IO and it's SharedPreferences
      *
@@ -160,19 +162,23 @@ public class IO
      */
     public static String retrieveData(String name)
     {
-        try
+        File cache = new File(fileDir + File.separator + name);
+        if(cache.exists())
         {
-            BufferedReader br = new BufferedReader(new FileReader(fileDir + File.separator + name));
-            String json = "";
-            String line;
-            while((line = br.readLine()) != null)
+            try
             {
-                json += line + "\n";
+                BufferedReader br = new BufferedReader(new FileReader(cache));
+                String json = "";
+                String line;
+                while((line = br.readLine()) != null)
+                {
+                    json += line + "\n";
+                }
+                return json;
+            } catch (IOException e)
+            {
+                e.printStackTrace();
             }
-            return json;
-        } catch (IOException e)
-        {
-            e.printStackTrace();
         }
         return "";
     }
@@ -226,7 +232,11 @@ public class IO
             int id = Integer.parseInt((String) map.get("id"));
             char perm = ((String) map.get("perm")).charAt(0);
             boolean archived = Integer.parseInt((String) map.get("archived")) == 1;
-            ListObj list = new ListObj(name, id, perm, archived);
+            boolean showDone = Integer.parseInt((String) map.get("showDone")) == 1;
+            boolean sortDate = Integer.parseInt((String) map.get("sortDate")) == 1;
+            boolean sortDone = Integer.parseInt((String) map.get("sortDone")) == 1;
+            int daysToDel = Integer.parseInt((String) map.get("daysToDel"));
+            ListObj list = new ListObj(name, id, perm, archived, daysToDel, showDone, sortDate, sortDone);
             Data.replaceList(list);
         }
     }

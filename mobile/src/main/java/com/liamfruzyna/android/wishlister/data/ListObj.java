@@ -13,14 +13,24 @@ public class ListObj
     private char perm;
     private int id;
 
+    private int daysToDel;
+    private boolean showDone;
+    private boolean sortDate;
+    private boolean sortDone;
+
     private ArrayList<Item> items;
 
-    public ListObj(String name, int id, char perm, boolean archived)
+    public ListObj(String name, int id, char perm, boolean archived, int daysToDel, boolean showDone, boolean sortDate, boolean sortDone)
     {
         this.name = name;
         this.id = id;
         this.perm = perm;
         this.archived = archived;
+
+        this.daysToDel = daysToDel;
+        this.showDone = showDone;
+        this.sortDate = sortDate;
+        this.sortDone = sortDone;
 
         items = new ArrayList<>();
     }
@@ -75,5 +85,25 @@ public class ListObj
     public void setArchived(boolean archived)
     {
         this.archived = archived;
+    }
+
+    public int getDaysToDel()
+    {
+        return daysToDel;
+    }
+
+    public boolean isShowDone()
+    {
+        return showDone;
+    }
+
+    public boolean isSortDate()
+    {
+        return sortDate;
+    }
+
+    public boolean isSortDone()
+    {
+        return sortDone;
     }
 }

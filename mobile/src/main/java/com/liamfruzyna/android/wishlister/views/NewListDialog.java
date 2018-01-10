@@ -12,6 +12,7 @@ import android.widget.EditText;
 
 import com.liamfruzyna.android.wishlister.R;
 import com.liamfruzyna.android.wishlister.data.DbConnection;
+import com.liamfruzyna.android.wishlister.data.IO;
 
 /**
  * Created by mail929 on 1/5/18.
@@ -51,6 +52,7 @@ public class NewListDialog extends DialogFragment
 							{
 								DbConnection.createList(name.getText().toString(), Integer.parseInt(days.getText().toString()), auto.isChecked());
 								DbConnection.pullLists();
+								IO.ready = true;
 							}
 						})).start();
 					}
@@ -59,6 +61,7 @@ public class NewListDialog extends DialogFragment
 				{
 					public void onClick(DialogInterface dialog, int id)
 					{
+						IO.ready = true;
 					}
 				});
 		return builder.create();
