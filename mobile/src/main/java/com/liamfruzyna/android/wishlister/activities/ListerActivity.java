@@ -76,6 +76,7 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
     {
         super.onResume();
 
+        IO.firstInstance(this);
         (new RefreshTask()).execute();
     }
 
@@ -107,7 +108,7 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
         }
 
         fab = findViewById(R.id.fab);
-        fab.setImageResource(R.drawable.ic_add_white);
+        fab.setImageResource(R.drawable.ic_add_24dp);
         fab.setOnClickListener(this);
     }
 
@@ -383,7 +384,7 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
         protected Void doInBackground(Void... na)
         {
             DbConnection.archiveList(Data.getCurrentList());
-            //IO.getInstance().pullList(getList().getId());
+            DbConnection.pullLists();
             return null;
         }
 

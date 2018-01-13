@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -29,6 +30,7 @@
             android:background="@android:color/white"
             android:gravity="center_vertical"
             android:translationZ="3dp"
+            tools:ignore="VectorDrawableCompat"
             android:padding="8dp">
 
             <Spinner
@@ -46,28 +48,28 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
-                app:srcCompat="@drawable/ic_settings_black_24dp" />
+                app:srcCompat="@drawable/ic_settings_24dp" />
 
             <ImageView
                 android:id="@+id/list_button_remove"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
-                app:srcCompat="@drawable/ic_close_indigo_100_24dp" />
+                app:srcCompat="@drawable/ic_close_24dp" />
 
             <ImageView
                 android:id="@+id/list_button_archive"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
-                app:srcCompat="@drawable/ic_check_indigo_100_24dp" />
+                app:srcCompat="@drawable/ic_archive_24dp" />
 
             <ImageView
                 android:id="@+id/list_button_share"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
-                app:srcCompat="@drawable/ic_add" />
+                app:srcCompat="@drawable/ic_person_24dp" />
 
         </LinearLayout>
 
