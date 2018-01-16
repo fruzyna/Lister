@@ -13,7 +13,7 @@ import okhttp3.Response;
 
 public class DbConnection
 {
-	private static final String baseUrl = "http://192.168.1.25:8080/api/";
+	private static final String baseUrl = "http://lister.mail929.com/api/";
 
 	private static OkHttpClient client;
 	private static Headers headers;
