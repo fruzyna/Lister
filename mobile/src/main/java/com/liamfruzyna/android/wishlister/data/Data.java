@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.liamfruzyna.android.wishlister.data.ListSorts.AUTO_FIRST;
+import static com.liamfruzyna.android.wishlister.data.ListSorts.AUTO_LAST;
+
 /**
  * Created by mail929 on 2/24/17.
  */
@@ -52,6 +55,99 @@ public class Data
     public static ListObj getCurrentList()
     {
         return getList(getCurrentListId());
+    }
+
+    public static void sortLists(ListSorts order)
+    {
+        List<ListObj> sorted = new ArrayList<>();
+        while(lists.size() > 0)
+        {
+            ListObj list;
+            switch(order)
+            {
+                case NEWEST_FIRST:
+                    list = getNewestList();
+                    break;
+                case AUTO_FIRST:
+                case AUTO_LAST:
+                case OLDEST_FIRST:
+                default:
+                    list = getOldestList();
+                    break;
+            }
+            sorted.add(list);
+            lists.remove(list);
+        }
+        lists = sorted;
+        if(order == AUTO_FIRST || order == AUTO_LAST)
+        {
+            sorted = new ArrayList<>();
+            while(lists.size() > 0)
+            {
+                ListObj list;
+                switch(order)
+                {
+                    case AUTO_FIRST:
+                        list = getFirstAuto(true);
+                        break;
+                    case AUTO_LAST:
+                    default:
+                        list = getFirstAuto(false);
+                        break;
+                }
+                sorted.add(list);
+                lists.remove(list);
+            }
+            lists = sorted;
+        }
+    }
+
+    public static ListObj getNewestList()
+    {
+        return getList(getNewestListId());
+    }
+
+    public static ListObj getOldestList()
+    {
+        return getList(getOldestListId());
+    }
+
+    public static int getNewestListId()
+    {
+        int newest = -1;
+        for(ListObj list : lists)
+        {
+            if(list.getId() > newest)
+            {
+                newest = list.getId();
+            }
+        }
+        return newest;
+    }
+
+    public static ListObj getFirstAuto(boolean auto)
+    {
+        for(ListObj list : lists)
+        {
+            if(list.isAuto() == auto)
+            {
+                return list;
+            }
+        }
+        return lists.get(0);
+    }
+
+    public static int getOldestListId()
+    {
+        int newest = -1;
+        for(ListObj list : lists)
+        {
+            if(newest < 0 || list.getId() < newest)
+            {
+                newest = list.getId();
+            }
+        }
+        return newest;
     }
 
     //returns all the unarchived lists

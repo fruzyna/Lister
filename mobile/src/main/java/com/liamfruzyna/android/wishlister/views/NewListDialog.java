@@ -11,6 +11,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.liamfruzyna.android.wishlister.R;
+import com.liamfruzyna.android.wishlister.data.Data;
 import com.liamfruzyna.android.wishlister.data.DbConnection;
 import com.liamfruzyna.android.wishlister.data.IO;
 
@@ -52,6 +53,7 @@ public class NewListDialog extends DialogFragment
 							{
 								DbConnection.createList(name.getText().toString(), Integer.parseInt(days.getText().toString()), auto.isChecked());
 								DbConnection.pullLists();
+								Data.setCurrentList(Data.getNewestListId());
 								IO.ready = true;
 							}
 						})).start();

@@ -106,4 +106,9 @@ public class ListObj
     {
         return sortDone;
     }
+
+    public boolean isAuto()
+    {
+        return this instanceof AutoList;
+    }
 }

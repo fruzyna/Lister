@@ -215,6 +215,8 @@ public class DbConnection
 		{
 			pullList(list.getId());
 		}
+
+		Data.sortLists(ListSorts.OLDEST_FIRST);
 	}
 
 	public static void pullList(int lid)
