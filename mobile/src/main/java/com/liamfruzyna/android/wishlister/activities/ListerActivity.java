@@ -122,6 +122,12 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
         listLayout.removeAllViews();
 
         List<Item> listItems = list.getItems();
+        if(listItems.size() == 0 && !isNewItem)
+        {
+            View noItems = getLayoutInflater().inflate(R.layout.no_items, listLayout, false);
+            listLayout.addView(noItems);
+        }
+
         for (Item item : listItems)
         {
             System.out.println("Adding item: " + item.getItem());

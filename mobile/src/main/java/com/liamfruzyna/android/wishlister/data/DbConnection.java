@@ -1,6 +1,8 @@
 package com.liamfruzyna.android.wishlister.data;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import okhttp3.Headers;
 import okhttp3.OkHttpClient;
@@ -76,6 +78,18 @@ public class DbConnection
 		return "Network Failure";
 	}
 
+	public static String encode(String str)
+	{
+		try
+		{
+			return URLEncoder.encode(str, "UTF-8");
+		} catch (UnsupportedEncodingException e)
+		{
+			e.printStackTrace();
+		}
+		return str;
+	}
+
 	/**
 	 * Resets headers if a logout is started
 	 */
@@ -143,17 +157,17 @@ public class DbConnection
 
 	public static void editItem(Item item)
 	{
-		respond(queryAndParse("edititem/?id=" + item.getId() + "&text=" + item.getItem()));
+		respond(queryAndParse("edititem/?id=" + item.getId() + "&text=" + encode(item.getItem())));
 	}
 
 	public static void addItem(String item, ListObj list)
 	{
-		respond(queryAndParse("additem/?lid=" + list.getId() + "&text=" + item));
+		respond(queryAndParse("additem/?lid=" + list.getId() + "&text=" + encode(item)));
 	}
 
 	public static void createList(String name, int days, boolean auto)
 	{
-		respond(queryAndParse("createlist/?name=" + name + "&daysToDel=" + days + "&auto=" + auto));
+		respond(queryAndParse("createlist/?name=" + encode(name) + "&daysToDel=" + days + "&auto=" + auto));
 	}
 
 	public static void deleteList(ListObj list)
@@ -168,7 +182,7 @@ public class DbConnection
 
 	public static void shareList(ListObj list, String user, char permLevel)
 	{
-		respond(queryAndParse("sharelist/?lid=" + list.getId() + "&level=" + permLevel + "&user=" + user));
+		respond(queryAndParse("sharelist/?lid=" + list.getId() + "&level=" + permLevel + "&user=" + encode(user)));
 	}
 
 	public static void leaveList(ListObj list)
@@ -188,7 +202,7 @@ public class DbConnection
 
 	public static void listSettings(int lid, String name, int days, boolean sortDone, boolean sortDate, boolean showDone)
 	{
-		respond(queryAndParse("listsettings/?lid=" + lid + "&name=" + name + "&daysToDel=" + days + "&sortDone=" + sortDone + "&sortDate=" + sortDate + "&showDone=" + showDone));
+		respond(queryAndParse("listsettings/?lid=" + lid + "&name=" + encode(name) + "&daysToDel=" + days + "&sortDone=" + sortDone + "&sortDate=" + sortDate + "&showDone=" + showDone));
 	}
 	
 	public static void pullLists()
@@ -242,7 +256,7 @@ public class DbConnection
 
 	public static int login(String user, String pass)
 	{
-		String query = "login/?user=" + user + "&pass=" + pass;
+		String query = "login/?user=" + encode(user) + "&pass=" + encode(pass);
 		Object result = queryAndParse(query);
 
 		int response = respond(result);
@@ -257,7 +271,7 @@ public class DbConnection
 
 	public static int create(String user, String pass)
 	{
-		String query = "createuser/?user=" + user + "&pass=" + pass;
+		String query = "createuser/?user=" + encode(user) + "&pass=" + encode(pass);
 		Object result = queryAndParse(query);
 
 		int response = respond(result);
