@@ -49,7 +49,14 @@ public class Data
 
     public static int getCurrentListPos()
     {
-        return getNames().indexOf(getList(getCurrentListId()).getName());
+        try
+        {
+            return getNames().indexOf(getList(getCurrentListId()).getName());
+        }
+        catch(NullPointerException e)
+        {
+            return 0;
+        }
     }
 
     public static ListObj getCurrentList()
@@ -195,9 +202,12 @@ public class Data
     }
 
     //takes the name of a list and returns the list object
-    public static ListObj getListFromName(String name) {
-        for (ListObj list : lists) {
-            if (list.getName().equals(name)) {
+    public static ListObj getListFromName(String name)
+    {
+        for (ListObj list : lists)
+        {
+            if (list.getName().equals(name))
+            {
                 return list;
             }
         }
@@ -205,10 +215,29 @@ public class Data
     }
 
     //returns the list object
-    public static ListObj getList(int id) {
-        for (ListObj list : lists) {
-            if (list.getId() == id) {
+    public static ListObj getList(int id)
+    {
+        for (ListObj list : lists)
+        {
+            if (list.getId() == id)
+            {
                 return list;
+            }
+        }
+        return null;
+    }
+
+    //returns the item object
+    public static Item getItem(int id)
+    {
+        for (ListObj list : lists)
+        {
+            for(Item item : list.getItems())
+            {
+                if(item.getId() == id)
+                {
+                    return item;
+                }
             }
         }
         return null;
@@ -230,5 +259,33 @@ public class Data
         {
             lists.add(list);
         }
+    }
+
+    public static int getMaxList()
+    {
+        int max = 0;
+        for(ListObj list : lists)
+        {
+            if(list.getId() > max)
+            {
+                max = list.getId();
+            }
+        }
+        return max;
+    }
+    public static int getMaxItem()
+    {
+        int max = 0;
+        for(ListObj list : lists)
+        {
+            for(Item item : list.getItems())
+            {
+                if(item.getId() > max)
+                {
+                    max = item.getId();
+                }
+            }
+        }
+        return max;
     }
 }

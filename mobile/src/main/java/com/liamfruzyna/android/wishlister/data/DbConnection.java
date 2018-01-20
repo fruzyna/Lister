@@ -73,6 +73,7 @@ public class DbConnection
 		{
 			//save for later if not available
 			IO.storeData("cache", queryExt + "\n", true);
+            QueryProcessor.processQuery(queryExt);
 		}
 
 		return "Network Failure";
@@ -217,6 +218,7 @@ public class DbConnection
 				result = IO.parseJSON(IO.retrieveData("Lists"));
 				break;
 			case 2:
+			    IO.wipeFiles();
 				IO.storeData("Lists", resultStr);
 				break;
 			default:
@@ -229,6 +231,11 @@ public class DbConnection
 		{
 			pullList(list.getId());
 		}
+
+		if(response == 4)
+        {
+            queryCache();
+        }
 
 		Data.sortLists(ListSorts.OLDEST_FIRST);
 	}

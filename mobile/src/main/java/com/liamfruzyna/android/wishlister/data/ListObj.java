@@ -87,6 +87,31 @@ public class ListObj
         this.archived = archived;
     }
 
+    public void setShowDone(boolean showDone)
+    {
+        this.showDone = showDone;
+    }
+
+    public void setSortDate(boolean sortDate)
+    {
+        this.sortDate = sortDate;
+    }
+
+    public void setSortDone(boolean sortDone)
+    {
+        this.sortDone = sortDone;
+    }
+
+    public void setDaysToDel(int daysToDel)
+    {
+        this.daysToDel = daysToDel;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
     public int getDaysToDel()
     {
         return daysToDel;
