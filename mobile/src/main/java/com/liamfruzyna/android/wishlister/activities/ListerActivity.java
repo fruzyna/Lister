@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.daimajia.swipe.SwipeLayout;
 import com.liamfruzyna.android.wishlister.data.Data;
 import com.liamfruzyna.android.wishlister.R;
 import com.liamfruzyna.android.wishlister.data.DbConnection;
@@ -140,8 +141,9 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
             else
             {
                 itemView = getLayoutInflater().inflate(R.layout.list_item, listLayout, false);
-                itemView.setOnLongClickListener(this);
-                items.add(new ItemView(item, itemView));
+                ItemView i = new ItemView(item, (SwipeLayout) itemView);
+                i.getLayout().setOnLongClickListener(this);
+                items.add(i);
             }
             listLayout.addView(itemView);
 
@@ -200,7 +202,8 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
     public boolean onOptionsItemSelected(MenuItem item)
     {
         System.out.println("Options selected");
-        switch (item.getItemId()) {
+        switch (item.getItemId())
+        {
             case R.id.action_settings:
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
@@ -313,7 +316,7 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
         {
             for(ItemView item : items)
             {
-                if(item.equals(view))
+                if(item.getLayout().equals(view))
                 {
                     editId = item.getItem().getId();
                     buildList();
@@ -356,7 +359,7 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    private class RemoveItemTask extends AsyncTask<Void, Void, Void>
+    public class RemoveItemTask extends AsyncTask<Void, Void, Void>
     {
         protected Void doInBackground(Void... na)
         {
