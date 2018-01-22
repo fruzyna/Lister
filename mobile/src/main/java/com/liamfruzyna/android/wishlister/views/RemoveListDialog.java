@@ -6,8 +6,10 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
+import com.liamfruzyna.android.wishlister.activities.ListerActivity;
 import com.liamfruzyna.android.wishlister.data.Data;
 import com.liamfruzyna.android.wishlister.data.DbConnection;
+import com.liamfruzyna.android.wishlister.data.IO;
 import com.liamfruzyna.android.wishlister.data.ListObj;
 
 /**
@@ -46,6 +48,7 @@ public class RemoveListDialog extends DialogFragment
 									DbConnection.leaveList(list);
 								}
 								DbConnection.pullLists();
+								IO.ready = true;
 							}
 						})).start();
 					}
@@ -54,6 +57,7 @@ public class RemoveListDialog extends DialogFragment
 				{
 					public void onClick(DialogInterface dialog, int id)
 					{
+					    IO.ready = false;
 					}
 				});
 		return builder.create();

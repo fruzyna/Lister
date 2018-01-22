@@ -1,6 +1,7 @@
 package com.liamfruzyna.android.wishlister.activities;
 
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -65,6 +66,8 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
 
     FloatingActionButton fab;
 
+    Context c;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -77,8 +80,10 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
     {
         super.onResume();
 
+        c = this;
+
         IO.firstInstance(this);
-        (new RefreshTask()).execute();
+        (new CheckLogin()).execute();
     }
 
     public void setup()
@@ -443,6 +448,55 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
         protected void onPostExecute(Void na)
         {
             setup();
+        }
+    }
+
+    private class CheckLogin extends AsyncTask<Void, Void, Boolean>
+    {
+        protected Boolean doInBackground(Void... na)
+        {
+            int result = DbConnection.loginStatus();
+            if(result == 1) //attempt login with cookies
+            {
+                DbConnection.pullLists();
+                return true;
+            }
+            else if(result == 4)
+            {
+                DbConnection.queryCache();
+                return true;
+            }
+            else if(!IO.getInstance().getString(IO.SERVER_USER_PREF).equals("") && !IO.getInstance().getString(IO.SERVER_PASS_PREF).equals("")) //if there are saved credentials
+            {
+                //attempt login with saved credentials
+                result = DbConnection.login(IO.getInstance().getString(IO.SERVER_USER_PREF), IO.getInstance().getString(IO.SERVER_PASS_PREF));
+
+                if(result == 1 || result == 4)
+                {
+                    if(result == 1)
+                    {
+                        DbConnection.queryCache();
+                    }
+                    DbConnection.pullLists();
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        protected void onPostExecute(Boolean success)
+        {
+            if(success)
+            {
+                setup();
+            }
+            else
+            {
+                //if we make it this far request login
+                Intent intent = new Intent(c, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         }
     }
 }
