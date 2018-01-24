@@ -205,6 +205,16 @@ public class DbConnection
 	{
 		respond(queryAndParse("listsettings/?lid=" + lid + "&name=" + encode(name) + "&daysToDel=" + days + "&sortDone=" + sortDone + "&sortDate=" + sortDate + "&showDone=" + showDone));
 	}
+
+	public static boolean changePass(String newPass, String oldPass)
+	{
+		if(respond(queryAndParse("changepass/?new=" + encode(newPass) + "&old=" + encode(oldPass))) == 1)
+        {
+            IO.getInstance().put(IO.SERVER_PASS_PREF, newPass);
+            return true;
+        }
+        return false;
+	}
 	
 	public static void pullLists()
 	{

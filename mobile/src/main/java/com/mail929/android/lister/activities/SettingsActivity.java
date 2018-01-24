@@ -1,10 +1,12 @@
 package com.mail929.android.lister.activities;
 
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
@@ -15,7 +17,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.mail929.android.lister.data.Data;
+import com.mail929.android.lister.data.DbConnection;
 import com.mail929.android.lister.data.IO;
+import com.mail929.android.lister.views.ChangePassDialog;
 import com.mail929.android.lister.views.SignoutDialog;
 import com.mail929.android.lister.views.UnarchiveListDialog;
 
@@ -25,9 +29,15 @@ import com.mail929.android.lister.views.UnarchiveListDialog;
 
 public class SettingsActivity extends AppCompatActivity
 {
+    Activity a;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
+
+        a = this;
+
         getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
     }
 
@@ -42,6 +52,7 @@ public class SettingsActivity extends AppCompatActivity
         Preference datesAsDays;
         Preference version;
         Preference me;
+        Preference changePass;
 
         @Override
         public boolean onPreferenceClick(Preference preference)
@@ -57,6 +68,11 @@ public class SettingsActivity extends AppCompatActivity
                     DialogFragment dialog = new UnarchiveListDialog();
                     dialog.show(getFragmentManager(), "");
                 }
+            }
+            if(preference.equals(changePass))
+            {
+                DialogFragment dialog = new ChangePassDialog();
+                dialog.show(getFragmentManager(), "");
             }
             else if(preference.equals(signout))
             {
@@ -140,6 +156,10 @@ public class SettingsActivity extends AppCompatActivity
             unArchive.setOnPreferenceClickListener(this);
             gen.addPreference(unArchive);
 
+            PreferenceCategory user = new PreferenceCategory(getActivity());
+            user.setTitle("Account");
+            ps.addPreference(user);
+
             //Prompts to signout
             signout = new Preference(getActivity());
             if(IO.getInstance().getString(IO.SERVER_PASS_PREF).equals("") || IO.getInstance().getString(IO.SERVER_USER_PREF).equals(""))
@@ -153,7 +173,21 @@ public class SettingsActivity extends AppCompatActivity
                 signout.setSummary("Currently logged in to " + IO.getInstance().getString(IO.SERVER_USER_PREF));
             }
             signout.setOnPreferenceClickListener(this);
-            gen.addPreference(signout);
+            user.addPreference(signout);
+
+            changePass = new Preference(getActivity());
+            changePass.setTitle("Change Password");
+            changePass.setSummary("Set a new password for the account " + IO.getInstance().getString(IO.SERVER_USER_PREF));
+            changePass.setOnPreferenceClickListener(this);
+            user.addPreference(changePass);
+
+            //Use US date format
+            dateFormat = new CheckBoxPreference(getActivity());
+            dateFormat.setTitle("Use US date format");
+            dateFormat.setSummary("MM/DD or DD/MM");
+            ((CheckBoxPreference) dateFormat).setChecked(IO.getInstance().getBoolean(IO.US_DATE_FORMAT_PREF, true));
+            dateFormat.setOnPreferenceClickListener(this);
+            user.addPreference(dateFormat);
 
             PreferenceCategory item = new PreferenceCategory(getActivity());
             item.setTitle("Items");
@@ -174,14 +208,6 @@ public class SettingsActivity extends AppCompatActivity
             ((CheckBoxPreference) highlightWhole).setChecked(IO.getInstance().getBoolean(IO.HIGHLIGHT_WHOLE_ITEM_PREF, true));
             highlightWhole.setOnPreferenceClickListener(this);
             item.addPreference(highlightWhole);
-
-            //Use US date format
-            dateFormat = new CheckBoxPreference(getActivity());
-            dateFormat.setTitle("Use US date format");
-            dateFormat.setSummary("MM/DD or DD/MM");
-            ((CheckBoxPreference) dateFormat).setChecked(IO.getInstance().getBoolean(IO.US_DATE_FORMAT_PREF, true));
-            dateFormat.setOnPreferenceClickListener(this);
-            item.addPreference(dateFormat);
 
             //Display dates as day of the week
             datesAsDay = new CheckBoxPreference(getActivity());
@@ -227,5 +253,4 @@ public class SettingsActivity extends AppCompatActivity
             setPreferenceScreen(ps);
         }
     }
-
 }
