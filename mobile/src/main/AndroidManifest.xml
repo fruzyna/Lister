@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.liamfruzyna.android.wishlister">
+    package="com.mail929.android.lister">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
@@ -13,20 +13,20 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true">
-        <activity android:name="com.liamfruzyna.android.wishlister.activities.SplashActivity"
+        <activity android:name="com.mail929.android.lister.activities.SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.liamfruzyna.android.wishlister.activities.ListerActivity"
+        <activity android:name="com.mail929.android.lister.activities.ListerActivity"
                   android:theme="@style/AppTheme">
         </activity>
-        <activity android:name="com.liamfruzyna.android.wishlister.activities.SettingsActivity"
+        <activity android:name="com.mail929.android.lister.activities.SettingsActivity"
                   android:theme="@style/AppTheme">
         </activity>
-        <activity android:name="com.liamfruzyna.android.wishlister.activities.LoginActivity"
+        <activity android:name="com.mail929.android.lister.activities.LoginActivity"
             android:theme="@style/DarkTheme">
         </activity>
     </application>

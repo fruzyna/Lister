@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.liamfruzyna.android.wishlister">
+          package="com.mail929.android.lister">
 
     <uses-feature android:name="android.hardware.type.watch"/>
 
@@ -17,7 +17,7 @@
             android:required="false"/>
 
         <activity
-            android:name="com.liamfruzyna.android.wishlister.LWActivity"
+            android:name="com.mail929.android.lister.LWActivity"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.DeviceDefault.Light">
             <intent-filter>
