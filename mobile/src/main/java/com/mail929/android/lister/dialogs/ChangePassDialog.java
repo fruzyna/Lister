@@ -1,4 +1,4 @@
-package com.mail929.android.lister.views;
+package com.mail929.android.lister.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.mail929.android.lister.R;
 import com.mail929.android.lister.data.DbConnection;
+import com.mail929.android.lister.views.ChangePassTask;
 
 /**
  * Created by mail929 on 1/24/18.

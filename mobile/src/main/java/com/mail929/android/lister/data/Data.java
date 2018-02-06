@@ -263,16 +263,9 @@ public class Data
 
     public static int getMaxList()
     {
-        int max = 0;
-        for(ListObj list : lists)
-        {
-            if(list.getId() > max)
-            {
-                max = list.getId();
-            }
-        }
-        return max;
+        return getNewestListId();
     }
+
     public static int getMaxItem()
     {
         int max = 0;

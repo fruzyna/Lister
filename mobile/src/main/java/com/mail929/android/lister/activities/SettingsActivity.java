@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
@@ -19,9 +18,9 @@ import android.widget.Toast;
 import com.mail929.android.lister.data.Data;
 import com.mail929.android.lister.data.DbConnection;
 import com.mail929.android.lister.data.IO;
-import com.mail929.android.lister.views.ChangePassDialog;
-import com.mail929.android.lister.views.SignoutDialog;
-import com.mail929.android.lister.views.UnarchiveListDialog;
+import com.mail929.android.lister.dialogs.ChangePassDialog;
+import com.mail929.android.lister.dialogs.SignoutDialog;
+import com.mail929.android.lister.dialogs.UnarchiveListDialog;
 
 /**
  * Created by mail929 on 3/3/17.
@@ -107,6 +106,14 @@ public class SettingsActivity extends AppCompatActivity
                 SharedPreferences.Editor editor = IO.getInstance().getEditor();
                 editor.putBoolean(IO.US_DATE_FORMAT_PREF, ((CheckBoxPreference) preference).isChecked());
                 editor.commit();
+                (new Thread(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        DbConnection.setDateFormat(IO.getInstance().getBoolean(IO.US_DATE_FORMAT_PREF, true));
+                    }
+                })).start();
                 return false;
             }
             else if(preference.equals(datesAsDay))

@@ -29,10 +29,10 @@ import com.mail929.android.lister.data.Item;
 import com.mail929.android.lister.data.ListObj;
 import com.mail929.android.lister.views.EditItemView;
 import com.mail929.android.lister.views.ItemView;
-import com.mail929.android.lister.views.ListSettingsDialog;
-import com.mail929.android.lister.views.NewListDialog;
-import com.mail929.android.lister.views.RemoveListDialog;
-import com.mail929.android.lister.views.ShareListDialog;
+import com.mail929.android.lister.dialogs.ListSettingsDialog;
+import com.mail929.android.lister.dialogs.NewListDialog;
+import com.mail929.android.lister.dialogs.RemoveListDialog;
+import com.mail929.android.lister.dialogs.ShareListDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,6 +104,7 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
         settings.setOnClickListener(this);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_item, Data.getNames());
+        adapter.setDropDownViewResource(R.layout.spinner_item);
         listSpinner.setAdapter(adapter);
         listSpinner.setSelection(Data.getCurrentListPos());
         listSpinner.setOnItemSelectedListener(this);

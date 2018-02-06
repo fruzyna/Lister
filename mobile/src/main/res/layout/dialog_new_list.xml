@@ -16,7 +16,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tags"
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
@@ -56,5 +55,26 @@
                 android:text="days" />
 
         </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/newlist_auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/newlist_auto_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
+
+        <Button
+            android:id="@+id/newlist_button_constraint"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Add Constraint"/>
+
     </LinearLayout>
 </LinearLayout>

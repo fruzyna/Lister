@@ -1,4 +1,4 @@
-package com.mail929.android.lister.views;
+package com.mail929.android.lister.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

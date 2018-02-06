@@ -201,6 +201,23 @@ public class DbConnection
 		respond(queryAndParse("deletedone/?lid=" + list.getId()));
 	}
 
+	public static void setDateFormat(boolean monthFirst)
+	{
+		respond(queryAndParse("setdateformat/?monthfirst=" + monthFirst));
+	}
+
+	public static void addConstraint(int lid, String data)
+	{
+		boolean exclude = false;
+		if(data.charAt(0) == '!')
+		{
+			exclude = true;
+			data = data.substring(1);
+		}
+		String parts[] = data.split(":");
+		respond(queryAndParse("addConstraint/?lid=" + lid + "&exclude=" + exclude + "&cType=" + parts[0] + "&cData=" + parts[1]));
+	}
+
 	public static void listSettings(int lid, String name, int days, boolean sortDone, boolean sortDate, boolean showDone)
 	{
 		respond(queryAndParse("listsettings/?lid=" + lid + "&name=" + encode(name) + "&daysToDel=" + days + "&sortDone=" + sortDone + "&sortDate=" + sortDate + "&showDone=" + showDone));
