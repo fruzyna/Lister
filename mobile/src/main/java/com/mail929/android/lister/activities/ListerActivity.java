@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -65,6 +66,7 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
     int editId;
 
     FloatingActionButton fab;
+    SwipeRefreshLayout refresh;
 
     Context c;
 
@@ -117,6 +119,16 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
         fab = findViewById(R.id.fab);
         fab.setImageResource(R.drawable.ic_add_24dp);
         fab.setOnClickListener(this);
+
+        refresh = findViewById(R.id.swipe_container);
+        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+        {
+            @Override
+            public void onRefresh()
+            {
+                (new RefreshTask()).execute();
+            }
+        });
     }
 
     public void buildList()
@@ -391,6 +403,7 @@ public class ListerActivity extends AppCompatActivity implements View.OnClickLis
         protected void onPostExecute(Void na)
         {
             setup();
+            refresh.setRefreshing(false);
         }
     }
 
