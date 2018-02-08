@@ -72,10 +72,11 @@ public class NewListDialog extends DialogFragment implements View.OnClickListene
 							@Override
 							public void run()
 							{
-								DbConnection.createList(name.getText().toString(), Integer.parseInt(days.getText().toString()), auto.isChecked());
+								boolean isAuto = auto.isChecked();
+								DbConnection.createList(name.getText().toString(), Integer.parseInt(days.getText().toString()), isAuto);
                                 DbConnection.pullLists();
                                 int newest = Data.getNewestListId();
-                                if(auto.isChecked())
+                                if(isAuto)
                                 {
                                     for(ConstraintView c : constraints)
                                     {
