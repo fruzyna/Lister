@@ -13,7 +13,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.mail929.android.lister.R;
-import com.mail929.android.lister.data.IO;
 
 /**
  * Created by mail929 on 2/6/18.
@@ -30,7 +29,8 @@ public class ConstraintView implements AdapterView.OnItemSelectedListener
 
     LinearLayout data;
 
-    String types[] = {"Tag", "Person", "Date", "Within", "Before", "After", "Between"};
+    String typeNames[] = {"Tag", "Person", "Date", "Within", "Before", "After", "Between"};
+    String types[] = {"SORT_TAG", "SORT_TAG", "SORT_DATE", "SORT_WITHIN", "SORT_BEFORE", "SORT_AFTER", "SORT_BETWEEN"};
     String entryTypes[] = {"String", "String", "Date", "Number", "Date", "Date", "Dual"};
 
     public ConstraintView(LayoutInflater inflater, LinearLayout inflatedView, Context c)
@@ -42,7 +42,7 @@ public class ConstraintView implements AdapterView.OnItemSelectedListener
         exclude = constraint.findViewById(R.id.constraint_check_exclude);
         container = constraint.findViewById(R.id.constraint_container);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(c, R.layout.spinner_item, types);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(c, R.layout.spinner_item, typeNames);
         adapter.setDropDownViewResource(R.layout.spinner_item);
         type.setAdapter(adapter);
         type.setOnItemSelectedListener(this);
@@ -52,7 +52,7 @@ public class ConstraintView implements AdapterView.OnItemSelectedListener
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l)
     {
-        String selectedType = types[i];
+        String selectedType = typeNames[i];
         String entryType = entryTypes[i];
 
         container.removeAllViews();
@@ -91,6 +91,7 @@ public class ConstraintView implements AdapterView.OnItemSelectedListener
     public String getData()
     {
         int i = type.getSelectedItemPosition();
+        String selectedName = typeNames[i];
         String selectedType = types[i];
         String entryType = entryTypes[i];
 
@@ -108,7 +109,7 @@ public class ConstraintView implements AdapterView.OnItemSelectedListener
         }
         else
         {
-            switch(selectedType)
+            switch(selectedName)
             {
                 case "Tag":
                     output += "#";

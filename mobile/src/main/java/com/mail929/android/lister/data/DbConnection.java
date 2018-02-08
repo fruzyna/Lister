@@ -215,7 +215,7 @@ public class DbConnection
 			data = data.substring(1);
 		}
 		String parts[] = data.split(":");
-		respond(queryAndParse("addConstraint/?lid=" + lid + "&exclude=" + exclude + "&ctype=" + parts[0] + "&cdata=" + parts[1]));
+		respond(queryAndParse("addConstraint/?lid=" + lid + "&exclude=" + exclude + "&ctype=" + encode(parts[0]) + "&cdata=" + encode(parts[1])));
 	}
 
 	public static void listSettings(int lid, String name, int days, boolean sortDone, boolean sortDate, boolean showDone)
